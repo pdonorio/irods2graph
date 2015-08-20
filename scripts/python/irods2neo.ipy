@@ -1,0 +1,17 @@
+
+##TOFIX
+# Check icommands? How?
+
+import os
+
+# Get list
+objlist = !ils [0-9a-z]*.txt
+metas = {}
+
+for obj in objlist:
+    ifile = os.path.basename(obj.strip())
+    meta = !imeta ls -d {ifile}
+    metas[ifile] = meta[1]
+    #print("Element " + ifile + " with meta " + meta[1])
+
+print(metas)
