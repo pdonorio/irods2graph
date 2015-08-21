@@ -8,16 +8,22 @@ Moving data from iRODS server to Neo4j graphdb
 
 ################################
 ## LIBS
-import os
+import os, string, random
+#import ConfigParser #python2
 import configparser
-# Make this script a powerful command line program:
+# Make this script a powerful command line program
 import click
+# Use shell commands in a python way
+from plumbum import local as shell_commands
 
 ################################
 ## CONFIGURATION
 USER_HOME = os.environ['HOME']
 IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
 CONFIG_FILE = "./connections.ini"
+# All my irods command
+ICOM = {}
+ICOM["list"] = shell_commands["ils"]
 
 ################################
 ## CLI EXECUTION HANDLING
@@ -27,12 +33,14 @@ def cli(verbose):
     #pass
     click.echo('Script init. Verbosity: %s' % verbose)
     # Do we have iRODS?
-    check_init(IRODS_ENV, CONFIG_FILE)
+    data = check_init(IRODS_ENV, CONFIG_FILE)
+    irods_connection(data)
 
 # Filling data inside irods
 @click.command()
 def popolae():
     click.echo('COMMAND:\tFilling irods.')
+    random_files_into_irods()
 cli.add_command(popolae)
 
 # Converting data from irods to a graph
@@ -51,21 +59,25 @@ cli.add_command(convert)
 def check_init(irodsenv, configuration_file, section='irods'):
     """ Prepare an ini file for future usage """
 
-    nosection = False
+    nosection = True
+    data = {}
 
+    # If ini file already exists, search for irods section
     if os.path.exists(configuration_file):
         Config = configparser.ConfigParser()
         Config.read(configuration_file)
-        if not section in Config.sections():
-            nosection = True
-    else:
-        nosection = True
+        if section in Config.sections():
+            nosection = False
+            for key in Config.options(section):
+                data[key] = Config.get(section, key)
 
     # Get irods data and save them only if not available yet
     if nosection:
         print("No section "+section+" found")
         data = get_irods_init(irodsenv)
         write_init(configuration_file, data, section)
+
+    return data
 
 
 def get_irods_init(irodsenv):
@@ -98,15 +110,44 @@ def write_init(configuration_file, data, section):
 
 ################################
 ## Connect to irods
-def irods_connection():
-    from irods.session import iRODSSession
-    sess = iRODSSession(host='localhost', port=1247, user='rods', \
-        password='rods', zone='tempZone')
+def irods_connection(data):
+    print(data)
+    pass
+
+    ## PROBLEM! requires PYTHON 2
+    # from irods.session import iRODSSession
+    # sess = iRODSSession(host='localhost', port=1247, user='rods', \
+    #     password='rods', zone='tempZone')
+
+################################
+## POPOLAE
+
+# Some chaos to order
+def string_generator(size=32, \
+    chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
+    """ Create a random string of fixed size """
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def random_files_into_irods(elements=10, prefix='abc_'):
+
+    # Clean old files?
+
+    # Create random files
+    for i in range(1,elements):
+        rand1 = string_generator()
+        rand2 = string_generator()
+        with open(prefix + rand1 + ".txt",'w') as f:
+            f.write(rand2)
+
+        # Put into irods
+
+    # Check data
+    print(ICOM["list"]())
+
 
 # ################################
 # ## READ LOOP
-
-# ## OLD...
 
 # # Get list
 # objlist = !ils [0-9a-z]*.txt
