@@ -15,6 +15,7 @@ import configparser
 import click
 # Use shell commands in a python way
 from plumbum import local as shell_commands
+from plumbum.cmd import mkdir, rm
 
 ################################
 ## CONFIGURATION
@@ -24,13 +25,18 @@ CONFIG_FILE = "./connections.ini"
 # All my irods command
 ICOM = {}
 ICOM["list"] = shell_commands["ils"]
+ICOM["search"] = shell_commands["ilocate"]
+ICOM["create_dir"] = shell_commands["imkdir"]
+ICOM["save"] = shell_commands["iput"]
+ICOM["remove"] = shell_commands["irm"]
+# Alternative?
+#from plumbum.cmd import ils
 
 ################################
 ## CLI EXECUTION HANDLING
 @click.group()
 @click.option('-v', '--verbose', count=True)
 def cli(verbose):
-    #pass
     click.echo('Script init. Verbosity: %s' % verbose)
     # Do we have iRODS?
     data = check_init(IRODS_ENV, CONFIG_FILE)
@@ -112,7 +118,6 @@ def write_init(configuration_file, data, section):
 ## Connect to irods
 def irods_connection(data):
     print(data)
-    pass
 
     ## PROBLEM! requires PYTHON 2
     # from irods.session import iRODSSession
@@ -128,23 +133,36 @@ def string_generator(size=32, \
     """ Create a random string of fixed size """
     return ''.join(random.choice(chars) for _ in range(size))
 
+def random_files_into_irods(elements=10, prefix='abc_', \
+    tmp_dir='itmp', irods_dir='mine'):
 
-def random_files_into_irods(elements=10, prefix='abc_'):
-
-    # Clean old files?
+    # Clean host
+    rm("-rf", tmp_dir)
+    mkdir("-p", tmp_dir)
+    # Clean existing on iRODS
+    (status, stdin, stdout) = ICOM["list"][irods_dir].run(retcode = (0,4))
+    if status == 0:
+        print("Cleaning everything on server")
+        ICOM["remove"]["-r", irods_dir]()
+    ICOM["create_dir"](irods_dir)
+    print("Created directory")
 
     # Create random files
     for i in range(1,elements):
         rand1 = string_generator()
         rand2 = string_generator()
-        with open(prefix + rand1 + ".txt",'w') as f:
+        filename = prefix + rand1 + ".txt"
+        hostfile = tmp_dir + "/" + filename
+        with open(hostfile,'w') as f:
             f.write(rand2)
 
         # Put into irods
+        ICOM["save"][hostfile, irods_dir + "/" + filename]()
+
+    print("Generated", elements, "elements")
 
     # Check data
-    print(ICOM["list"]())
-
+    print(ICOM["search"](prefix + '%'))
 
 # ################################
 # ## READ LOOP
