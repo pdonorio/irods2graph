@@ -27,9 +27,7 @@ def cli(verbose):
     #pass
     click.echo('Script init. Verbosity: %s' % verbose)
     # Do we have iRODS?
-    data = check_init(IRODS_ENV)
-    # Prepare an ini file for future usage
-    write_init(CONFIG_FILE, data)
+    check_init(IRODS_ENV, CONFIG_FILE)
 
 # Filling data inside irods
 @click.command()
@@ -50,7 +48,28 @@ cli.add_command(convert)
 ################################
 ## INIT methods
 
-def check_init(irodsenv):
+def check_init(irodsenv, configuration_file, section='irods'):
+    """ Prepare an ini file for future usage """
+
+    nosection = False
+
+    if os.path.exists(configuration_file):
+        Config = configparser.ConfigParser()
+        Config.read(configuration_file)
+        if not section in Config.sections():
+            nosection = True
+    else:
+        nosection = True
+
+    # Get irods data and save them only if not available yet
+    if nosection:
+        print("No section "+section+" found")
+        data = get_irods_init(irodsenv)
+        write_init(configuration_file, data, section)
+
+
+def get_irods_init(irodsenv):
+
     # Check if irods client exists and is configured
     if not os.path.exists(irodsenv):
         raise EnvironmentError("No irods environment found")
@@ -65,18 +84,17 @@ def check_init(irodsenv):
         raise EnvironmentError("Wrong irods environment in " + irodsenv)
     return data
 
-def write_init(configuration_file, data, section='irods'):
+def write_init(configuration_file, data, section):
 
-    # Create it, if not exists (section)
-    if not os.path.exists(configuration_file):
-        with open(configuration_file,'w') as cfgfile:
-            Config = configparser.ConfigParser()
-            Config.add_section(section)
+    # Create the section - append mode for file, since something else may exists
+    with open(configuration_file,'a') as cfgfile:
+        Config = configparser.ConfigParser()
+        Config.add_section(section)
 
-            for key, value in data.items():
-                Config.set(section, key, value)
-            Config.write(cfgfile)
-        print("Wrote ini file and its irods section")
+        for key, value in data.items():
+            Config.set(section, key, value)
+        Config.write(cfgfile)
+    print("Wrote ini file and its irods section")
 
 ################################
 ## Connect to irods
