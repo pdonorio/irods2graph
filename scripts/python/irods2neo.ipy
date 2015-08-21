@@ -1,17 +1,98 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-##TOFIX
-# Check icommands? How?
+"""
+Moving data from iRODS server to Neo4j graphdb
+[ N.B. this is an IPython script! ]
+"""
 
+################################
+## LIBS
 import os
+# Make this script a powerful command line program:
+import click
 
-# Get list
-objlist = !ils [0-9a-z]*.txt
-metas = {}
+################################
+## CONFIGURATION
+USER_HOME = os.environ['HOME']
+IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
+CONFIG_FILE = "./connections.ini"
 
-for obj in objlist:
-    ifile = os.path.basename(obj.strip())
-    meta = !imeta ls -d {ifile}
-    metas[ifile] = meta[1]
-    #print("Element " + ifile + " with meta " + meta[1])
+################################
+## CLI EXECUTION HANDLING
+@click.group()
+@click.option('-v', '--verbose', count=True)
+def cli(verbose):
+    #pass
+    click.echo('Verbosity: %s' % verbose)
+    # Do we have iRODS?
+    check_init(CONFIG_FILE)
+    # Prepare an ini file for future usage
+    write_init(IRODS_ENV)
 
-print(metas)
+# Filling data inside irods
+@click.command()
+def popolae():
+    click.echo('COMMAND:\tFilling irods.')
+cli.add_command(popolae)
+
+# Converting data from irods to a graph
+@click.command()
+@click.option('--elements', default=10, type=int, \
+    help='number of elements to find and convert')
+@click.argument('account')
+def convert(account, elements):
+    click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
+    #click.echo('Account: ' + account + ", Elements: " + elements.__str__())
+cli.add_command(convert)
+
+################################
+## INIT methods
+
+def check_init(irodsenv):
+    # Check if irods client exists and is configured
+    if not os.path.exists(irodsenv):
+        raise EnvironmentError("No irods environment found")
+
+def write_init(configuration_file):
+
+    # Create it, if not exists
+    if not os.path.exists(configuration_file):
+        print("Not yet")
+
+        # Config = open(configuration_file,'w')
+        # # add the settings to the structure of the file, and lets write it out...
+        # Config.add_section('Person')
+        # Config.set('Person','HasEyes',True)
+        # Config.set('Person','Age', 50)
+        # Config.write(cfgfile)
+        # cfgfile.close()
+
+################################
+## Connect to irods
+def irods_connection():
+    from irods.session import iRODSSession
+    sess = iRODSSession(host='localhost', port=1247, user='rods', \
+        password='rods', zone='tempZone')
+
+# ################################
+# ## READ LOOP
+
+# ## OLD...
+
+# # Get list
+# objlist = !ils [0-9a-z]*.txt
+# metas = {}
+
+# for obj in objlist:
+#     ifile = os.path.basename(obj.strip())
+#     meta = !imeta ls -d {ifile}
+#     metas[ifile] = meta[1]
+#     #print("Element " + ifile + " with meta " + meta[1])
+
+# print(metas)
+
+################################
+## MAIN
+if __name__ == '__main__':
+    cli()
