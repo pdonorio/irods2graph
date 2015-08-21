@@ -9,6 +9,7 @@ Moving data from iRODS server to Neo4j graphdb
 ################################
 ## LIBS
 import os
+import configparser
 # Make this script a powerful command line program:
 import click
 
@@ -24,11 +25,11 @@ CONFIG_FILE = "./connections.ini"
 @click.option('-v', '--verbose', count=True)
 def cli(verbose):
     #pass
-    click.echo('Verbosity: %s' % verbose)
+    click.echo('Script init. Verbosity: %s' % verbose)
     # Do we have iRODS?
-    check_init(CONFIG_FILE)
+    data = check_init(IRODS_ENV)
     # Prepare an ini file for future usage
-    write_init(IRODS_ENV)
+    write_init(CONFIG_FILE, data)
 
 # Filling data inside irods
 @click.command()
@@ -53,20 +54,29 @@ def check_init(irodsenv):
     # Check if irods client exists and is configured
     if not os.path.exists(irodsenv):
         raise EnvironmentError("No irods environment found")
+    print("Found data in " + irodsenv)
 
-def write_init(configuration_file):
+    # Recover irods data
+    data = {}
+    for element in [line.strip() for line in open(irodsenv, 'r')]:
+        key, value = element.split(" ")
+        data[key] = value
+    if data.__len__() < 2:
+        raise EnvironmentError("Wrong irods environment in " + irodsenv)
+    return data
 
-    # Create it, if not exists
+def write_init(configuration_file, data, section='irods'):
+
+    # Create it, if not exists (section)
     if not os.path.exists(configuration_file):
-        print("Not yet")
+        with open(configuration_file,'w') as cfgfile:
+            Config = configparser.ConfigParser()
+            Config.add_section(section)
 
-        # Config = open(configuration_file,'w')
-        # # add the settings to the structure of the file, and lets write it out...
-        # Config.add_section('Person')
-        # Config.set('Person','HasEyes',True)
-        # Config.set('Person','Age', 50)
-        # Config.write(cfgfile)
-        # cfgfile.close()
+            for key, value in data.items():
+                Config.set(section, key, value)
+            Config.write(cfgfile)
+        print("Wrote ini file and its irods section")
 
 ################################
 ## Connect to irods
