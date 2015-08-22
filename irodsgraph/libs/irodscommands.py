@@ -8,9 +8,8 @@ My irods client class wrapper
 import os
 # Use shell commands in a python way
 from plumbum import local as shell_commands
-from libs import USER_HOME
+from libs import IRODS_ENV
 
-IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
 # All my irods command
 ICOM = {}
 ICOM["list"] = shell_commands["ils"]
@@ -21,8 +20,19 @@ ICOM["remove"] = shell_commands["irm"]
 # Alternative?
 #from plumbum.cmd import ils
 
+################################
+## CONNECT TO IRODS ?
+# def irods_connection(data):
+
+#     # PROBLEM! requires PYTHON 2
+#     from irods.session import iRODSSession
+#     sess = iRODSSession(host='localhost', port=1247, user='rods', \
+#         password='rods', zone='tempZone')
+
 class ICommands(object):
     """irods icommands in a class"""
+
+    _init_data = {}
 
     def __init__(self, irodsenv=IRODS_ENV):
         super(ICommands, self).__init__()
@@ -30,9 +40,9 @@ class ICommands(object):
         self.irodsenv = irodsenv
         #print (self.irodsenv)
         print("Ready for some iRODS")
-        self.get_iinit()
+        self.iinit()
 
-    def get_iinit(self):
+    def iinit(self):
         """ Recover current user setup for irods """
         # Check if irods client exists and is configured
         if not os.path.exists(self.irodsenv):
@@ -48,4 +58,8 @@ class ICommands(object):
             raise EnvironmentError("Wrong irods environment: " + self.irodsenv)
 
         print("Obtained irods conf:", data)
+        self._init_data = data
         return data
+
+    def get_init(self):
+        return self._init_data
