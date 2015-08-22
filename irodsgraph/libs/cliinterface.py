@@ -7,6 +7,7 @@ Use 'click' library to create an interface for shell execution
 
 # Make this script a powerful command line program
 import click
+from libs.irodscommands import ICommands as icom
 
 # Click commands grouping
 @click.group()
@@ -14,7 +15,8 @@ import click
 def cli(verbose):
     click.echo('Script init. Verbosity: %s' % verbose)
 
-    # # Do we have iRODS?
+    # Do we have iRODS?
+    icom()
     # data = check_init(IRODS_ENV, CONFIG_FILE)
     # irods_connection(data)
 

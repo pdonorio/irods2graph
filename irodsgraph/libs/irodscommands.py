@@ -5,7 +5,10 @@
 My irods client class wrapper
 """
 
-USER_HOME = os.environ['HOME']
+from libs import USER_HOME
+# Use shell commands in a python way
+from plumbum import local as shell_commands
+
 IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
 # All my irods command
 ICOM = {}
@@ -22,3 +25,4 @@ class ICommands(object):
     def __init__(self, irodsenv=IRODS_ENV):
         super(ICommands, self).__init__()
         self.irodsenv = irodsenv
+        print("Ready for some iRODS")
