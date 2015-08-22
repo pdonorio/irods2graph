@@ -13,6 +13,8 @@ from libs import CONFIG_FILE
 class MyConfig(object):
     """My personal ini configuration for speeding app usage"""
 
+    section = 'irods'
+
     def __init__(self, icom, configuration_file=CONFIG_FILE):
         super(MyConfig, self).__init__()
         self.icom = icom
@@ -21,7 +23,7 @@ class MyConfig(object):
         # // TO FIX: should i open in write mode forever?
         self.configurer = configparser.ConfigParser()
 
-    def check_init(self, section='irods'):
+    def check(self):
         """ Prepare an ini file for future usage """
 
         nosection = True
@@ -29,28 +31,27 @@ class MyConfig(object):
 
         # If ini file already exists, search for irods section
         if os.path.exists(self.conffile):
-            Config.read(self.conffile)
-            if section in Config.sections():
+            self.configurer.read(self.conffile)
+            if self.section in self.configurer.sections():
                 nosection = False
-                for key in Config.options(section):
-                    data[key] = Config.get(section, key)
+                for key in self.configurer.options(self.section):
+                    data[key] = self.configurer.get(self.section, key)
 
         # Get irods data and save them only if not available yet
         if nosection:
-            print("No section "+section+" found")
-            data = get_irods_init(irodsenv)
-            write_init(self.conffile, data, section)
+            print("No self.section "+self.section+" found")
+            data = self.icom.get_init()
+            self.save(data)
 
         return data
 
-    def write_init(self, data, section):
+    def save(self, data):
 
         # Create the section - append mode for file, since something else may exists
         with open(self.conffile,'a') as cfgfile:
-            Config = configparser.ConfigParser()
-            Config.add_section(section)
+            self.configurer.add_section(self.section)
 
             for key, value in data.items():
-                Config.set(section, key, value)
-            Config.write(cfgfile)
+                self.configurer.set(self.section, key, value)
+            self.configurer.write(cfgfile)
         print("Wrote ini file and its irods section")

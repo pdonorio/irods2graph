@@ -8,6 +8,7 @@ Use 'click' library to create an interface for shell execution
 # Make this script a powerful command line program
 import click
 from libs.irodscommands import ICommands
+from libs.config import MyConfig
 
 # Click commands grouping
 @click.group()
@@ -17,8 +18,9 @@ def cli(verbose):
 
     # Do we have iRODS?
     icom = ICommands()
-    # data = check_init(IRODS_ENV, CONFIG_FILE)
-    # irods_connection(data)
+    # Make sure we have an ini file for futures callback
+    configurer = MyConfig(icom)
+    configurer.check()
 
 # Option 1. Filling data inside irods
 @click.command()
@@ -26,7 +28,11 @@ def cli(verbose):
     help='number of elements to find and convert')
 def popolae(elements):
     click.echo('COMMAND:\tFilling irods.')
+
+# // TODO:
+    click.echo('***FIXME***')
     #random_files_into_irods(elements)
+
 cli.add_command(popolae)
 
 # Option 2. Converting data from irods to a graph
