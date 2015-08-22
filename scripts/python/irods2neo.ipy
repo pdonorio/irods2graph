@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Moving data from iRODS server to Neo4j graphdb
-[ N.B. this is an IPython script! ]
+Moving data from iRODS server to a Neo4j graphdb.
+
+// TODO: write a irods commands class
+    - be sure the class context works with click library -
+    http://click.pocoo.org/5/commands/#nested-handling-and-contexts
+// TOFIX: python3 irods client?
+
 """
 
 ################################
@@ -44,24 +49,24 @@ def cli(verbose):
 
 # Filling data inside irods
 @click.command()
-def popolae():
+@click.option('--elements', default=10, type=int, \
+    help='number of elements to find and convert')
+def popolae(elements):
     click.echo('COMMAND:\tFilling irods.')
-    random_files_into_irods()
+    random_files_into_irods(elements)
 cli.add_command(popolae)
 
 # Converting data from irods to a graph
 @click.command()
 @click.option('--elements', default=10, type=int, \
     help='number of elements to find and convert')
-@click.argument('account')
-def convert(account, elements):
+def convert(elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
-    #click.echo('Account: ' + account + ", Elements: " + elements.__str__())
+    fill_graph_from_irods(elements)
 cli.add_command(convert)
 
 ################################
 ## INIT methods
-
 def check_init(irodsenv, configuration_file, section='irods'):
     """ Prepare an ini file for future usage """
 
@@ -115,9 +120,9 @@ def write_init(configuration_file, data, section):
     print("Wrote ini file and its irods section")
 
 ################################
-## Connect to irods
+## CONNECT TO IRODS ?
 def irods_connection(data):
-    print(data)
+    return
 
     ## PROBLEM! requires PYTHON 2
     # from irods.session import iRODSSession
@@ -133,7 +138,7 @@ def string_generator(size=32, \
     """ Create a random string of fixed size """
     return ''.join(random.choice(chars) for _ in range(size))
 
-def random_files_into_irods(elements=10, prefix='abc_', \
+def random_files_into_irods(elements, prefix='abc_', \
     tmp_dir='itmp', irods_dir='mine'):
 
     # Clean host
@@ -166,6 +171,9 @@ def random_files_into_irods(elements=10, prefix='abc_', \
 
 # ################################
 # ## READ LOOP
+
+def fill_graph_from_irods(elements):
+    print("test")
 
 # # Get list
 # objlist = !ils [0-9a-z]*.txt
