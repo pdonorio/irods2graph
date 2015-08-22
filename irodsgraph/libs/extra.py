@@ -31,22 +31,6 @@ def check_init(irodsenv, configuration_file, section='irods'):
     return data
 
 
-def get_irods_init(irodsenv):
-
-    # Check if irods client exists and is configured
-    if not os.path.exists(irodsenv):
-        raise EnvironmentError("No irods environment found")
-    print("Found data in " + irodsenv)
-
-    # Recover irods data
-    data = {}
-    for element in [line.strip() for line in open(irodsenv, 'r')]:
-        key, value = element.split(" ")
-        data[key] = value
-    if data.__len__() < 2:
-        raise EnvironmentError("Wrong irods environment in " + irodsenv)
-    return data
-
 def write_init(configuration_file, data, section):
 
     # Create the section - append mode for file, since something else may exists
