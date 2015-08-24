@@ -26,7 +26,9 @@ class BashCommands(object):
 
     def execute_command_advanced(self, command, parameters=[], retcodes=()):
         """ Pattern in plumbum library for executing a shell command """
-        (status, stdin, stdout) = self._shell[command][parameters].run(retcode=retcodes)
+        (status, stdin, stdout) = \
+            self._shell[command][parameters].run(retcode=retcodes)
+        # e.g. ICOM["list"][irods_dir].run(retcode = (0,4))
         return status
 
     ###################
@@ -42,6 +44,7 @@ class BashCommands(object):
         print("Created", path)
 
     def remove(self, path, recursive=False, force=False):
+
         # Build parameters and arguments for this command
         com = "rm"
         args = []

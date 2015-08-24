@@ -5,7 +5,7 @@
 My irods client class wrapper
 """
 
-import os
+import os, inspect
 from libs.bash import BashCommands
 from libs import IRODS_ENV
 
@@ -55,8 +55,30 @@ class ICommands(BashCommands):
     def get_init(self):
         return self._init_data
 
+
     ###################
     # ICOMs
+    def create_empty(self, path, directory=False):
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+        # com = ""
+        # self.execute_command(com, [path])
+
+    def remove(self, path, recursive=False, force=False):
+        com = 'irm'
+        args = []
+        if force:
+            args.append('-f')
+        if recursive:
+            args.append('-r')
+        args.append(path)
+        # Execute
+        self.execute_command(com, args)
+        # Debug
+        print("Removed irods object:\t", path)
+
+    def create_directory(self, directory):
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+
     def list(self, path, retcodes=(0,4)):
         com = "ils"
         status = self.execute_command_advanced(com, path, retcodes=retcodes)

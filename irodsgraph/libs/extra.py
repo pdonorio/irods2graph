@@ -27,20 +27,20 @@ def fill_with_randomness(com, icom, \
     com.remove_directory(tmp_dir, ignore=True)
     com.create_directory(tmp_dir)
 
-####################################
-# WORKING ON
-    # Clean existing on iRODS
+    # Clean if existing on iRODS
     status = icom.list(irods_dir)
-    #(status, stdin, stdout) = ICOM["list"][irods_dir].run(retcode = (0,4))
     print("*** TO FIX ***\t status:", status)
 
+####################################
+# WORKING ON
+
+    if status == 0:
+        print("Cleaning on server")
+        icom.remove_directory(irods_dir)
     return
 # WORKING ON
 ####################################
 
-    if status == 0:
-        print("Cleaning everything on server")
-        ICOM["remove"]["-r", irods_dir]()
     ICOM["create_dir"](irods_dir)
     print("Created directory")
 
