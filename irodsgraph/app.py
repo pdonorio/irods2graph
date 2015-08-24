@@ -14,6 +14,9 @@ Moving data from iRODS server to a Neo4j graphdb.
 // TODO:
     * install py2neo and write a class
     * docker section/dir for images and yaml files
+// BRAINSTORMING:
+    * Commands extends plumbus?
+    * Irods extends Commands?
 
 """
 

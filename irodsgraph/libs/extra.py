@@ -6,6 +6,8 @@ Other methods in my package
 """
 
 import string, random
+from libs.bash import BashCommands as basher
+com = basher()
 
 ################################
 ## UTILITIES
@@ -24,13 +26,13 @@ def fill_with_randomness(icom, \
     elements=10, prefix='abc_', \
     tmp_dir='itmp', irods_dir='mine'):
 
-    print("Test", icom, elements)
+    # Clean host data
+    com.remove_directory(tmp_dir, ignore=True)
+    com.create_directory(tmp_dir)
+
     print("*** TO FIX ***")
     return
 
-    # Clean host
-    rm("-rf", tmp_dir)
-    mkdir("-p", tmp_dir)
     # Clean existing on iRODS
     (status, stdin, stdout) = ICOM["list"][irods_dir].run(retcode = (0,4))
     if status == 0:
