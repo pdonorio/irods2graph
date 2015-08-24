@@ -3,34 +3,47 @@
 
 """
 Centralized use of plumbum package:
-Use shell commands in a pythonic way.
+http://plumbum.readthedocs.org/en/latest/index.html#
+- use shell commands in a more pythonic way -
 """
-
-################################
-# Normal bash commands
-from plumbum.cmd import touch, mkdir, rm
-#from plumbum import local as shell_commands
 
 class BashCommands(object):
     """ Wrapper for execution of commands in a bash shell """
 
+    _shell = None
+
     def __init__(self):
+        # Load my personal list of commands based on my bash environment
+        from plumbum import local as myshell
+        self._shell = myshell
+
         super(BashCommands, self).__init__()
-        print("Commands init")
+        print("Internal shell initialized")
+
+    def execute_command(self, command, parameters=[]):
+        """ Pattern in plumbum library for executing a shell command """
+        self._shell[command](parameters)
+
+    def execute_command_advanced(self, command, parameters=[], retcodes=()):
+        """ Pattern in plumbum library for executing a shell command """
+        (status, stdin, stdout) = self._shell[command][parameters].run(retcode=retcodes)
+        return status
 
     ###################
     # BASE COMMANDS
     def create_empty(self, path, directory=False):
 
         if not directory:
-            touch(path)
+            com = "touch"
         else:
-            mkdir(path)
+            com = "mkdir"
         # Debug
+        self.execute_command(com, [path])
         print("Created", path)
 
     def remove(self, path, recursive=False, force=False):
         # Build parameters and arguments for this command
+        com = "rm"
         args = []
         if force:
             args.append('-f')
@@ -38,7 +51,7 @@ class BashCommands(object):
             args.append('-r')
         args.append(path)
         # Execute
-        rm(args)
+        self.execute_command(com, args)
         # Debug
         print("Removed", path)
 

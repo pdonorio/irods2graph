@@ -7,6 +7,7 @@ Use 'click' library to create an interface for shell execution
 
 # Make this script a powerful command line program
 import click
+from libs.bash import BashCommands as basher
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
 from libs.extra import fill_with_randomness
@@ -41,7 +42,8 @@ def cli(ctx, debug, verbose):
 @click.pass_context
 def popolae(ctx, size):
     click.echo('COMMAND:\tFilling irods.')
-    fill_with_randomness(ctx.obj['icom'], size)
+    com = basher()
+    fill_with_randomness(com, ctx.obj['icom'], size)
 
 cli.add_command(popolae)
 

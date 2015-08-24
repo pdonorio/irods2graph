@@ -8,15 +8,16 @@ Moving data from iRODS server to a Neo4j graphdb.
 // DONE:
     * wrote the base for irods commands class
 // DOING:
+    * Irods extends Commands which loads plumbus for shell
     * writing classes and methods for a real package
 // TOFIX:
     * python3 irods client? or stick with plumbus?
 // TODO:
     * install py2neo and write a class
     * docker section/dir for images and yaml files
+    * add logs class
 // BRAINSTORMING:
-    * Commands extends plumbus?
-    * Irods extends Commands?
+    * Prototyping?
 
 """
 

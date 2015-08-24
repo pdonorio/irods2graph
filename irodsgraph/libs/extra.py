@@ -6,8 +6,6 @@ Other methods in my package
 """
 
 import string, random
-from libs.bash import BashCommands as basher
-com = basher()
 
 ################################
 ## UTILITIES
@@ -22,19 +20,24 @@ def string_generator(size=32, \
 ################################
 ## POPOLAE
 # Create mock files and save them into irods
-def fill_with_randomness(icom, \
-    elements=10, prefix='abc_', \
-    tmp_dir='itmp', irods_dir='mine'):
+def fill_with_randomness(com, icom, \
+    elements=10, prefix='abc_', tmp_dir='itmp', irods_dir='irods2graph'):
 
     # Clean host data
     com.remove_directory(tmp_dir, ignore=True)
     com.create_directory(tmp_dir)
 
-    print("*** TO FIX ***")
-    return
-
+####################################
+# WORKING ON
     # Clean existing on iRODS
-    (status, stdin, stdout) = ICOM["list"][irods_dir].run(retcode = (0,4))
+    status = icom.list(irods_dir)
+    #(status, stdin, stdout) = ICOM["list"][irods_dir].run(retcode = (0,4))
+    print("*** TO FIX ***\t status:", status)
+
+    return
+# WORKING ON
+####################################
+
     if status == 0:
         print("Cleaning everything on server")
         ICOM["remove"]["-r", irods_dir]()
