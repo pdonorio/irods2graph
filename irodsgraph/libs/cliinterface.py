@@ -9,11 +9,15 @@ Use 'click' library to create an interface for shell execution
 import click
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
+from libs.extra import fill_with_randomness
 
+############################
 # Click commands grouping
 @click.group()
+@click.option('--debug/--no-debug', default=False)
 @click.option('-v', '--verbose', count=True)
-def cli(verbose):
+@click.pass_context
+def cli(ctx, debug, verbose):
     click.echo('Script init. Verbosity: %s' % verbose)
 
     # Do we have iRODS?
@@ -22,23 +26,33 @@ def cli(verbose):
     configurer = MyConfig(icom)
     configurer.check()
 
+    # Save context
+    ctx.obj['VERBOSE'] = verbose
+    ctx.obj['DEBUG'] = debug
+    ctx.obj['icom'] = icom
+    ctx.obj['conf'] = configurer
+    #print(dir(ctx))
+
+############################
 # Option 1. Filling data inside irods
 @click.command()
-@click.option('--elements', default=10, type=int, \
+@click.option('--size', default=10, type=int, \
     help='number of elements to find and convert')
-def popolae(elements):
+@click.pass_context
+def popolae(ctx, size):
     click.echo('COMMAND:\tFilling irods.')
-
-# // TODO:
-    click.echo('***FIXME***')
-    #random_files_into_irods(elements)
+    fill_with_randomness(ctx.obj['icom'], size)
 
 cli.add_command(popolae)
 
+############################
 # Option 2. Converting data from irods to a graph
 @click.command()
 @click.option('--elements', default=10, type=int, \
     help='number of elements to find and convert')
+
+# // TO FIX: CONTEXT?
+
 def convert(elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
     #fill_graph_from_irods(elements)

@@ -5,10 +5,10 @@
 
 Moving data from iRODS server to a Neo4j graphdb.
 
+// DONE:
+    * wrote the base for irods commands class
 // DOING:
-    * write a irods commands class
-    be sure the class context works with click library
-    http://click.pocoo.org/5/commands/#nested-handling-and-contexts
+    * writing classes and methods for a real package
 // TOFIX:
     * python3 irods client? or stick with plumbus?
 // TODO:
@@ -21,4 +21,4 @@ import libs.cliinterface as shell_app
 
 # MAIN
 if __name__ == '__main__':
-    shell_app.cli()
+    shell_app.cli(obj={})

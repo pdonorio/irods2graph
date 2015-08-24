@@ -2,20 +2,31 @@
 # -*- coding: utf-8 -*-
 
 """
-TO BE FIXED - THIS FILE SHOULD BE REMOVED
+Other methods in my package
 """
 
-################################
-## POPOLAE
+import string, random
 
-# Some chaos to order
+################################
+## UTILITIES
+
 def string_generator(size=32, \
     chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
     """ Create a random string of fixed size """
+
+    # Some chaos to order
     return ''.join(random.choice(chars) for _ in range(size))
 
-def random_files_into_irods(elements, prefix='abc_', \
+################################
+## POPOLAE
+# Create mock files and save them into irods
+def fill_with_randomness(icom, \
+    elements=10, prefix='abc_', \
     tmp_dir='itmp', irods_dir='mine'):
+
+    print("Test", icom, elements)
+    print("*** TO FIX ***")
+    return
 
     # Clean host
     rm("-rf", tmp_dir)
@@ -45,8 +56,8 @@ def random_files_into_irods(elements, prefix='abc_', \
     # Check data
     print(ICOM["search"](prefix + '%'))
 
-# ################################
-# ## READ LOOP
+################################
+## From iRODS to neo4j graph
 
 def fill_graph_from_irods(elements):
     print("test")
