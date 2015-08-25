@@ -59,7 +59,7 @@ def fill_with_randomness(com, icom, \
         # imeta set -d FILEPATH a b
         # imeta ls -d FILEPATH
         # imeta ls -d FILEPATH a
-        icom.meta_list(irods_file)
+        print(icom.meta_list(irods_file))
 
         return False
 

@@ -119,19 +119,33 @@ class ICommands(BashCommands):
     ###################
     # METADATA
 
-    def meta_command(self, path, attributes=[], values=[]):
+    def meta_command(self, path, action='list', attributes=[], values=[]):
         com = "imeta"
+        args = []
+
+        # Base commands for imeta:
+        # ls, set, rm
+        # - see https://docs.irods.org/master/icommands/metadata/#imeta
+        if action == "list":
+            args.append("ls")
+        elif action == "write":
+            args.append("set")
+
+        # File to list metadata?
+        args.append("-d") # if working with data object metadata
+        args.append(path)
 
         if len(attributes) > 0 and \
             (len(values) == 0 or len(attributes) == len(values)):
-
             print(attributes)
         else:
             print("No valid attributes specified")
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+
+        # Execute
+        return self.execute_command(com, args)
 
     def meta_list(self, path, attributes=[]):
-        return self.meta_command(path,attributes)
+        return self.meta_command(path, 'list', attributes)
 
 ################################
 ## CONNECT TO IRODS ?

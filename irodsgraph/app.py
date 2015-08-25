@@ -13,6 +13,8 @@ Moving data from iRODS server to a Neo4j graphdb.
     * metadata handling inside irods class
 // TOFIX:
     * python3 irods client? or stick with plumbus?
+    * switch script to ipython:
+        http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
 // TODO:
     * install py2neo and write a class
     * docker section/dir for images and yaml files
