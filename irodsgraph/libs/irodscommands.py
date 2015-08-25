@@ -93,6 +93,16 @@ class ICommands(BashCommands):
         # Debug
         print("Removed irods object:\t", path)
 
+    def save(self, path, destination=None):
+        com = 'iput'
+        args = [path]
+        if destination is not None:
+            args.append(destination)
+        # Execute
+        self.execute_command(com, args)
+        # Debug
+        print("Saved irods object from", path)
+
     def list(self, path, retcodes=(0,4)):
         com = "ils"
         status = self.execute_command_advanced(com, path, retcodes=retcodes)

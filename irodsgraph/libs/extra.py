@@ -37,29 +37,33 @@ def fill_with_randomness(com, icom, \
     icom.create_directory(irods_dir)
     print("Created directory")
 
-####################################
-# WORKING ON
-    print("*** TO FIX ***")
-    return False
-# WORKING ON
-####################################
 
-    # Create random files
+    # Create and save
     for i in range(1,elements):
+        # Create two strings
         rand1 = string_generator()
         rand2 = string_generator()
+        # Write a random file
         filename = prefix + rand1 + ".txt"
         hostfile = tmp_dir + "/" + filename
         with open(hostfile,'w') as f:
             f.write(rand2)
-
         # Put into irods
-        ICOM["save"][hostfile, irods_dir + "/" + filename]()
+        #ICOM["save"][hostfile, irods_dir + "/" + filename]()
+        icom.save(hostfile, irods_dir + "/" + filename)
 
     print("Generated", elements, "elements")
 
+####################################
+# WORKING ON
+    return
+
     # Check data
     print(ICOM["search"](prefix + '%'))
+    print("*** TO FIX ***")
+    return False
+# WORKING ON
+####################################
 
 ################################
 ## From iRODS to neo4j graph
