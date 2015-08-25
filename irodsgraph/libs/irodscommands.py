@@ -58,8 +58,25 @@ class ICommands(BashCommands):
 
     ###################
     # ICOMs
-    def create_empty(self, path, directory=False):
+
+    def do_nothing(self):
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+
+    def create_empty(self, path, directory=False):
+        if directory:
+            com = "imkdir"
+        else:
+            # // TODO:
+            # super call of create_tempy with file (touch)
+            # icp / iput of that file
+            # super call of remove for the original temporary file
+            print("NOT IMPLEMENTED for a file:", \
+                inspect.currentframe().f_code.co_name)
+            return
+
+        # Debug
+        self.execute_command(com, [path])
+        print("Created", path)
         # com = ""
         # self.execute_command(com, [path])
 
@@ -75,9 +92,6 @@ class ICommands(BashCommands):
         self.execute_command(com, args)
         # Debug
         print("Removed irods object:\t", path)
-
-    def create_directory(self, directory):
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
 
     def list(self, path, retcodes=(0,4)):
         com = "ils"
