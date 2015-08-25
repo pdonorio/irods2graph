@@ -22,7 +22,7 @@ class BashCommands(object):
 
     def execute_command(self, command, parameters=[]):
         """ Pattern in plumbum library for executing a shell command """
-        self._shell[command](parameters)
+        return self._shell[command](parameters)
 
     def execute_command_advanced(self, command, parameters=[], retcodes=()):
         """ Pattern in plumbum library for executing a shell command """

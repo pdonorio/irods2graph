@@ -9,14 +9,6 @@ import os, inspect
 from libs.bash import BashCommands
 from libs import IRODS_ENV
 
-# # All my irods command
-# ICOM = {}
-# ICOM["list"] = shell_commands["ils"]
-# ICOM["search"] = shell_commands["ilocate"]
-# ICOM["create_dir"] = shell_commands["imkdir"]
-# ICOM["save"] = shell_commands["iput"]
-# ICOM["remove"] = shell_commands["irm"]
-
 class ICommands(BashCommands):
     """irods icommands in a class"""
 
@@ -103,10 +95,24 @@ class ICommands(BashCommands):
         # Debug
         print("Saved irods object from", path)
 
-    def list(self, path, retcodes=(0,4)):
+    def check(self, path, retcodes=(0,4)):
         com = "ils"
         status = self.execute_command_advanced(com, path, retcodes=retcodes)
         return status
+
+    def list(self, path, retcodes=(0,4)):
+        com = "ils"
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+        # status = self.execute_command_advanced(com, path, retcodes=retcodes)
+        # return status
+
+    def search(self, path, like=True):
+        com = "ilocate"
+        if like:
+            path += '%'
+        print("iRODS search for", path)
+        # Execute
+        return self.execute_command(com, path)
 
 ################################
 ## CONNECT TO IRODS ?

@@ -28,7 +28,7 @@ def fill_with_randomness(com, icom, \
     com.create_directory(tmp_dir)
 
     # Clean if existing on iRODS
-    status = icom.list(irods_dir)
+    status = icom.check(irods_dir)
 
     if status == 0:
         print("Cleaning on server")
@@ -49,21 +49,21 @@ def fill_with_randomness(com, icom, \
         with open(hostfile,'w') as f:
             f.write(rand2)
         # Put into irods
-        #ICOM["save"][hostfile, irods_dir + "/" + filename]()
         icom.save(hostfile, irods_dir + "/" + filename)
+
+####################################
+# WORKING ON
+
+        # Add random meta via imeta?
+
+# WORKING ON
+####################################
 
     print("Generated", elements, "elements")
 
-####################################
-# WORKING ON
-    return
-
     # Check data
-    print(ICOM["search"](prefix + '%'))
-    print("*** TO FIX ***")
-    return False
-# WORKING ON
-####################################
+    print(icom.search(prefix))
+
 
 ################################
 ## From iRODS to neo4j graph
