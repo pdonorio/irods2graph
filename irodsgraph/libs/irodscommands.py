@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-My irods client class wrapper
+My irods client class wrapper.
+
+Since python3 is not ready for API or client,
+i base this wrapper on plumbum package handling shell commands.
 """
 
 import os, inspect
@@ -46,7 +49,6 @@ class ICommands(BashCommands):
 
     def get_init(self):
         return self._init_data
-
 
     ###################
     # ICOMs
@@ -113,6 +115,23 @@ class ICommands(BashCommands):
         print("iRODS search for", path)
         # Execute
         return self.execute_command(com, path)
+
+    ###################
+    # METADATA
+
+    def meta_command(self, path, attributes=[], values=[]):
+        com = "imeta"
+
+        if len(attributes) > 0 and \
+            (len(values) == 0 or len(attributes) == len(values)):
+
+            print(attributes)
+        else:
+            print("No valid attributes specified")
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+
+    def meta_list(self, path, attributes=[]):
+        return self.meta_command(path,attributes)
 
 ################################
 ## CONNECT TO IRODS ?

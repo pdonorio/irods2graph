@@ -10,6 +10,7 @@ Moving data from iRODS server to a Neo4j graphdb.
     * Irods extends Commands which loads plumbus for shell
 // DOING:
     * writing classes and methods for a real package
+    * metadata handling inside irods class
 // TOFIX:
     * python3 irods client? or stick with plumbus?
 // TODO:

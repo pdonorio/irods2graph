@@ -49,12 +49,19 @@ def fill_with_randomness(com, icom, \
         with open(hostfile,'w') as f:
             f.write(rand2)
         # Put into irods
-        icom.save(hostfile, irods_dir + "/" + filename)
+        irods_file = irods_dir + "/" + filename
+        icom.save(hostfile, irods_file)
 
 ####################################
 # WORKING ON
 
         # Add random meta via imeta?
+        # imeta set -d FILEPATH a b
+        # imeta ls -d FILEPATH
+        # imeta ls -d FILEPATH a
+        icom.meta_list(irods_file)
+
+        return False
 
 # WORKING ON
 ####################################
