@@ -41,34 +41,27 @@ def fill_with_randomness(com, icom, \
     # Create and save
     for i in range(1,elements):
         # Create two strings
-        rand1 = string_generator()
-        rand2 = string_generator()
+        r1 = string_generator()
+        r2 = string_generator()
+        r3 = string_generator()
+
         # Write a random file
-        filename = prefix + rand1 + ".txt"
+        filename = prefix + r1 + ".txt"
         hostfile = tmp_dir + "/" + filename
         with open(hostfile,'w') as f:
-            f.write(rand2)
+            f.write(r2)
         # Put into irods
         irods_file = irods_dir + "/" + filename
         icom.save(hostfile, irods_file)
 
-####################################
-# WORKING ON
-
-        # Add random meta via imeta?
-        # imeta set -d FILEPATH a b
-        # imeta ls -d FILEPATH
-        # imeta ls -d FILEPATH a
-        print(icom.meta_list(irods_file))
-
-        return False
-
-# WORKING ON
-####################################
+        # Add random meta via imeta
+        icom.meta_write(irods_file, [r3], [r2])
+        # Debug
+        #print(icom.meta_list(irods_file))
 
     print("Generated", elements, "elements")
 
-    # Check data
+    # DEBUG: Check data
     print(icom.search(prefix))
 
 

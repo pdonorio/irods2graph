@@ -95,7 +95,7 @@ class ICommands(BashCommands):
         # Execute
         self.execute_command(com, args)
         # Debug
-        print("Saved irods object from", path)
+        #print("Saved irods object from", path)
 
     def check(self, path, retcodes=(0,4)):
         com = "ils"
@@ -130,6 +130,11 @@ class ICommands(BashCommands):
             args.append("ls")
         elif action == "write":
             args.append("set")
+        elif action != "":
+            raise KeyError("Unknown action for metadata: " + action)
+        # imeta set -d FILEPATH a b
+        # imeta ls -d FILEPATH
+        # imeta ls -d FILEPATH a
 
         # File to list metadata?
         args.append("-d") # if working with data object metadata
@@ -137,15 +142,23 @@ class ICommands(BashCommands):
 
         if len(attributes) > 0 and \
             (len(values) == 0 or len(attributes) == len(values)):
-            print(attributes)
+            for key in range(0,len(attributes)):
+                args.append(attributes[key])
+                try:
+                    args.append(values[key])
+                except:
+                    pass
         else:
-            print("No valid attributes specified")
+            print("No valid attributes specified for action", action)
 
         # Execute
         return self.execute_command(com, args)
 
     def meta_list(self, path, attributes=[]):
         return self.meta_command(path, 'list', attributes)
+
+    def meta_write(self, path, attributes, values):
+        return self.meta_command(path, 'write', attributes, values)
 
 ################################
 ## CONNECT TO IRODS ?
