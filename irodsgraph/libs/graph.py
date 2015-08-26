@@ -15,8 +15,10 @@ port = '7474'
 graph_link = "http://neo4j:neo4j@" + host + ":" + port + "/db/data"
 remote_graph = Graph(graph_link)
 
-# Test connection
-alice = Node("Person", name="Alice")
-bob = Node("Person", name="Bob")
-alice_knows_bob = Relationship(alice, "KNOWS", bob)
-remote_graph.create(alice_knows_bob)
+def graph_test():
+
+    # Test connection
+    alice = Node("Person", name="Alice")
+    bob = Node("Person", name="Bob")
+    alice_knows_bob = Relationship(alice, "KNOWS", bob)
+    remote_graph.create(alice_knows_bob)

@@ -10,6 +10,7 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
+from libs.graph import graph_test
 from libs.extra import fill_irods_random, fill_graph_from_irods
 
 ############################
@@ -26,6 +27,8 @@ def cli(ctx, debug, verbose):
     # Make sure we have an ini file for futures callback
     configurer = MyConfig(icom)
     configurer.check()
+    # Graph
+    graph_test()
 
     # Save context
     ctx.obj['VERBOSE'] = verbose
