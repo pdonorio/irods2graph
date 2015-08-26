@@ -70,14 +70,11 @@ def fill_irods_random(com, icom, \
 
 def fill_graph_from_irods(icom, elements=20, prefix=DEFAULT_PREFIX):
 
-    metas = {}
     data_objs = icom.search(prefix)
 
     for ifile in data_objs:
-        meta = icom.meta_list(ifile)
-        print(meta)
-    #     meta = !imeta ls -d {ifile}
-    #     metas[ifile] = meta[1]
-    #     #print("Element " + ifile + " with meta " + meta[1])
+        ifile_metas = icom.meta_list(ifile)
+        print("File:\t", ifile, "\nMetadata:\t", ifile_metas)
 
-    # print(metas)
+        # DEBUG - remove me!!!
+        break

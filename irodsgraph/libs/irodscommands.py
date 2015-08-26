@@ -159,9 +159,15 @@ class ICommands(BashCommands):
 
     def meta_list(self, path, attributes=[]):
         out = self.meta_command(path, 'list', attributes)
-        # Parse out
 
-        return out
+        # Parse out
+        import re
+        metas = {}
+        m1 = re.search(r"attribute:\s+(.+)", out)
+        m2 = re.search(r"value:\s+(.+)", out)
+        if m1 and m2:
+            metas[m1.group(1)] = m2.group(1)
+        return metas
 
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)
