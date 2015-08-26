@@ -9,18 +9,20 @@ Moving data from iRODS server to a Neo4j graphdb.
     * wrote the base for irods commands class
     * Irods extends Commands which loads plumbus for shell
     * metadata handling inside irods class
+    * install py2neo
 // DOING:
-    * writing classes and methods for a real package
-// TOFIX:
+    * docker section/dir for images
+    * write py2neo class
+// TODO:
+    * docker composer
+    * add logs class
+    * rancher yaml for multi host configuration
+// BRAINSTORMING:
+    * Prototyping?
+// TOFIX in the near future:
     * python3 irods client? or stick with plumbus?
     * switch script to ipython:
         http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
-// TODO:
-    * install py2neo and write a class
-    * docker section/dir for images and yaml files
-    * add logs class
-// BRAINSTORMING:
-    * Prototyping?
 
 """
 
