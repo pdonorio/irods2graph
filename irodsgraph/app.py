@@ -13,7 +13,8 @@ Moving data from iRODS server to a Neo4j graphdb.
     * docker section/dir for images
     * docker composer
 // DOING:
-    * write py2neo class
+    * write graphdb class
+    * OGM neomodel: http://neomodel.readthedocs.org/en/latest/
 // TODO:
     * iclient bootstrap script (simulate iinit via bash/ipython?)
     * add logs class
