@@ -1,0 +1,53 @@
+
+############################
+## IRODS server
+irods:
+  image: irods/icat:4.0.3
+  hostname: rodserver
+  command:
+  - mytest
+  ports:
+  - 1247/tcp
+  links:
+  - graphdb:neo
+  tty: true
+
+############################
+## IRODS clients (+ python?)
+icom:
+  image: pdonorio/neoicommands
+  #image: irods/icommands:4.0.3
+  # labels:
+  #   io.rancher.scheduler.global: 'true'
+  hostname: iclient
+  links:
+  - irods:rodserver
+  - graphdb:neo
+  stdin_open: true
+  volumes:
+  - ../irodsgraph:/data
+  working_dir: /data
+  restart: on-failure:1
+  tty: true
+
+############################
+## neo4j
+graphdb:
+  image: tpires/neo4j
+  volumes:
+  - ./neo4j_server.conf:/etc/neo4j/neo4j-server.properties:rw
+  # labels:
+  #   io.rancher.scheduler.affinity:host_label_ne: anet=pub
+  #   io.rancher.scheduler.affinity:host_label: anet=pub
+  hostname: neo
+  expose:
+  - 7474
+  ports:
+  - 7777:7474/tcp
+  restart: 'no'
+  environment:
+    NEO4J_AUTH: none # No passw otherwise the web server is not accessible
+  tty: true
+  stdin_open: true
+  cap_add:
+  - SYS_RESOURCE
