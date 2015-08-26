@@ -114,7 +114,10 @@ class ICommands(BashCommands):
             path += '%'
         print("iRODS search for", path)
         # Execute
-        return self.execute_command(com, path)
+        out = self.execute_command(com, path)
+        if out != None:
+            return out.strip().split('\n')
+        return out
 
     ###################
     # METADATA
@@ -140,22 +143,25 @@ class ICommands(BashCommands):
         args.append("-d") # if working with data object metadata
         args.append(path)
 
-        if len(attributes) > 0 and \
-            (len(values) == 0 or len(attributes) == len(values)):
-            for key in range(0,len(attributes)):
-                args.append(attributes[key])
-                try:
-                    args.append(values[key])
-                except:
-                    pass
-        else:
-            print("No valid attributes specified for action", action)
+        if len(attributes) > 0:
+            if len(values) == 0 or len(attributes) == len(values):
+                for key in range(0,len(attributes)):
+                    args.append(attributes[key])
+                    try:
+                        args.append(values[key])
+                    except:
+                        pass
+            else:
+                print("No valid attributes specified for action", action)
 
         # Execute
         return self.execute_command(com, args)
 
     def meta_list(self, path, attributes=[]):
-        return self.meta_command(path, 'list', attributes)
+        out = self.meta_command(path, 'list', attributes)
+        # Parse out
+
+        return out
 
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)

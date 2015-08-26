@@ -10,7 +10,7 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
-from libs.extra import fill_with_randomness
+from libs.extra import fill_irods_random, fill_graph_from_irods
 
 ############################
 # Click commands grouping
@@ -42,8 +42,8 @@ def cli(ctx, debug, verbose):
 @click.pass_context
 def popolae(ctx, size):
     click.echo('COMMAND:\tFilling irods.')
-    com = basher()
-    fill_with_randomness(com, ctx.obj['icom'], size)
+    com = basher()  # only needed for this option
+    fill_irods_random(com, ctx.obj['icom'], size)
 
 cli.add_command(popolae)
 
@@ -52,10 +52,9 @@ cli.add_command(popolae)
 @click.command()
 @click.option('--elements', default=10, type=int, \
     help='number of elements to find and convert')
-
-# // TO FIX: CONTEXT?
-
-def convert(elements):
+@click.pass_context
+def convert(ctx, elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
-    #fill_graph_from_irods(elements)
+    fill_graph_from_irods(ctx.obj['icom'], elements)
+
 cli.add_command(convert)

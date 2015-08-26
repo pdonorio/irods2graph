@@ -6,6 +6,7 @@ Other methods in my package
 """
 
 import string, random
+DEFAULT_PREFIX = 'abc_'
 
 ################################
 ## UTILITIES
@@ -20,8 +21,8 @@ def string_generator(size=32, \
 ################################
 ## POPOLAE
 # Create mock files and save them into irods
-def fill_with_randomness(com, icom, \
-    elements=10, prefix='abc_', tmp_dir='itmp', irods_dir='irods2graph'):
+def fill_irods_random(com, icom, \
+    elements=10, prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
 
     # Clean host data
     com.remove_directory(tmp_dir, ignore=True)
@@ -64,21 +65,19 @@ def fill_with_randomness(com, icom, \
     # DEBUG: Check data
     print(icom.search(prefix))
 
-
 ################################
 ## From iRODS to neo4j graph
 
-def fill_graph_from_irods(elements):
-    print("test")
+def fill_graph_from_irods(icom, elements=20, prefix=DEFAULT_PREFIX):
 
-# # Get list
-# objlist = !ils [0-9a-z]*.txt
-# metas = {}
+    metas = {}
+    data_objs = icom.search(prefix)
 
-# for obj in objlist:
-#     ifile = os.path.basename(obj.strip())
-#     meta = !imeta ls -d {ifile}
-#     metas[ifile] = meta[1]
-#     #print("Element " + ifile + " with meta " + meta[1])
+    for ifile in data_objs:
+        meta = icom.meta_list(ifile)
+        print(meta)
+    #     meta = !imeta ls -d {ifile}
+    #     metas[ifile] = meta[1]
+    #     #print("Element " + ifile + " with meta " + meta[1])
 
-# print(metas)
+    # print(metas)
