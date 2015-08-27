@@ -1,0 +1,9 @@
+#!/bin/bash
+
+bin="docker-compose"
+
+$bin stop
+$bin rm -f
+$bin up -d
+$bin ps
+
