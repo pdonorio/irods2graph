@@ -27,7 +27,9 @@ def cli(ctx, debug, verbose):
     # Make sure we have an ini file for futures callback
     configurer = MyConfig(icom)
     configurer.check()
+
     # Graph
+    click.echo('DEBUG GRAPH USAGE')
     graph_test()
 
     # Save context

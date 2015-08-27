@@ -39,6 +39,8 @@ class ICommands(BashCommands):
         # Recover irods data
         data = {}
         for element in [line.strip() for line in open(self.irodsenv, 'r')]:
+            if element == '':
+                continue
             key, value = element.split(" ")
             data[key] = value
         if data.__len__() < 2:
