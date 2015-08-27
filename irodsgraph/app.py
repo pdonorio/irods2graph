@@ -6,17 +6,13 @@
 Moving data from iRODS server to a Neo4j graphdb.
 
 // DONE:
-    * wrote the base for irods commands class
-    * Irods extends Commands which loads plumbus for shell
-    * metadata handling inside irods class
-    * install py2neo
-    * docker section/dir for images
-    * docker composer
+    * packaging, libraries and class style
+    * docker section
+    * iclient bootstrap script
 // DOING:
-    * write graphdb class
-    * OGM neomodel: http://neomodel.readthedocs.org/en/latest/
+    * write graphdb class and OGM models
 // TODO:
-    * iclient bootstrap script (simulate iinit via bash/ipython?)
+    * entities list: pid, checksum, zone, path, location, replica
     * add logs class
     * rancher yaml for multi host configuration
 // BRAINSTORMING:

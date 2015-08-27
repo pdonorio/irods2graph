@@ -10,7 +10,7 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
-from libs.graph import graph_test
+from libs.ogmmodels import graph
 from libs.extra import fill_irods_random, fill_graph_from_irods
 
 ############################
@@ -29,8 +29,9 @@ def cli(ctx, debug, verbose):
     configurer.check()
 
     # Graph
+    graph.save_data([])
     click.echo('DEBUG GRAPH USAGE')
-    graph_test()
+    exit()
 
     # Save context
     ctx.obj['VERBOSE'] = verbose

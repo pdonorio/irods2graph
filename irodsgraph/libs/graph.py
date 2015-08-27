@@ -8,73 +8,71 @@ Class for neo4j database operations
 import os
 
 ###########################
-protocol = 'http'
-host = 'neo'
-port = '7474'
-# username and pw default
-user = 'neo4j'
-pw = user
-
-# Connection description
-graph_link = protocol + "://" + user + ":" + pw + "@" \
-    + host + ":" + port + "/db/data"
-# Enable OGM connection
-os.environ["NEO4J_REST_URL"] = graph_link
-
-###########################
-## OGM
-from neomodel import (StructuredNode, StringProperty, IntegerProperty,
-    RelationshipTo, RelationshipFrom)
+## A graph database with class as models
+from libs import GRAPHDB_LINK
 from neomodel import db
 
-# // TODO: entities list
-#           pid, checksum, zone, path, location, replica
+class GraphDB(object):
+    """ Wrapper for our neo4j-db client connection"""
 
-class Country(StructuredNode):
-    code = StringProperty(unique_index=True, required=True)
+    #_link = GRAPHDB_LINK
 
-    # traverse incoming IS_FROM relation, inflate to Person objects
-    inhabitant = RelationshipFrom('Person', 'IS_FROM')
+    def __init__(self):
+        super(GraphDB, self).__init__()
+        self.check_connection()
+        self.load_models()
+
+    def check_connection(self, debug=True):
+        """
+        Connection is already enabled via environment inside package _init__
+        This is the only way because we have a global connection for other
+        python classes inside other files
+        """
+        # Enable OGM connection
+        try:
+            os.environ["NEO4J_REST_URL"]
+        except:
+            raise EnvironmentError("Missing REST url configuration for graph")
+        print("Graph database is connected")
+
+        if debug:
+            # Set debug for cipher queries
+            os.environ["NEOMODEL_CYPHER_DEBUG"] = "1"
+
+    def load_models(self, models=[]):
+        for model in models:
+            print(model)
+            # Get the name
+            # Save attribute inside class with the same name?
+
+    def save_data(self, data):
+        """ Save data inside graph db with batch process """
+        #http://neomodel.readthedocs.org/en/latest/batch.html
+        pass
 
 
-class Person(StructuredNode):
-    name = StringProperty(unique_index=True)
-    age = IntegerProperty(index=True, default=0)
+#     #######################
+#     ## CIPHER QUERY
+#     remove_all = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r"
+#     # for standalone queries
+#     results, meta = db.cypher_query(remove_all)
+#     #print(results, meta)
 
-    # traverse outgoing IS_FROM relations, inflate to Country objects
-    country = RelationshipTo(Country, 'IS_FROM')
+#     #######################
+#     jim = Person(name='Test', age=3)   #.save()
+#     # jim.delete()
+#     # jim.refresh() # reload properties from neo
+#     #jim.age = 45
+#     jim.save() # validation happens here
+#     germany = Country(code='DE').save()
+#     jim.country.connect(germany)
 
-#http://neomodel.readthedocs.org/en/latest/batch.html
-
-def graph_test():
-
-    #######################
-    ## CIPHER QUERY
-
-    # Set debug for cipher queries
-    os.environ["NEOMODEL_CYPHER_DEBUG"] = "1"
-    # http://neo4j.com/docs/stable/query-delete.html#delete-delete-all-nodes-and-relationships
-    remove_all = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r"
-    # for standalone queries
-    results, meta = db.cypher_query(remove_all)
-    #print(results, meta)
-
-    #######################
-    jim = Person(name='Test', age=3)   #.save()
-    # jim.delete()
-    # jim.refresh() # reload properties from neo
-    #jim.age = 45
-    jim.save() # validation happens here
-    germany = Country(code='DE').save()
-    jim.country.connect(germany)
-
-    exit()
+#     exit()
 
 #############################################
 ## STANDARD python library
 # from py2neo import Graph, Node, Relationship
 # remote_graph = Graph(graph_link)
-
 # def graph_test():
 #     # Test connection
 #     alice = Node("Person", name="Alice")
