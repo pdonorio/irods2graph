@@ -80,6 +80,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         ifile_metas = icom.meta_list(ifile)
         print("File:\t", ifile, "\nMetadata:\t", ifile_metas)
 
+        dataobj = graph.DataObject(path="a",filename="b",location="c").save()
+
         # Graph
         #graph.save_data([])
         # Save nodes and relations

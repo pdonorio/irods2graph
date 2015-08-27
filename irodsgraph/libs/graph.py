@@ -20,6 +20,7 @@ class GraphDB(object):
     def __init__(self):
         super(GraphDB, self).__init__()
         self.check_connection()
+        self.clean_whole_database()
         self.load_models()
 
     def check_connection(self, debug=True):
@@ -60,24 +61,13 @@ class GraphDB(object):
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         pass
 
+    def cipher_query(self, query):
+        """ Execute normal neo4j queries """
+        results, meta = db.cypher_query(query)
+        return results
 
-#     #######################
-#     ## CIPHER QUERY
-#     remove_all = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r"
-#     # for standalone queries
-#     results, meta = db.cypher_query(remove_all)
-#     #print(results, meta)
-
-#     #######################
-#     jim = Person(name='Test', age=3)   #.save()
-#     # jim.delete()
-#     # jim.refresh() # reload properties from neo
-#     #jim.age = 45
-#     jim.save() # validation happens here
-#     germany = Country(code='DE').save()
-#     jim.country.connect(germany)
-
-#     exit()
+    def clean_whole_database(self):
+        return self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
 
 #############################################
 ## STANDARD python library

@@ -29,7 +29,7 @@ class Zone(GraphNode):
          2356 rods#tempZone  0:00:00  ips  172.17.0.9
     """
     name = StringProperty(unique_index=True)
-    country = RelationshipFrom('DataObject', 'STORED_IN')
+    hosting = RelationshipFrom('DataObject', 'STORED_IN')
 
 class DataObject(GraphNode):
     """
@@ -41,6 +41,17 @@ class DataObject(GraphNode):
     location = StringProperty(index=True)
     #age = IntegerProperty(index=True, default=0)
     located = RelationshipTo(Zone, 'STORED_IN')
+    hosting = RelationshipFrom('MetaData', 'LABELING')
+
+class MetaData(GraphNode):
+    """
+    iclient:/data# ips -a
+    Server: localhost
+         2356 rods#tempZone  0:00:00  ips  172.17.0.9
+    """
+    key = StringProperty(unique_index=True)
+    value = StringProperty(index=True)
+    associated = RelationshipTo(DataObject, 'LABELING')
 
 ################################
 # Saving models inside the graph class
