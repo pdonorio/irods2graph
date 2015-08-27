@@ -116,7 +116,13 @@ class ICommands(BashCommands):
             path += '%'
         print("iRODS search for", path)
         # Execute
-        out = self.execute_command(com, path)
+        try:
+            out = self.execute_command(com, path)
+        except Exception:
+            print("No data found. " + \
+                "You may try 'popolae' command first.")
+# // TO FIX
+            exit(1)
         if out != None:
             return out.strip().split('\n')
         return out

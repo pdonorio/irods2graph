@@ -45,13 +45,15 @@ class GraphDB(object):
             # Save attribute inside class with the same name
             setattr(self, model.__name__, model)
 
-    def save_data(self, data):
-        """ Save data inside graph db with batch process """
-
+###############################
         # Check if load models worked
         model = 'Zone'
         if model in dir(self):
             print(getattr(self, model))
+###############################
+
+    def save_data(self, data):
+        """ Save data inside graph db with batch process """
 
         #http://neomodel.readthedocs.org/en/latest/batch.html
         import inspect

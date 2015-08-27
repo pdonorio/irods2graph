@@ -28,11 +28,6 @@ def cli(ctx, debug, verbose):
     configurer = MyConfig(icom)
     configurer.check()
 
-    # Graph
-    graph.save_data([])
-    click.echo('DEBUG GRAPH USAGE')
-    exit()
-
     # Save context
     ctx.obj['VERBOSE'] = verbose
     ctx.obj['DEBUG'] = debug
@@ -61,6 +56,6 @@ cli.add_command(popolae)
 @click.pass_context
 def convert(ctx, elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
-    fill_graph_from_irods(ctx.obj['icom'], elements)
+    fill_graph_from_irods(ctx.obj['icom'], graph, elements)
 
 cli.add_command(convert)

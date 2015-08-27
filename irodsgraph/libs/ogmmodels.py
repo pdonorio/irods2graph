@@ -5,8 +5,9 @@
 OGM: Object-Graph mapping;
 Writing models for current application to describe my graph database.
 
-// b2safe entities list:
+// B2SAFE entities list:
     pid, checksum, replica
+    metadata?
 """
 
 from neomodel import StructuredNode, \
@@ -18,7 +19,15 @@ class GraphNode(StructuredNode):
     def getName(self):
         return self.__class__.__name__
 
+# /tempZone/home/rods/irods2graph/abc_XdcRNnNc36YiV6iLlArDYsL7MUcEheAs.txt
+# /ZONE/PATH_LOCATION_COLLECTION/NAME
+
 class Zone(GraphNode):
+    """
+    iclient:/data# ips -a
+    Server: localhost
+         2356 rods#tempZone  0:00:00  ips  172.17.0.9
+    """
     name = StringProperty(unique_index=True)
     country = RelationshipFrom('DataObject', 'STORED_IN')
 

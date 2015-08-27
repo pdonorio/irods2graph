@@ -72,13 +72,17 @@ def fill_irods_random(com, icom, \
 ################################
 ## From iRODS to neo4j graph
 
-def fill_graph_from_irods(icom, elements=20, prefix=DEFAULT_PREFIX):
+def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
     data_objs = icom.search(prefix)
 
     for ifile in data_objs:
         ifile_metas = icom.meta_list(ifile)
         print("File:\t", ifile, "\nMetadata:\t", ifile_metas)
+
+        # Graph
+        #graph.save_data([])
+        # Save nodes and relations
 
         # DEBUG - remove me!!!
         break
