@@ -74,17 +74,32 @@ def fill_irods_random(com, icom, \
 
 def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
+    import os
     data_objs = icom.search(prefix)
 
     for ifile in data_objs:
-        ifile_metas = icom.meta_list(ifile)
-        print("File:\t", ifile, "\nMetadata:\t", ifile_metas)
+        # Get metadata
+        metas = icom.meta_list(ifile)
 
-        dataobj = graph.DataObject(path="a",filename="b",location="c").save()
+        # Getting the three pieces from Absolute Path of data object:
+        # zone, location and filename
+        zone = ""
+        location = ""
+        (head, filename) = os.path.split(ifile)
+        while head != "/":
+            location = os.path.join(zone, location)
+            (head, zone) = os.path.split(head)
 
-        # Graph
-        #graph.save_data([])
-        # Save nodes and relations
+#############
+## Work in progress
+        # Save zone if not exists
+        current_zone = graph.Zone(name=zone).save()
+## Work in progress
+#############
+
+        # Save it inside graph
+        print(zone, location, filename, metas)
+        dataobj = graph.DataObject(path=ifile,filename=filename,location=location).save()
 
         # DEBUG - remove me!!!
         break

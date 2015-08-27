@@ -14,15 +14,12 @@ from neomodel import StructuredNode, \
     StringProperty, IntegerProperty, \
     RelationshipTo, RelationshipFrom
 
-class GraphNode(StructuredNode):
-    """ Extending the base Node to add some tricks """
-    def getName(self):
-        return self.__class__.__name__
+# class GraphNode(StructuredNode):
+#     """ Extending the base Node to add some tricks """
+#     def getName(self):
+#         return self.__class__.__name__
 
-# /tempZone/home/rods/irods2graph/abc_XdcRNnNc36YiV6iLlArDYsL7MUcEheAs.txt
-# /ZONE/PATH_LOCATION_COLLECTION/NAME
-
-class Zone(GraphNode):
+class Zone(StructuredNode):
     """
     iclient:/data# ips -a
     Server: localhost
@@ -31,7 +28,7 @@ class Zone(GraphNode):
     name = StringProperty(unique_index=True)
     hosting = RelationshipFrom('DataObject', 'STORED_IN')
 
-class DataObject(GraphNode):
+class DataObject(StructuredNode):
     """
     iRODS data object.
     - name, path, location -
@@ -43,7 +40,7 @@ class DataObject(GraphNode):
     located = RelationshipTo(Zone, 'STORED_IN')
     hosting = RelationshipFrom('MetaData', 'LABELING')
 
-class MetaData(GraphNode):
+class MetaData(StructuredNode):
     """
     iclient:/data# ips -a
     Server: localhost
