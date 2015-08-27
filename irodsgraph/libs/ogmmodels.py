@@ -13,11 +13,16 @@ from neomodel import StructuredNode, \
     StringProperty, IntegerProperty, \
     RelationshipTo, RelationshipFrom
 
-class Zone(StructuredNode):
+class GraphNode(StructuredNode):
+    """ Extending the base Node to add some tricks """
+    def getName(self):
+        return self.__class__.__name__
+
+class Zone(GraphNode):
     name = StringProperty(unique_index=True)
     country = RelationshipFrom('DataObject', 'STORED_IN')
 
-class DataObject(StructuredNode):
+class DataObject(GraphNode):
     """
     iRODS data object.
     - name, path, location -

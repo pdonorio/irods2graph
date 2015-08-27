@@ -18,6 +18,10 @@ def string_generator(size=32, \
     # Some chaos to order
     return ''.join(random.choice(chars) for _ in range(size))
 
+# def get_classes_from_module(mod):
+#     return dict([(name, cls) \
+#         for name, cls in mod.__dict__.items() if isinstance(cls, type)])
+
 ################################
 ## POPOLAE
 # Create mock files and save them into irods

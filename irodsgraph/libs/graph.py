@@ -40,14 +40,22 @@ class GraphDB(object):
             os.environ["NEOMODEL_CYPHER_DEBUG"] = "1"
 
     def load_models(self, models=[]):
+
         for model in models:
-            print(model)
-            # Get the name
-            # Save attribute inside class with the same name?
+            # Save attribute inside class with the same name
+            setattr(self, model.__name__, model)
 
     def save_data(self, data):
         """ Save data inside graph db with batch process """
+
+        # Check if load models worked
+        model = 'Zone'
+        if model in dir(self):
+            print(getattr(self, model))
+
         #http://neomodel.readthedocs.org/en/latest/batch.html
+        import inspect
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         pass
 
 
