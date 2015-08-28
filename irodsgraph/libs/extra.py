@@ -28,8 +28,7 @@ def string_generator(size=32, \
 def fill_irods_random(com, icom, \
     elements=10, prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
 
-    # Clean host data
-    com.remove_directory(tmp_dir, ignore=True)
+    # Create host data
     com.create_directory(tmp_dir)
 
     # Clean if existing on iRODS
@@ -65,6 +64,9 @@ def fill_irods_random(com, icom, \
         #print(icom.meta_list(irods_file))
 
     print("Generated", elements, "elements")
+
+    # Clean host data
+    com.remove_directory(tmp_dir, ignore=True)
 
     # DEBUG: Check data
     print(icom.search(prefix))

@@ -10,7 +10,6 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import ICommands
 from libs.config import MyConfig
-from libs.ogmmodels import graph
 from libs.extra import fill_irods_random, fill_graph_from_irods
 
 ############################
@@ -43,7 +42,8 @@ def cli(ctx, debug, verbose):
 @click.pass_context
 def popolae(ctx, size):
     click.echo('COMMAND:\tFilling irods.')
-    com = basher()  # only needed for this option
+
+    com = basher()  # system commands, only needed for this command
     fill_irods_random(com, ctx.obj['icom'], size)
 
 cli.add_command(popolae)
@@ -56,6 +56,9 @@ cli.add_command(popolae)
 @click.pass_context
 def convert(ctx, elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
+
+    # Loading the library opens the graph connection
+    from libs.ogmmodels import graph    # only needed for this command
     fill_graph_from_irods(ctx.obj['icom'], graph, elements)
 
 cli.add_command(convert)
