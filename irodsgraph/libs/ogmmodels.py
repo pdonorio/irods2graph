@@ -33,9 +33,10 @@ class DataObject(StructuredNode):
     iRODS data object.
     - name, path, location -
     """
-    path = StringProperty(unique_index=True)
+    PID = StringProperty(unique_index=True)
     filename = StringProperty(index=True)
     location = StringProperty(index=True)
+    path = StringProperty()
     #age = IntegerProperty(index=True, default=0)
     located = RelationshipTo(Zone, 'STORED_IN')
     hosting = RelationshipFrom('MetaData', 'LABELING')

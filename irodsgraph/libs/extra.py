@@ -5,7 +5,7 @@
 Other methods in my package
 """
 
-import string, random
+import string, random, hashlib
 DEFAULT_PREFIX = 'abc_'
 
 ################################
@@ -90,16 +90,26 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             location = os.path.join(zone, location)
             (head, zone) = os.path.split(head)
 
-#############
-## Work in progress
-        # Save zone if not exists
-        current_zone = graph.Zone(name=zone).save()
-## Work in progress
-#############
+        # Zone
+        try:
+            # Does this already exists?
+            current_zone = graph.Zone.nodes.get(name=zone)
+        except graph.Zone.DoesNotExist:
+            print("Saving zone", zone)
+            # Save zone if not exists
+            current_zone = graph.Zone(name=zone).save()
 
-        # Save it inside graph
+        # Save the data object inside graph
         print(zone, location, filename, metas)
-        dataobj = graph.DataObject(path=ifile,filename=filename,location=location).save()
+        # Simulating a PID
+        m = hashlib.md5(ifile.encode('utf-8'))
+        pid = m.hexdigest()
+        dataobj = graph.DataObject(PID=pid, \
+            filename=filename, path=ifile, location=location).save()
+
+        # Connect the object
+        dataobj.located.connect(current_zone)
+
 
         # DEBUG - remove me!!!
-        break
+        #break

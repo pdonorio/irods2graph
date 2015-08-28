@@ -10,6 +10,7 @@ import os
 ###########################
 ## A graph database with class as models
 from libs import GRAPHDB_LINK
+import py2neo
 from neomodel import db
 
 class GraphDB(object):
@@ -63,7 +64,10 @@ class GraphDB(object):
 
     def cipher_query(self, query):
         """ Execute normal neo4j queries """
-        results, meta = db.cypher_query(query)
+        try:
+            results, meta = db.cypher_query(query)
+        except Exception as e:
+            raise ("Failed to execute Cipher Query: " + query + "\n" + str(e))
         return results
 
     def clean_whole_database(self):
