@@ -177,6 +177,17 @@ class ICommands(BashCommands):
             metas[m1.group(1)] = m2.group(1)
         return metas
 
+    def meta_sys_list(self, path):
+        #isysmeta ls
+        com = "isysmeta"
+        args = ['ls']
+        args.append(path)
+        print("iRODS sys meta for", path)
+        out = self.execute_command(com, args)
+        if out != None:
+            return out.strip().split('\n')
+        return False
+
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)
 

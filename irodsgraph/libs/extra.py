@@ -41,7 +41,6 @@ def fill_irods_random(com, icom, \
     icom.create_directory(irods_dir)
     print("Created directory")
 
-
     # Create and save
     for i in range(1,elements):
         # Create two strings
@@ -112,6 +111,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         # Connect the object
         dataobj.located.connect(current_zone)
 
-
         # DEBUG - remove me!!!
-        #break
+        tmp = icom.meta_sys_list(ifile)
+        print(metas, tmp)
+        break
