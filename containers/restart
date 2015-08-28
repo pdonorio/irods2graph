@@ -7,3 +7,6 @@ $bin rm -f
 $bin up -d
 $bin ps
 
+# Open the client bash
+docker exec -it containers_icom_1 bash
+
