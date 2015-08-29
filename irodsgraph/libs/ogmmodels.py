@@ -42,11 +42,7 @@ class DataObject(StructuredNode):
     hosting = RelationshipFrom('MetaData', 'LABELING')
 
 class MetaData(StructuredNode):
-    """
-    iclient:/data# ips -a
-    Server: localhost
-         2356 rods#tempZone  0:00:00  ips  172.17.0.9
-    """
+    """ MetaData found in irods """
     key = StringProperty(unique_index=True)
     value = StringProperty(index=True)
     associated = RelationshipTo(DataObject, 'LABELING')
@@ -56,4 +52,4 @@ class MetaData(StructuredNode):
 
 from libs.graph import GraphDB
 graph = GraphDB()
-graph.load_models([DataObject, Zone])
+graph.load_models([DataObject, Zone, MetaData])

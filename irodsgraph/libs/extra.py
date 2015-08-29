@@ -29,6 +29,7 @@ def fill_irods_random(com, icom, \
     elements=10, prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
 
     # Create host data
+    com.remove_directory(tmp_dir, ignore=True)
     com.create_directory(tmp_dir)
 
     # Clean if existing on iRODS
@@ -46,7 +47,6 @@ def fill_irods_random(com, icom, \
         # Create two strings
         r1 = string_generator()
         r2 = string_generator()
-        r3 = string_generator()
 
         # Write a random file
         filename = prefix + r1 + ".txt"
@@ -58,7 +58,12 @@ def fill_irods_random(com, icom, \
         icom.save(hostfile, irods_file)
 
         # Add random meta via imeta
-        icom.meta_write(irods_file, [r3], [r2])
+        for i in range(1,random.randint(1,4)):
+            r3 = string_generator(i)
+            name = "meta" + str(i)
+            value = r3 + r2
+            #print(name, value)
+            icom.meta_write(irods_file, [name], [value])
         # Debug
         #print(icom.meta_list(irods_file))
 
@@ -81,6 +86,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     for ifile in data_objs:
         # Get metadata
         metas = icom.meta_list(ifile)
+        print(metas)
+        exit()
 
         # Getting the three pieces from Absolute Path of data object:
         # zone, location and filename
@@ -105,13 +112,19 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         # Simulating a PID
         m = hashlib.md5(ifile.encode('utf-8'))
         pid = m.hexdigest()
-        dataobj = graph.DataObject(PID=pid, \
+        current_dobj = graph.DataObject(PID=pid, \
             filename=filename, path=ifile, location=location).save()
 
         # Connect the object
-        dataobj.located.connect(current_zone)
+        current_dobj.located.connect(current_zone)
 
-        # DEBUG - remove me!!!
-        tmp = icom.meta_sys_list(ifile)
-        print(metas, tmp)
-        break
+        # Create metadata attributes and connect
+        for key, value in metas.items():
+            current_meta = graph.MetaData(key=pid+key, value=value).save()
+            current_meta.associated.connect(current_dobj)
+
+        # # DEBUG - remove me!!!
+        # tmp = icom.meta_sys_list(ifile)
+        # print("\n\n***\n\n")
+        # print(metas, tmp)
+        # break

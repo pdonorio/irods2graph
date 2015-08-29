@@ -161,12 +161,16 @@ class ICommands(BashCommands):
                         pass
             else:
                 print("No valid attributes specified for action", action)
+                print(attributes, values)
 
         # Execute
         return self.execute_command(com, args)
 
     def meta_list(self, path, attributes=[]):
         out = self.meta_command(path, 'list', attributes)
+
+        print("Does not work!")
+        exit()
 
         # Parse out
         import re
