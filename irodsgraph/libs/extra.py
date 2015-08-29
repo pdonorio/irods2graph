@@ -62,8 +62,9 @@ def fill_irods_random(com, icom, \
         # Add random meta via imeta
         metas_elements = random.randint(1,5)
         for j in range(0, metas_elements):
+            metatag = random.randint(1,elements)
+            name = "meta-" + str(metatag)
             r3 = string_generator(j)
-            name = "meta" + str(r3)
             value = r3 + r2
             #print(name, value)
             icom.meta_write(irods_file, [name], [value])
@@ -120,11 +121,15 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         metas = icom.meta_list(ifile)
         # Create metadata attributes and connect
         for key, value in metas.items():
-            current_meta = graph.MetaData(key=pid+key, value=value).save()
+            try:
+                # Does this already exists?
+                current_meta = graph.MetaData.nodes.get(key=key)
+            except graph.MetaData.DoesNotExist:
+                current_meta = graph.MetaData(key=key, value=value).save()
             current_meta.associated.connect(current_dobj)
 
         # Save the data object inside graph
-        print(zone, location, filename, metas)
+        print("Data object\t", filename, location, "\n", metas, "\n")
         # # DEBUG - remove me!!!
         # tmp = icom.meta_sys_list(ifile)
         # print("\n\n***\n\n")
