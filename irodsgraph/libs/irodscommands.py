@@ -169,16 +169,23 @@ class ICommands(BashCommands):
     def meta_list(self, path, attributes=[]):
         out = self.meta_command(path, 'list', attributes)
 
-        print("Does not work!")
-        exit()
 
         # Parse out
         import re
         metas = {}
-        m1 = re.search(r"attribute:\s+(.+)", out)
-        m2 = re.search(r"value:\s+(.+)", out)
-        if m1 and m2:
-            metas[m1.group(1)] = m2.group(1)
+
+        pattern = re.compile("attribute:\s+(.+)")
+        keys = pattern.findall(out)
+        pattern = re.compile("value:\s+(.+)")
+        values = pattern.findall(out)
+        for j in range(0, len(keys)):
+            metas[keys[j]] = values[j]
+
+        # m1 = re.search(r"attribute:\s+(.+)", out)
+        # m2 = re.search(r"value:\s+(.+)", out)
+        # if m1 and m2:
+        #     metas[m1.group(1)] = m2.group(1)
+
         return metas
 
     def meta_sys_list(self, path):

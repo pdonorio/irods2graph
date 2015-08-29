@@ -44,6 +44,8 @@ def fill_irods_random(com, icom, \
 
     # Create and save
     for i in range(1,elements):
+
+        print("\nElement n." + str(i))
         # Create two strings
         r1 = string_generator()
         r2 = string_generator()
@@ -58,13 +60,16 @@ def fill_irods_random(com, icom, \
         icom.save(hostfile, irods_file)
 
         # Add random meta via imeta
-        for i in range(1,random.randint(1,4)):
-            r3 = string_generator(i)
-            name = "meta" + str(i)
+        metas_elements = random.randint(1,5)
+        for j in range(0, metas_elements):
+            r3 = string_generator(j)
+            name = "meta" + str(r3)
             value = r3 + r2
             #print(name, value)
             icom.meta_write(irods_file, [name], [value])
+            print("Wrote", name, "in", filename)
         # Debug
+        print("Created ", metas_elements, "elements")
         #print(icom.meta_list(irods_file))
 
     print("Generated", elements, "elements")
@@ -84,10 +89,6 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     data_objs = icom.search(prefix)
 
     for ifile in data_objs:
-        # Get metadata
-        metas = icom.meta_list(ifile)
-        print(metas)
-        exit()
 
         # Getting the three pieces from Absolute Path of data object:
         # zone, location and filename
@@ -107,22 +108,23 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             # Save zone if not exists
             current_zone = graph.Zone(name=zone).save()
 
-        # Save the data object inside graph
-        print(zone, location, filename, metas)
         # Simulating a PID
         m = hashlib.md5(ifile.encode('utf-8'))
         pid = m.hexdigest()
         current_dobj = graph.DataObject(PID=pid, \
             filename=filename, path=ifile, location=location).save()
-
         # Connect the object
         current_dobj.located.connect(current_zone)
 
+        # Get metadata
+        metas = icom.meta_list(ifile)
         # Create metadata attributes and connect
         for key, value in metas.items():
             current_meta = graph.MetaData(key=pid+key, value=value).save()
             current_meta.associated.connect(current_dobj)
 
+        # Save the data object inside graph
+        print(zone, location, filename, metas)
         # # DEBUG - remove me!!!
         # tmp = icom.meta_sys_list(ifile)
         # print("\n\n***\n\n")
