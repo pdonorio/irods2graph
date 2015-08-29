@@ -62,24 +62,28 @@ def fill_irods_random(com, icom, \
         # Add random meta via imeta
         metas_elements = random.randint(1,5)
         for j in range(0, metas_elements):
-            metatag = random.randint(1,elements)
-            name = "meta-" + str(metatag)
+            # More randoms
             r3 = string_generator(j)
+            metatag = random.randint(1,elements)
+            # Meta key
+            name = "meta-" + str(metatag) #str(r3) #to make unique?
+            # Content
             value = r3 + r2
             #print(name, value)
+
+            # Could use batch insert instead
             icom.meta_write(irods_file, [name], [value])
             print("Wrote", name, "in", filename)
+
         # Debug
         print("Created ", metas_elements, "elements")
-        #print(icom.meta_list(irods_file))
-
-    print("Generated", elements, "elements")
 
     # Clean host data
     com.remove_directory(tmp_dir, ignore=True)
+    print("COMPLETED! Generated", elements, "elements")
 
     # DEBUG: Check data
-    print(icom.search(prefix))
+    #print(icom.search(prefix))
 
 ################################
 ## From iRODS to neo4j graph
