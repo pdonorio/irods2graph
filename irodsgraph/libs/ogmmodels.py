@@ -43,8 +43,7 @@ class DataObject(StructuredNode):
 
 class MetaData(StructuredNode):
     """ MetaData found in irods """
-    key = StringProperty(index=True)
-    #key = StringProperty(unique_index=True)
+    key = StringProperty(unique_index=True)
     value = StringProperty(index=True)
     associated = RelationshipTo(DataObject, 'LABELING')
 
