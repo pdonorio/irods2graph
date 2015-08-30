@@ -8,7 +8,7 @@ Since python3 is not ready for API or client,
 i base this wrapper on plumbum package handling shell commands.
 """
 
-import os, inspect
+import os, inspect, re
 from libs.bash import BashCommands
 from libs import IRODS_ENV
 
@@ -169,11 +169,8 @@ class ICommands(BashCommands):
     def meta_list(self, path, attributes=[]):
         out = self.meta_command(path, 'list', attributes)
 
-
         # Parse out
-        import re
         metas = {}
-
         pattern = re.compile("attribute:\s+(.+)")
         keys = pattern.findall(out)
         pattern = re.compile("value:\s+(.+)")
@@ -193,11 +190,13 @@ class ICommands(BashCommands):
         com = "isysmeta"
         args = ['ls']
         args.append(path)
-        print("iRODS sys meta for", path)
+        #print("iRODS sys meta for", path)
         out = self.execute_command(com, args)
+        metas = {}
         if out != None:
-            return out.strip().split('\n')
-        return False
+            pattern = re.compile("([a-z_]+):\s+([^\n]+)")
+            metas = pattern.findall(out)
+        return metas
 
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)

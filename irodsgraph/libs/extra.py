@@ -125,17 +125,25 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         metas = icom.meta_list(ifile)
         # Create metadata attributes and connect
         for key, value in metas.items():
-            try:
-                # Does this already exists?
-                current_meta = graph.MetaData.nodes.get(key=key)
-            except graph.MetaData.DoesNotExist:
-                current_meta = graph.MetaData(key=key, value=value).save()
+# // TO FIX:
+# is metadata with unique key/label??
+            # try:
+            #     # Does this key already exists?
+            #     current_meta = graph.MetaData.nodes.get(key=key)
+            # except graph.MetaData.DoesNotExist:
+
+            current_meta = graph.MetaData(key=key, value=value).save()
             current_meta.associated.connect(current_dobj)
+            print("Saved and connected", key, value)
+
+        # SYS META?
+        for key, value in icom.meta_sys_list(ifile):
+            current_sysmeta = graph.MetaData(key=key, value=value).save()
+            current_sysmeta.associated.connect(current_dobj)
+            print("Saved and connected", key, value)
 
         # Save the data object inside graph
-        print("Data object\t", filename, location, "\n", metas, "\n")
-        # # DEBUG - remove me!!!
-        # tmp = icom.meta_sys_list(ifile)
-        # print("\n\n***\n\n")
-        # print(metas, tmp)
-        # break
+        print("CREATED ***\t[Data object]\t", filename, location)
+
+        # DEBUG
+        break

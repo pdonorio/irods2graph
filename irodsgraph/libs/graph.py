@@ -71,6 +71,12 @@ class GraphDB(object):
     def clean_whole_database(self):
         return self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
 
+    # // TO FIX:
+    def create_node_if_not_exists(self, model):
+        """ UHM? """
+        pass
+
+
 #############################################
 ## STANDARD python library
 # from py2neo import Graph, Node, Relationship
