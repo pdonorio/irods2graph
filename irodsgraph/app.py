@@ -11,7 +11,7 @@ Moving data from iRODS server to a Neo4j graphdb.
     * iclient bootstrap script
     * write graphdb class and OGM models, with entities list
 // DOING:
-    * pause
+    * testing PID rules
 // TODO:
     * add logs class
     * Update docker neo4j https://hub.docker.com/r/neo4j/neo4j/
