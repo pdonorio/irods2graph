@@ -34,6 +34,8 @@ icom:
 ## neo4j
 graphdb:
   image: tpires/neo4j
+  # // TO FIX:
+  # Must change this. Update to https://hub.docker.com/r/neo4j/neo4j/
   volumes:
   - ./neo4j_server.conf:/etc/neo4j/neo4j-server.properties:rw
   # labels:

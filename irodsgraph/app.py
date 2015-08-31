@@ -9,12 +9,12 @@ Moving data from iRODS server to a Neo4j graphdb.
     * packaging, libraries and class style
     * docker section
     * iclient bootstrap script
-    * write graphdb class and OGM models
+    * write graphdb class and OGM models, with entities list
 // DOING:
-    * entities list
-    * graph insert testing
+    * pause
 // TODO:
     * add logs class
+    * Update docker neo4j https://hub.docker.com/r/neo4j/neo4j/
     * rancher yaml for multi host configuration
 // TOFIX in the near future:
     * show counts of irods element vs selected elements
