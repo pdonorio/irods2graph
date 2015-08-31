@@ -55,9 +55,6 @@ class ICommands(BashCommands):
     ###################
     # ICOMs
 
-    def do_nothing(self):
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-
     def create_empty(self, path, directory=False):
         if directory:
             com = "imkdir"
@@ -200,6 +197,28 @@ class ICommands(BashCommands):
 
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)
+
+    ###################
+    # IRULES and templates
+
+    def rule_execution(self, rule=None, rule_file=None):
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+        return False
+
+    def irule_from_file(self, rule_file):
+        return self.rule_execution(None, rule_file)
+
+    ###################
+    # PID and replica
+    def register_pid(self, dataobj):
+        irule_template = ""
+    # use jinja2 templating
+        return self.irule_from_file(irule_template)
+
+    ###################
+    def do_nothing(self):
+        """ Remember how to say 'not implemented yet' """
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
 
 ################################
 ## CONNECT TO IRODS ?

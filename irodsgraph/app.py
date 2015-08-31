@@ -10,8 +10,10 @@ Moving data from iRODS server to a Neo4j graphdb.
     * docker section
     * iclient bootstrap script
     * write graphdb class and OGM models, with entities list
+    * PID rules tests
 // DOING:
-    * testing PID rules
+    * templating for irods rules
+        https://realpython.com/blog/python/primer-on-jinja-templating/
 // TODO:
     * add logs class
     * Update docker neo4j https://hub.docker.com/r/neo4j/neo4j/
