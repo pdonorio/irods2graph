@@ -12,3 +12,6 @@ irodsZone tempZone
 " > $IRODS_ENV
 
 bash -c "iinit"
+
+./app.py popolae --size=20
+./app.py convert
