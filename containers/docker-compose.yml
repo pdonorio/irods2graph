@@ -20,6 +20,7 @@ icom:
   # labels:
   #   io.rancher.scheduler.global: 'true'
   hostname: iclient
+  user: dev
   links:
   - irods:rodserver
   - graphdb:neo

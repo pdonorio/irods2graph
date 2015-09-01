@@ -1,6 +1,9 @@
+USER=`whoami`
+HOME="/home/$USER"
 
 IRODS_DIR="$HOME/.irods"
 IRODS_ENV="$IRODS_DIR/.irodsEnv"
+
 mkdir -p $IRODS_DIR
 touch $IRODS_ENV
 
@@ -22,9 +25,10 @@ irodsUserName rods
 irodsZone tempZone
 "
 
-echo $remoteconf > $IRODS_ENV
-#echo $localconf > $IRODS_ENV
-bash -c "iinit"
+#echo "$remoteconf" > $IRODS_ENV
+echo "$localconf" > $IRODS_ENV
+bash -c "iinit" || exit $?
 
-# ./app.py popolae --size=20
+./app.py popolae --size=20
 # ./app.py convert
+

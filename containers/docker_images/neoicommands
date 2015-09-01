@@ -41,8 +41,5 @@ RUN wget http://j.mp/eudat_epic_client -q -O /opt/epicclient.py && \
 # test
 RUN epicc -h
 
-# ####################################
-# ENV MYUSER dev
-# RUN useradd -ms /bin/bash $MYUSER
-# USER $MYUSER
-# #WORKDIR /home/newuser
+####################################
+RUN useradd -ms /bin/bash dev
