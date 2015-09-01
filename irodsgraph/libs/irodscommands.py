@@ -202,6 +202,15 @@ class ICommands(BashCommands):
     # IRULES and templates
 
     def rule_execution(self, rule=None, rule_file=None):
+        com='irule'
+        args=[]
+        if rule != None:
+            args.append(rule)
+        elif rule_file != None:
+            args.append('-F')
+            args.append(rule_file)
+
+        print(com, args)
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         return False
 
@@ -213,7 +222,9 @@ class ICommands(BashCommands):
     def register_pid(self, dataobj):
         irule_template = ""
     # use jinja2 templating
-        return self.irule_from_file(irule_template)
+        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+        irule_file = "test"
+        return self.irule_from_file(irule_file)
 
     ###################
     def do_nothing(self):
