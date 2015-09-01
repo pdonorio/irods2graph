@@ -10,6 +10,7 @@ i base this wrapper on plumbum package handling shell commands.
 
 import os, inspect, re
 from libs.bash import BashCommands
+from libs.templating import Templa
 from libs import IRODS_ENV
 
 #######################################
@@ -238,6 +239,7 @@ class EudatICommands(IRuled):
     # PID and replica
     def register_pid(self, dataobj):
         irule_template = ""
+        Templa()
 # use jinja2 templating
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         irule_file = "test"

@@ -75,6 +75,18 @@ def fill_irods_random(com, icom, \
             icom.meta_write(irods_file, [name], [value])
             print("Wrote", name, "in", filename)
 
+##########################
+# WORK IN PROGRESS
+            icom.register_pid(irods_file)
+            exit()
+
+            # Random choise if replica or not,
+            #   - random number of replicas
+            #   - Check replica(s) integrity?
+            break
+# WORK IN PROGRESS
+##########################
+
         # Debug
         print("Created ", metas_elements, "elements")
 
@@ -94,6 +106,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     data_objs = icom.search(prefix)
 
     for ifile in data_objs:
+
+# // TO FIX: i should limit to elements count
 
         # Getting the three pieces from Absolute Path of data object:
         # zone, location and filename
