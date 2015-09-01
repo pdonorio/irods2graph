@@ -39,14 +39,17 @@ class DataObject(StructuredNode):
     path = StringProperty()
     #age = IntegerProperty(index=True, default=0)
     located = RelationshipTo(Zone, 'STORED_IN')
-    hosting = RelationshipFrom('MetaData', 'LABELING')
+    hosting = RelationshipFrom('MetaData', 'DESCRIBED_BY')
 
 class MetaData(StructuredNode):
     """ MetaData found in irods """
     key = StringProperty(index=True)
     #key = StringProperty(unique_index=True)
     value = StringProperty(index=True)
-    associated = RelationshipTo(DataObject, 'LABELING')
+    associated = RelationshipTo(DataObject, 'DESCRIBED_BY')
+
+# DataObject, Collection, MetaData
+# Zone, PID, ParentPID, Replica
 
 ################################
 # Saving models inside the graph class

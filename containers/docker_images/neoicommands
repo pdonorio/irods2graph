@@ -29,3 +29,20 @@ RUN pip3 install ipython \
     jupyter
     # python-irodsclient #does not work with python 3
 
+####################################
+### EPIC CLIENT - and python 2 ...
+RUN apt-get install -y \
+    python-pip python-dev libxml2-dev libxslt-dev && \
+    pip2 install lxml httplib2 simplejson defusedxml
+
+RUN wget http://j.mp/eudat_epic_client -q -O /opt/epicclient.py && \
+    chmod +x /opt/epicclient.py && \
+    ln -s /opt/epicclient.py /usr/bin/epicc
+# test
+RUN epicc -h
+
+# ####################################
+# ENV MYUSER dev
+# RUN useradd -ms /bin/bash $MYUSER
+# USER $MYUSER
+# #WORKDIR /home/newuser

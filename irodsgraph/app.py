@@ -12,17 +12,20 @@ Moving data from iRODS server to a Neo4j graphdb.
     * write graphdb class and OGM models, with entities list
     * PID rules tests
 // DOING:
+    * Recover PID from testbed with eudat epic client
     * templating for irods rules
         https://realpython.com/blog/python/primer-on-jinja-templating/
 // TODO:
     * add logs class
-    * Update docker neo4j https://hub.docker.com/r/neo4j/neo4j/
-    * rancher yaml for multi host configuration
-// TOFIX in the near future:
+// TOFIX
     * show counts of irods element vs selected elements
     * switch script to ipython:
         http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
     * python3 irods client? or stick with plumbus?
+// NOT SO FAST:
+    * Recover PID in production? http://hdl.handle.net/
+    * Update docker neo4j https://hub.docker.com/r/neo4j/neo4j/
+    * rancher yaml for multi host configuration
 
 """
 
