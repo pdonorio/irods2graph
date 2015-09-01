@@ -8,7 +8,7 @@ Use 'click' library to create an interface for shell execution
 # Make this script a powerful command line program
 import click
 from libs.bash import BashCommands as basher
-from libs.irodscommands import ICommands
+from libs.irodscommands import EudatICommands
 from libs.config import MyConfig
 from libs.extra import fill_irods_random, fill_graph_from_irods
 
@@ -22,7 +22,7 @@ def cli(ctx, debug, verbose):
     click.echo('Script init. Verbosity: %s' % verbose)
 
     # Do we have iRODS?
-    icom = ICommands()
+    icom = EudatICommands()
     # Make sure we have an ini file for futures callback
     configurer = MyConfig(icom)
     configurer.check()

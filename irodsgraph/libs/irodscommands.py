@@ -12,6 +12,9 @@ import os, inspect, re
 from libs.bash import BashCommands
 from libs import IRODS_ENV
 
+#######################################
+## basic irods
+
 class ICommands(BashCommands):
     """irods icommands in a class"""
 
@@ -124,8 +127,13 @@ class ICommands(BashCommands):
             return out.strip().split('\n')
         return out
 
+#######################################
+## irods and metadata
+
+class IMetaCommands(ICommands):
+    """irods icommands in a class"""
     ###################
-    # METADATA
+    # METADATA for irods
 
     def meta_command(self, path, action='list', attributes=[], values=[]):
         com = "imeta"
@@ -198,10 +206,13 @@ class ICommands(BashCommands):
     def meta_write(self, path, attributes, values):
         return self.meta_command(path, 'write', attributes, values)
 
+#######################################
+## irods + metadata + irules
+class IRuled(IMetaCommands):
+
     ###################
     # IRULES and templates
-
-    def rule_execution(self, rule=None, rule_file=None):
+    def irule_execution(self, rule=None, rule_file=None):
         com='irule'
         args=[]
         if rule != None:
@@ -215,27 +226,33 @@ class ICommands(BashCommands):
         return False
 
     def irule_from_file(self, rule_file):
-        return self.rule_execution(None, rule_file)
+        return self.irule_execution(None, rule_file)
 
-    ###################
+#######################################
+## EUDAT project irods configuration
+
+class EudatICommands(IRuled):
+    """ See project documentation
+    http://eudat.eu/User%20Documentation%20-%20iRODS%20Deployment.html
+    """
     # PID and replica
     def register_pid(self, dataobj):
         irule_template = ""
-    # use jinja2 templating
+# use jinja2 templating
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         irule_file = "test"
         return self.irule_from_file(irule_file)
 
-    ###################
-    def do_nothing(self):
-        """ Remember how to say 'not implemented yet' """
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-
 ################################
 ## CONNECT TO IRODS ?
-# def irods_connection(data):
-
+# // TO FIX in the near future?
 #     # PROBLEM! requires PYTHON 2
+
+# def irods_connection(data):
 #     from irods.session import iRODSSession
 #     sess = iRODSSession(host='localhost', port=1247, user='rods', \
 #         password='rods', zone='tempZone')
+
+def do_nothing(self):
+    """ Remember how to say 'not implemented yet' """
+    print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
