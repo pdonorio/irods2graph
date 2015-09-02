@@ -34,7 +34,6 @@ def fill_irods_random(com, icom, \
 
     # Clean if existing on iRODS
     status = icom.check(irods_dir)
-
     if status == 0:
         print("Cleaning on server")
         icom.remove_directory(irods_dir)
@@ -43,7 +42,7 @@ def fill_irods_random(com, icom, \
     print("Created directory")
 
     # Create and save
-    for i in range(1,elements):
+    for i in range(1, elements+1):
 
         print("\nElement n." + str(i))
         # Create two strings
@@ -78,7 +77,6 @@ def fill_irods_random(com, icom, \
 ##########################
 # WORK IN PROGRESS
             icom.register_pid(irods_file)
-            exit()
 
             # Random choise if replica or not,
             #   - random number of replicas

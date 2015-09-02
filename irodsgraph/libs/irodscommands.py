@@ -20,6 +20,7 @@ class ICommands(BashCommands):
     """irods icommands in a class"""
 
     _init_data = {}
+    _base_dir = ''
 
     def __init__(self, irodsenv=IRODS_ENV):
 
@@ -29,6 +30,8 @@ class ICommands(BashCommands):
         self.irodsenv = irodsenv
         self.iinit()
         print("iRODS environment found: ", self._init_data)
+
+        self._base_dir = self.get_base_dir()
 
     ###################
     # ABOUT CONFIGURATION
@@ -58,6 +61,10 @@ class ICommands(BashCommands):
 
     ###################
     # ICOMs
+
+    def get_base_dir(self):
+        com = "ipwd"
+        return self.execute_command(com).strip()
 
     def create_empty(self, path, directory=False):
         if directory:
@@ -238,13 +245,16 @@ class EudatICommands(IRuled):
     """
     # PID and replica
     def register_pid(self, dataobj):
-        irule_template = ""
-        # use jinja2 templating
-        jin = Templa("getpid")
+        # Path fix
+        dataobj = os.path.join(self._base_dir, dataobj)
+        # Use jinja2 templating
+        irule_template = "getpid"
+        jin = Templa(irule_template)
         irule_file = jin.template2file({'irods_file': '"' + dataobj + '"'})
-
+        # Call irule from template rendered
         self.irule_from_file(irule_file)
-#remove file?
+        #remove file?
+        os.remove(irule_file)
         return True
 
 ################################

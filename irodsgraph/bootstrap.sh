@@ -25,10 +25,12 @@ irodsUserName rods
 irodsZone tempZone
 "
 
-#echo "$remoteconf" > $IRODS_ENV
-echo "$localconf" > $IRODS_ENV
+echo "$remoteconf" > $IRODS_ENV
+#echo "$localconf" > $IRODS_ENV
 bash -c "iinit" || exit $?
 
-./app.py popolae --size=20
+./app.py popolae --size=2
+
+#./app.py popolae --size=20
 # ./app.py convert
 
