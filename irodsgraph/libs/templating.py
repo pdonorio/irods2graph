@@ -19,6 +19,7 @@ class Templa(object):
 
     _environment = None
     _template_dir = '../templates'
+    _current_template = ''
 
     def __init__(self, template=None):
         super(Templa, self).__init__()
@@ -26,30 +27,37 @@ class Templa(object):
         self._environment = Environment( autoescape=False, trim_blocks=False, \
             loader=FileSystemLoader(os.path.join(PATH, self._template_dir)) )
 
-        context = {
-            'irods_file': '"test.txt"',
-        }
         if template != None:
-            print(self.template2file(template, context))
+            self._current_template = template
 
     def render_template(self, template_filename, context):
         """ Create a string which compiles the template variables """
         return self._environment.get_template(template_filename).render(context)
 
-    def write_to_file(self, content, filename='temp.template.rendered', mydir='/tmp'):
+    def write_to_file(self, content, filename=None, mydir='/tmp'):
         """ Quickly write a file for using rendered template """
+
+        if filename == None:
+            import random
+            filename = str(random.randint(1,100)) + '_' + \
+                str(random.randint(1,100000)) + '.rendered_template.r'
         path = os.path.join(mydir, filename)
         with open(path, 'w') as f:
             f.write(content)
+        return path
 
-    def template2file(self, template, context):
+    def template2file(self, context, template=None):
         """ Main operation for this class """
+
+        if template == None:
+            template = self._current_template
         template += '.r'
-        if os.path.exists(os.path.join(PATH, self._template_dir, template)):
-            print("working")
+        template_file = os.path.join(PATH, self._template_dir, template)
+
+        if os.path.exists(template_file):
             content = self.render_template(template, context)
-            self.write_to_file(content)
-            return True
+            return self.write_to_file(content)
+
         return False
 
 # ##############################

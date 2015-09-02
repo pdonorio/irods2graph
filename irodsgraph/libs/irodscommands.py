@@ -222,9 +222,9 @@ class IRuled(IMetaCommands):
             args.append('-F')
             args.append(rule_file)
 
+        # Execute
         print(com, args)
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-        return False
+        return self.execute_command(com, args)
 
     def irule_from_file(self, rule_file):
         return self.irule_execution(None, rule_file)
@@ -239,11 +239,13 @@ class EudatICommands(IRuled):
     # PID and replica
     def register_pid(self, dataobj):
         irule_template = ""
-        Templa("getpid")
-# use jinja2 templating
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-        irule_file = "test"
-        return self.irule_from_file(irule_file)
+        # use jinja2 templating
+        jin = Templa("getpid")
+        irule_file = jin.template2file({'irods_file': '"' + dataobj + '"'})
+
+        self.irule_from_file(irule_file)
+#remove file?
+        return True
 
 ################################
 ## CONNECT TO IRODS ?
