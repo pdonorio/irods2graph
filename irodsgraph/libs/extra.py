@@ -74,13 +74,16 @@ def fill_irods_random(com, icom, \
             icom.meta_write(irods_file, [name], [value])
             print("Wrote", name, "in", filename)
 
+
 ##########################
 # WORK IN PROGRESS
-            icom.register_pid(irods_file)
+            #icom.register_pid(irods_file)
+# REMOVED IN DEBUG
 
             # Random choise if replica or not,
             #   - random number of replicas
             #   - Check replica(s) integrity?
+            print("Debug exit")
             break
 # WORK IN PROGRESS
 ##########################
@@ -103,7 +106,21 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     import os
     data_objs = icom.search(prefix)
 
+    counter = 0
     for ifile in data_objs:
+        counter += 1
+        if counter > elements:
+            break
+
+        print(ifile)
+##########################
+# WORK IN PROGRESS
+
+        #epicc os ./cred.json read 842/a72976e0-5177-11e5-b479-fa163e62896a
+        print("Epic")
+        break
+# WORK IN PROGRESS
+##########################
 
 # // TO FIX: i should limit to elements count
 
@@ -113,6 +130,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         location = ""
         (head, filename) = os.path.split(ifile)
         while head != "/":
+            # Warning: this is not location as eudat thinks of it
             location = os.path.join(zone, location)
             (head, zone) = os.path.split(head)
 
