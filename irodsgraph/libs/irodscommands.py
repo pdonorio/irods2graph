@@ -244,6 +244,25 @@ class EudatICommands(IRuled):
     http://eudat.eu/User%20Documentation%20-%20iRODS%20Deployment.html
     """
 
+    def parse_rest_json(self, json_string=None, json_file=None):
+        """ Parsing REST API output in JSON format """
+        import json
+        json_data = ""
+
+        if json_string != None:
+            json_data = json.loads(json_string)
+        elif json_file != None:
+            with open(json_file) as f:
+                json_data = json.load(f)
+
+        metas = {}
+        for meta in json_data:
+            key = meta['type']
+            value = meta['parsed_data']
+            metas[key] = value
+
+        return metas
+
     # PID and replica
     def register_pid(self, dataobj):
         # Path fix
@@ -263,10 +282,26 @@ class EudatICommands(IRuled):
         com = 'epicc'
         credentials = './cred.json'
         args = ['os', credentials, 'read', pid]
-        #epicc os ./cred.json read PID
-        json_data = self.execute_command(com, args).strip()
 
-        return json_data
+#################
+        json_data = ""
+# ONLINE
+        # #epicc os ./cred.json read PID
+        # json_data = self.execute_command(com, args).strip()
+        # pid_metas = self.parse_rest_json(json_data)
+# OFFLINE
+        pid_metas = self.parse_rest_json(None, 'out.json')
+#################
+
+        # Meaningfull data
+        location = pid_metas['URL']
+        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+        checksum = pid_metas['CHECKSUM']
+        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
+        parent_pid = pid_metas['EUDAT/PPID']
+        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
+
+        return (location, checksum, parent_pid)
 
 ################################
 ## CONNECT TO IRODS ?

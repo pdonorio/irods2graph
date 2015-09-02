@@ -108,22 +108,24 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
     counter = 0
     for ifile in data_objs:
+
+        # Limit elements as requested
         counter += 1
         if counter > elements:
             break
+        print("Working with", ifile)
 
-        print(ifile)
 ##########################
 # WORK IN PROGRESS
-
+        # FAKE PID for testing purpose
         PID = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+        # Get PID metadata for this develop handle via EPIC CLIENT
         out = icom.pid_metadata(PID)
+
         print("Epic", out)
         break
 # WORK IN PROGRESS
 ##########################
-
-# // TO FIX: i should limit to elements count
 
         # Getting the three pieces from Absolute Path of data object:
         # zone, location and filename
