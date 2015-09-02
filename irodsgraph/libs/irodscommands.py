@@ -8,7 +8,7 @@ Since python3 is not ready for API or client,
 i base this wrapper on plumbum package handling shell commands.
 """
 
-import os, inspect, re
+import os, inspect, re, hashlib
 from libs.bash import BashCommands
 from libs.templating import Templa
 from libs import IRODS_ENV
@@ -286,6 +286,19 @@ class EudatICommands(IRuled):
         #remove file?
         os.remove(irule_file)
         return True
+
+    # PID and replica
+    def check_pid(self, dataobj):
+# // TO FIX: with irule in reality
+        #self.irule_from_file(irule_file)
+
+# FAKE PID for testing purpose
+# // TO FIX: may not exists
+        m = hashlib.md5(dataobj.encode('utf-8'))
+        pid = m.hexdigest()
+
+        pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+        return pid
 
     def pid_metadata(self, pid):
         # Binary included inside the neoicommands docker image

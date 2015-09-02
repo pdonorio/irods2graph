@@ -6,7 +6,7 @@ Other methods in my package
 """
 
 DEFAULT_PREFIX = 'abc_'
-import string, random, hashlib
+import string, random
 from libs.ogmmodels import save_node_metadata
 
 ################################
@@ -140,12 +140,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # PID
-
-# FAKE PID for testing purpose
-        pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
-        m = hashlib.md5(ifile.encode('utf-8'))
-        pid = m.hexdigest()
-# REAL
+        pid = icom.check_pid(ifile)
 
         ##################################
         # Store Data Object
