@@ -37,7 +37,14 @@ class MetaData(StructuredNode):
     key = StringProperty(index=True)
     metatype = StringProperty()
     value = StringProperty(index=True)
-    associated = RelationshipTo(DataObject, 'DESCRIBED_BY')
+    link = RelationshipTo(DataObject, 'DESCRIBED_BY')
+
+def save_node_metadata(graph_node, data, from_node=None):
+    """ Generic pattern of saving metadata and connecting a node """
+    obj = graph_node.MetaData(**data).save()
+    if from_node != None:
+        obj.link.connect(from_node)
+    print("Saved and connected", data)
 
 ################################
 # Saving models inside the graph class

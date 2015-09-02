@@ -5,8 +5,9 @@
 Other methods in my package
 """
 
-import string, random, hashlib
 DEFAULT_PREFIX = 'abc_'
+import string, random, hashlib
+from libs.ogmmodels import save_node_metadata
 
 ################################
 ## UTILITIES
@@ -158,36 +159,25 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         # System metadata
         for key, value in icom.meta_sys_list(ifile):
-            current_sysmeta = \
-                graph.MetaData(key=key, metatype='system', value=value).save()
-            current_sysmeta.associated.connect(current_dobj)
-            print("Saved and connected", key, value)
+            data = {'metatype':'system', 'key':key, 'value':value}
+            save_node_metadata(graph, data, current_dobj)
 
         # Other metadata, including Eudat/B2safe
         metas = icom.meta_list(ifile)
         # Create metadata attributes and connect
         for key, value in metas.items():
-            current_meta = \
-                graph.MetaData(key=key, metatype='classic', value=value).save()
-            current_meta.associated.connect(current_dobj)
-            print("Saved and connected", key, value)
+            data = {'metatype':'classic', 'key':key, 'value':value}
+            save_node_metadata(graph, data, current_dobj)
 
-# WORK IN PROGRESS
         # PID Metadata
         if pid != None:
-# // TO FIX:
-            print("TEST")
-            exit()
-            location, checksum, parent_pid = icom.pid_metadata(pid)
-            current_meta = \
-                graph.MetaData(key=key, metatype='pid', value=value).save()
-            current_meta.associated.connect(current_dobj)
-            print("Saved and connected", key, value)
-# WORK IN PROGRESS
+            for key, value in icom.pid_metadata(pid).items():
+                data = {'metatype':'pid', 'key':key, 'value':value}
+                save_node_metadata(graph, data, current_dobj)
 
         ##################################
         # Save the data object inside graph
         print("CREATED ***\t[Data object]\t", filename, location)
 
-        # DEBUG
-        break
+        # # DEBUG
+        # break

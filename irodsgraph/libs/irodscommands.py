@@ -312,7 +312,11 @@ class EudatICommands(IRuled):
         parent_pid = pid_metas['EUDAT/PPID']
         # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
 
-        return (location, checksum, parent_pid)
+        return {
+            'location': location,
+            'checksum': checksum,
+            'parent_pid': parent_pid
+        }
 
 ################################
 ## CONNECT TO IRODS ?
