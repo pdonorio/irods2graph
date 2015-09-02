@@ -116,8 +116,9 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 ##########################
 # WORK IN PROGRESS
 
-        #epicc os ./cred.json read 842/a72976e0-5177-11e5-b479-fa163e62896a
-        print("Epic")
+        PID = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+        out = icom.pid_metadata(PID)
+        print("Epic", out)
         break
 # WORK IN PROGRESS
 ##########################

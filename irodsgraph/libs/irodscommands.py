@@ -243,6 +243,7 @@ class EudatICommands(IRuled):
     """ See project documentation
     http://eudat.eu/User%20Documentation%20-%20iRODS%20Deployment.html
     """
+
     # PID and replica
     def register_pid(self, dataobj):
         # Path fix
@@ -256,6 +257,16 @@ class EudatICommands(IRuled):
         #remove file?
         os.remove(irule_file)
         return True
+
+    def pid_metadata(self, pid):
+        # Binary included inside the neoicommands docker image
+        com = 'epicc'
+        credentials = './cred.json'
+        args = ['os', credentials, 'read', pid]
+        #epicc os ./cred.json read PID
+        json_data = self.execute_command(com, args).strip()
+
+        return json_data
 
 ################################
 ## CONNECT TO IRODS ?
