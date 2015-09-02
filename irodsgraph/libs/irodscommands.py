@@ -11,7 +11,7 @@ i base this wrapper on plumbum package handling shell commands.
 import os, inspect, re, hashlib
 from libs.bash import BashCommands
 from libs.templating import Templa
-from libs import IRODS_ENV
+from libs import IRODS_ENV, TESTING
 
 #######################################
 ## basic irods
@@ -289,15 +289,17 @@ class EudatICommands(IRuled):
 
     # PID and replica
     def check_pid(self, dataobj):
-# // TO FIX: with irule in reality
-        #self.irule_from_file(irule_file)
 
-# FAKE PID for testing purpose
+        if TESTING:
+            # FAKE PID for testing purpose
+            m = hashlib.md5(dataobj.encode('utf-8'))
+            pid = m.hexdigest()
 # // TO FIX: may not exists
-        m = hashlib.md5(dataobj.encode('utf-8'))
-        pid = m.hexdigest()
-
-        pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+            #pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+        else:
+            print("Work in progress")
+            exit()
+            self.irule_from_file(irule_file)
         return pid
 
     def pid_metadata(self, pid):
@@ -306,16 +308,13 @@ class EudatICommands(IRuled):
         credentials = './cred.json'
         args = ['os', credentials, 'read', pid]
 
-#################
         json_data = ""
-# // TO FIX:
-# ONLINE
-        # #epicc os ./cred.json read PID
-        # json_data = self.execute_command(com, args).strip()
-        # pid_metas = self.parse_rest_json(json_data)
-# OFFLINE
-        pid_metas = self.parse_rest_json(None, 'out.json')
-#################
+        if TESTING:
+            # Fake, always the same
+            pid_metas = self.parse_rest_json(None, 'out.json')
+        else:
+            json_data = self.execute_command(com, args).strip()
+            pid_metas = self.parse_rest_json(json_data)
 
         # Meaningfull data
         location = pid_metas['URL']

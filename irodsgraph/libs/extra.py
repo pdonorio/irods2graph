@@ -172,7 +172,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # Save the data object inside graph
-        print("CREATED ***\t[Data object]\t", filename, location)
+        print("Data Object [created]\t", location)
 
-        # # DEBUG
-        # break
+        # DEBUG
+        print("DEBUG exit")
+        break

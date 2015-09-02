@@ -4,6 +4,11 @@
 """ My package """
 
 ################################
+## TESTING PURPOSE
+TESTING = True
+#TESTING = False
+
+################################
 ## CONFIGURATION
 import os
 USER_HOME = os.environ['HOME']
