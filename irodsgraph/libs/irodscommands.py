@@ -239,7 +239,7 @@ class EudatICommands(IRuled):
     # PID and replica
     def register_pid(self, dataobj):
         irule_template = ""
-        Templa()
+        Templa("getpid")
 # use jinja2 templating
         print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
         irule_file = "test"

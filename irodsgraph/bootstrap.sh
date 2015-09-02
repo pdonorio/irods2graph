@@ -1,5 +1,5 @@
 USER=`whoami`
-HOME="/home/$USER"
+export HOME="/home/$USER"
 
 IRODS_DIR="$HOME/.irods"
 IRODS_ENV="$IRODS_DIR/.irodsEnv"
