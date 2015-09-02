@@ -10,7 +10,6 @@ DEFAULT_PREFIX = 'abc_'
 
 ################################
 ## UTILITIES
-
 def string_generator(size=32, \
     chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
     """ Create a random string of fixed size """
@@ -77,6 +76,7 @@ def fill_irods_random(com, icom, \
 
 ##########################
 # WORK IN PROGRESS
+
             #icom.register_pid(irods_file)
 # REMOVED IN DEBUG
 
@@ -115,29 +115,20 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             break
         print("Working with", ifile)
 
-##########################
-# WORK IN PROGRESS
-        # FAKE PID for testing purpose
-        PID = "842/a72976e0-5177-11e5-b479-fa163e62896a"
-        # Get PID metadata for this develop handle via EPIC CLIENT
-        out = icom.pid_metadata(PID)
-
-        print("Epic", out)
-        break
-# WORK IN PROGRESS
-##########################
-
+        ##################################
         # Getting the three pieces from Absolute Path of data object:
         # zone, location and filename
         zone = ""
-        location = ""
+        irods_path = ""
         (head, filename) = os.path.split(ifile)
         while head != "/":
-            # Warning: this is not location as eudat thinks of it
-            location = os.path.join(zone, location)
+            # Warning: this is not irods_path as eudat thinks of it
+            irods_path = os.path.join(zone, irods_path)
             (head, zone) = os.path.split(head)
+        location = icom.current_location(ifile)
 
-        # Zone
+        ##################################
+        # Store Zone node
         try:
             # Does this already exists?
             current_zone = graph.Zone.nodes.get(name=zone)
@@ -146,37 +137,57 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             # Save zone if not exists
             current_zone = graph.Zone(name=zone).save()
 
-        # Simulating a PID
+        ##################################
+        # PID
+
+# FAKE PID for testing purpose
+        pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
         m = hashlib.md5(ifile.encode('utf-8'))
         pid = m.hexdigest()
-        current_dobj = graph.DataObject(PID=pid, \
-            filename=filename, path=ifile, location=location).save()
+# REAL
+
+        ##################################
+        # Store Data Object
+        current_dobj = graph.DataObject(location=location, \
+            filename=filename, path=ifile, PID=pid).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
 
-        # Get metadata
-        metas = icom.meta_list(ifile)
-        # Create metadata attributes and connect
-        for key, value in metas.items():
-# // TO FIX:
-# is metadata with unique key/label??
-            # try:
-            #     # Does this key already exists?
-            #     current_meta = graph.MetaData.nodes.get(key=key)
-            # except graph.MetaData.DoesNotExist:
+        ##################################
+        ## METADATA
 
-            current_meta = graph.MetaData(key=key, value=value).save()
-            current_meta.associated.connect(current_dobj)
-            print("Saved and connected", key, value)
-
-        # SYS META?
+        # System metadata
         for key, value in icom.meta_sys_list(ifile):
-            current_sysmeta = graph.MetaData(key=key, value=value).save()
+            current_sysmeta = \
+                graph.MetaData(key=key, metatype='system', value=value).save()
             current_sysmeta.associated.connect(current_dobj)
             print("Saved and connected", key, value)
 
+        # Other metadata, including Eudat/B2safe
+        metas = icom.meta_list(ifile)
+        # Create metadata attributes and connect
+        for key, value in metas.items():
+            current_meta = \
+                graph.MetaData(key=key, metatype='classic', value=value).save()
+            current_meta.associated.connect(current_dobj)
+            print("Saved and connected", key, value)
+
+# WORK IN PROGRESS
+        # PID Metadata
+        if pid != None:
+# // TO FIX:
+            print("TEST")
+            exit()
+            location, checksum, parent_pid = icom.pid_metadata(pid)
+            current_meta = \
+                graph.MetaData(key=key, metatype='pid', value=value).save()
+            current_meta.associated.connect(current_dobj)
+            print("Saved and connected", key, value)
+# WORK IN PROGRESS
+
+        ##################################
         # Save the data object inside graph
         print("CREATED ***\t[Data object]\t", filename, location)
 
-        # # DEBUG
-        # break
+        # DEBUG
+        break

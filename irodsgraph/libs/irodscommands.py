@@ -84,6 +84,16 @@ class ICommands(BashCommands):
         # com = ""
         # self.execute_command(com, [path])
 
+    def current_location(self, ifile):
+        """
+        irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+        """
+        protocol = 'irods://'
+        URL = protocol + \
+            self._init_data['irodsHost'] +':'+ self._init_data['irodsPort'] + \
+            os.path.join(self._base_dir, ifile)
+        return URL
+
     def remove(self, path, recursive=False, force=False):
         com = 'irm'
         args = []
@@ -285,6 +295,7 @@ class EudatICommands(IRuled):
 
 #################
         json_data = ""
+# // TO FIX:
 # ONLINE
         # #epicc os ./cred.json read PID
         # json_data = self.execute_command(com, args).strip()

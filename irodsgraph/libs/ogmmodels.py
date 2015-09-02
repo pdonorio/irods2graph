@@ -20,36 +20,24 @@ from neomodel import StructuredNode, \
 #         return self.__class__.__name__
 
 class Zone(StructuredNode):
-    """
-    iclient:/data# ips -a
-    Server: localhost
-         2356 rods#tempZone  0:00:00  ips  172.17.0.9
-    """
     name = StringProperty(unique_index=True)
     hosting = RelationshipFrom('DataObject', 'STORED_IN')
 
 class DataObject(StructuredNode):
-    """
-    iRODS data object.
-    - name, path, location -
-    """
-    PID = StringProperty(unique_index=True)
+    """ iRODS data object. """
+    location = StringProperty(unique_index=True)
     filename = StringProperty(index=True)
-    location = StringProperty(index=True)
     path = StringProperty()
-    #age = IntegerProperty(index=True, default=0)
+    PID = StringProperty(index=True)    # May not exist
     located = RelationshipTo(Zone, 'STORED_IN')
     hosting = RelationshipFrom('MetaData', 'DESCRIBED_BY')
 
 class MetaData(StructuredNode):
-    """ MetaData found in irods """
+    """ Any metaData stored in irods """
     key = StringProperty(index=True)
-    #key = StringProperty(unique_index=True)
+    metatype = StringProperty()
     value = StringProperty(index=True)
     associated = RelationshipTo(DataObject, 'DESCRIBED_BY')
-
-# DataObject, Collection, MetaData
-# Zone, PID, ParentPID, Replica
 
 ################################
 # Saving models inside the graph class
