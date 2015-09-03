@@ -305,13 +305,13 @@ class EudatICommands(IRuled):
     def pid_metadata(self, pid):
         # Binary included inside the neoicommands docker image
         com = 'epicc'
-        credentials = './cred.json'
+        credentials = './conf/credentials.json'
         args = ['os', credentials, 'read', pid]
 
         json_data = ""
         if TESTING:
             # Fake, always the same
-            pid_metas = self.parse_rest_json(None, 'out.json')
+            pid_metas = self.parse_rest_json(None, './tests/epic.pid.out')
         else:
             json_data = self.execute_command(com, args).strip()
             pid_metas = self.parse_rest_json(json_data)
