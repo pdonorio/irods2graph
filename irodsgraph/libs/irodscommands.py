@@ -110,7 +110,7 @@ class ICommands(BashCommands):
     def save(self, path, destination=None):
         com = 'iput'
         args = [path]
-        if destination is not None:
+        if destination:
             args.append(destination)
         # Execute
         self.execute_command(com, args)
@@ -141,7 +141,7 @@ class ICommands(BashCommands):
                 "You may try 'popolae' command first.")
 # // TO FIX
             exit(1)
-        if out != None:
+        if out:
             return out.strip().split('\n')
         return out
 
@@ -216,7 +216,7 @@ class IMetaCommands(ICommands):
         #print("iRODS sys meta for", path)
         out = self.execute_command(com, args)
         metas = {}
-        if out != None:
+        if out:
             pattern = re.compile("([a-z_]+):\s+([^\n]+)")
             metas = pattern.findall(out)
         return metas
@@ -233,9 +233,9 @@ class IRuled(IMetaCommands):
     def irule_execution(self, rule=None, rule_file=None):
         com='irule'
         args=[]
-        if rule != None:
+        if rule:
             args.append(rule)
-        elif rule_file != None:
+        elif rule_file:
             args.append('-F')
             args.append(rule_file)
 
@@ -259,9 +259,9 @@ class EudatICommands(IRuled):
         import json
         json_data = ""
 
-        if json_string != None:
+        if json_string:
             json_data = json.loads(json_string)
-        elif json_file != None:
+        elif json_file:
             with open(json_file) as f:
                 json_data = json.load(f)
 
@@ -275,28 +275,11 @@ class EudatICommands(IRuled):
 
     # PID and replica
     def register_pid(self, dataobj):
+
         # Path fix
         dataobj = os.path.join(self._base_dir, dataobj)
-        # Use jinja2 templating
-        irule_template = "getpid"
-        jin = Templa(irule_template)
-        irule_file = jin.template2file({'irods_file': '"' + dataobj + '"'})
-        # Call irule from template rendered
-        self.irule_from_file(irule_file)
-        #remove file?
-        os.remove(irule_file)
-        return True
-
-    # PID
-    def check_pid(self, dataobj):
-        """ Should get this value from irods metadata """
-
-        #self.meta_list(dataobj, ['PID'])
 
         if TESTING:
-            # PID may not exists
-            if not random.randint(0,1):
-                return None
 
             #pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
             # 8 - 4 - 4 - 4 - 12
@@ -308,9 +291,27 @@ class EudatICommands(IRuled):
             pid = base + "/" + code
 
         else:
-            print("Work in progress")
-            exit()
-            self.irule_from_file(irule_file)
+            # Use jinja2 templating
+            irule_template = "getpid"
+            jin = Templa(irule_template)
+            irule_file = jin.template2file({'irods_file': '"' + dataobj + '"'})
+            # Call irule from template rendered
+            pid = self.irule_from_file(irule_file)
+            #remove file?
+            os.remove(irule_file)
+
+        return pid
+
+    # PID
+    def check_pid(self, dataobj):
+        """ Should get this value from irods metadata """
+
+        #self.meta_list(dataobj, ['PID'])
+
+        print("Work in progress")
+        exit()
+        self.irule_from_file(irule_file)
+
         return pid
 
     def pid_metadata(self, pid):

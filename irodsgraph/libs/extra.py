@@ -6,7 +6,8 @@ Other methods in my package
 """
 
 DEFAULT_PREFIX = 'abc_'
-from libs import string_generator
+import random
+from libs import TESTING, string_generator
 from libs.ogmmodels import save_node_metadata
 
 ################################
@@ -46,6 +47,7 @@ def fill_irods_random(com, icom, \
         icom.save(hostfile, irods_file)
 
         # Add random meta via imeta
+        metas = {}
         metas_elements = random.randint(1,5)
         for j in range(0, metas_elements):
             # More randoms
@@ -55,29 +57,42 @@ def fill_irods_random(com, icom, \
             name = "meta-" + str(metatag) #str(r3) #to make unique?
             # Content
             value = r3 + r2
-            #print(name, value)
+            metas[name] = value
 
+        #######################
+        ## PID
+        if random.randint(0,3):
+            # PID may not exists
+            pid = icom.register_pid(irods_file)
+            print("Obtained PID", pid)
+
+            if TESTING:
+                # Save pid inside metadata
+                # Automatic if using real Eudat service
+                metas["PID"] = pid
+
+        # Write metadata
+        for key, value in metas.items():
             # Could use batch insert instead
-            icom.meta_write(irods_file, [name], [value])
-            print("Wrote", name, "in", filename)
+            icom.meta_write(irods_file, [key], [value])
+            print("Wrote", key, "in", filename)
 
-            #icom.register_pid(irods_file)
 
 ##########################
 # WORK IN PROGRESS
-            ## Create replica relation + ppid
+        ## Create replica relation + ppid
 
-            # Random choise if replica or not,
-            #   - random number of replicas
+        # Random choise if replica or not,
+        #   - random number of replicas
 
-            #   - Check replica(s) integrity?
-            print("Debug exit")
-            break
+        #   - Check replica(s) integrity?
+        print("Debug exit")
+        exit()
 # WORK IN PROGRESS
 ##########################
 
-        # Debug
-        print("Created ", metas_elements, "elements")
+    # Debug
+    print("Created ", metas_elements, "elements")
 
     # Clean host data
     com.remove_directory(tmp_dir, ignore=True)
