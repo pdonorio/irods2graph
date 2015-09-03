@@ -61,7 +61,7 @@ def fill_irods_random(com, icom, \
 
         #######################
         ## PID
-        if random.randint(0,3):
+        if random.randint(0,2):
             # PID may not exists
             pid = icom.register_pid(irods_file)
             print("Obtained PID", pid)
@@ -77,15 +77,18 @@ def fill_irods_random(com, icom, \
             icom.meta_write(irods_file, [key], [value])
             print("Wrote", key, "in", filename)
 
-
 ##########################
 # WORK IN PROGRESS
-        ## Create replica relation + ppid
+
+        #######################
+        ## REPLICA
+        if TESTING:
+            # Use pickle to save the latest list of replicas
+            pass
 
         # Random choise if replica or not,
         #   - random number of replicas
 
-        #   - Check replica(s) integrity?
         print("Debug exit")
         exit()
 # WORK IN PROGRESS
@@ -148,18 +151,34 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         current_dobj.located.connect(current_zone)
 
         ##################################
+        ## Other METADATA
+
+        # System metadata
+        for key, value in icom.meta_sys_list(ifile):
+            data = {'metatype':'system', 'key':key, 'value':value}
+            save_node_metadata(graph, data, current_dobj)
+
+        # normal metadata, including some Eudat/B2safe
+        for key, value in icom.meta_list(ifile).items():
+            data = {'metatype':'classic', 'key':key, 'value':value}
+            save_node_metadata(graph, data, current_dobj)
+
+        ##################################
         # PID
         pid = icom.check_pid(ifile)
+
         if pid != None:
-            print("We have a PID")
+            # Create and connect
             current_pid = graph.PID(code=pid).save()
             current_dobj.identity.connect(current_pid)
+
             # PID Metadata
             for key, value in icom.pid_metadata(pid).items():
+                #print(key, value)
                 data = {'metatype':'pid', 'key':key, 'value':value}
                 save_node_metadata(graph, data, current_pid, True)
 
-                # Update PID node{checksum}
+                # Update PID node with checksum property
                 if key == 'checksum':
                     current_pid.checksum = value
                     current_pid.save()
@@ -174,23 +193,9 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 #######################
 
         ##################################
-        ## Other METADATA
-
-        # System metadata
-        for key, value in icom.meta_sys_list(ifile):
-            data = {'metatype':'system', 'key':key, 'value':value}
-            save_node_metadata(graph, data, current_dobj)
-
-        # normal metadata, including some Eudat/B2safe
-        for key, value in icom.meta_list(ifile).items():
-            data = {'metatype':'classic', 'key':key, 'value':value}
-            save_node_metadata(graph, data, current_dobj)
-
-
-        ##################################
         # Save the data object inside graph
         print("Data Object [created]\t", location)
 
         # DEBUG
-        print("DEBUG exit")
-        break
+        # print("DEBUG exit")
+        # exit()

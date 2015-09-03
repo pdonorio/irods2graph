@@ -190,6 +190,7 @@ class IMetaCommands(ICommands):
         return self.execute_command(com, args)
 
     def meta_list(self, path, attributes=[]):
+        """ Listing all irods metadata """
         out = self.meta_command(path, 'list', attributes)
 
         # Parse out
@@ -209,7 +210,7 @@ class IMetaCommands(ICommands):
         return metas
 
     def meta_sys_list(self, path):
-        #isysmeta ls
+        """ Listing file system metadata """
         com = "isysmeta"
         args = ['ls']
         args.append(path)
@@ -253,6 +254,8 @@ class EudatICommands(IRuled):
     """ See project documentation
     http://eudat.eu/User%20Documentation%20-%20iRODS%20Deployment.html
     """
+
+    latest_pid = None
 
     def parse_rest_json(self, json_string=None, json_file=None):
         """ Parsing REST API output in JSON format """
@@ -302,15 +305,28 @@ class EudatICommands(IRuled):
 
         return pid
 
+    def meta_list(self, path, attributes=[]):
+        """
+        Little trick to save PID from metadata listing:
+        override the original method
+        """
+        metas = super(EudatICommands, self).meta_list(path, attributes)
+        if 'PID' in metas:
+            self.latest_pid = metas['PID']
+        else:
+            self.latest_pid = None
+        return metas
+
     # PID
     def check_pid(self, dataobj):
         """ Should get this value from irods metadata """
 
+        # Solved with a trick
+        pid = self.latest_pid
+        # Otherwise
         #self.meta_list(dataobj, ['PID'])
-
-        print("Work in progress")
-        exit()
-        self.irule_from_file(irule_file)
+        # Might also use an irods rule to seek
+        #self.irule_from_file(irule_file)
 
         return pid
 
