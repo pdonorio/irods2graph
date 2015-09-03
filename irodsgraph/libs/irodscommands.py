@@ -154,7 +154,6 @@ class ICommands(BashCommands):
         """
 
         com = "irepl"
-#irepl irods2graph/abc_qreKLIUJb0dMnWvU24nLhKf3J1vM5LvF.txt -P -S demoResc -R replicaRes
         if not resOri:
             resOri = self.first_resource
         if not resDest:
@@ -174,7 +173,13 @@ class ICommands(BashCommands):
         return self.execute_command(com, args)
 
     def replica_list(self, dataobj):
-        pass
+        com = 'ils'
+        args = ['-l']
+        args.append(dataobj)
+        out = self.execute_command(com, args)
+        print(out)
+        exit()
+        return out
 
 #######################################
 ## irods and metadata
@@ -396,19 +401,15 @@ class EudatICommands(IRuled):
             'parent_pid': pid_metas['EUDAT/PPID']
         }
 
-    def replica(self, dataobj, replicas_num=1, pid_register=True, \
-        resOri=None, resDest=None):
+    def eudat_replica(self, dataobj_ori, dataobj_dest, pid_register=True):
         """ Replica """
-        out = super(EudatICommands, self).replica(dataobj, \
-            replicas_num, resOri, resDest)
+        print("***REPLICA PID REGISTRATION NOT IMPLEMENTED YET ***")
+        # Use Eudat irule?
+        exit()
 
-        if pid_register:
-            print("***REPLICA PID REGISTRATION NOT IMPLEMENTED YET ***")
-            # Use Eudat irule?
-            #pid = self.register_pid("WHO?")
-            #return pid
-
-        return out
+    def eudat_find_ppid(self, dataobj):
+        print("***REPLICA EUDAT LIST NOT IMPLEMENTED YET ***")
+        exit()
 
 ################################
 ## CONNECT TO IRODS ?

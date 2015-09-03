@@ -84,19 +84,21 @@ def fill_irods_random(com, icom, \
         ## REPLICA
 
         # Random choise if replica or not
-        if random.randint(0,2):
+        if random.randint(0,3):
             print("Replica!")
-            # Random number of replicas
-            n = random.randint(1,3)
-            icom.replica(irods_file, n)
 
-        # if TESTING:
-        #     # Use pickle to save the latest list of replicas
-        #     print("To save pickle replica list")
-        #     pass
+            if TESTING:
+                # Random number of replicas
+                n = random.randint(1,3)
+                # irods simple replica
+                icom.replica(irods_file, n)
+                icom.replica_list(irods_file)
+            else:
+                # Eudat
+                icom.eudat_replica(irods_file)
 
-        # print("Debug exit")
-        # exit()
+            print("Debug exit")
+            exit()
 # WORK IN PROGRESS
 ##########################
 

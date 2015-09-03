@@ -15,12 +15,12 @@ Moving data from iRODS server to a Neo4j graphdb.
     * templating for one irods rule
     * eudat epic client for PID metadata
 // DOING:
-    * Replica listing (with ils -l)
+    * Replica
 // TODO:
-    * Resource node saving and connecting
-    * Replica node saving and connecting
-    * add logs class
     * template all rules
+    * Resource
+    * Collections
+    * add logs class
 // TOFIX
     * show counts of irods element vs selected elements
     * switch script to ipython:
