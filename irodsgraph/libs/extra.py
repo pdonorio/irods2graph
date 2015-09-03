@@ -78,6 +78,7 @@ def fill_irods_random(com, icom, \
 ##########################
 # WORK IN PROGRESS
 
+# REMOVED IN DEBUG
             #icom.register_pid(irods_file)
 # REMOVED IN DEBUG
 
@@ -169,6 +170,14 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             for key, value in icom.pid_metadata(pid).items():
                 data = {'metatype':'pid', 'key':key, 'value':value}
                 save_node_metadata(graph, data, current_dobj)
+
+# # WORK IN PROGRESS
+
+# # Create PID node{checksum}
+
+# # If PPID then create replica relation{ppid, ror}
+
+# # Check integrity?
 
         ##################################
         # Save the data object inside graph
