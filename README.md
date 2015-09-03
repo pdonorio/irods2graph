@@ -24,6 +24,11 @@ DataObject - [:IS_REPLICA_OF{PPID, ROR}] -> DataObject
     Note: PPID = PID of replicated object, computable by query
     Note: ROR is the ancestor, the first element. Should be computable.
     Note: Replica is preferable a node instead of property { Replica: 0/1 }
+
+# To be added as model/properties:
+# - checksum timestamp (integrity)
+# - ACL
+
 ```
 
 These models [are mapped as objects](https://github.com/pdonorio/irods2graph/blob/master/irodsgraph/libs/ogmmodels.py#L13) inside the python project using
