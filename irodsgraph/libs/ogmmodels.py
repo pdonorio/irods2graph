@@ -52,9 +52,9 @@ class Replication(StructuredRel):
 class DataObject(StructuredNode):
     """ iRODS data object [File] """
     location = StringProperty(unique_index=True)
+    #PID = StringProperty(index=True)    # May not exist
     filename = StringProperty(index=True)
     path = StringProperty()
-    PID = StringProperty(index=True)    # May not exist
     # Relations
     located = RelationshipTo(Zone, 'IS_LOCATED_IN')
     stored = RelationshipTo(Resource, 'STORED_IN')
@@ -62,16 +62,6 @@ class DataObject(StructuredNode):
     replica = RelationshipTo('DataObject', 'IS_REPLICA_OF', model=Replication)
     described = RelationshipFrom('MetaData', 'DESCRIBED_BY')
     identity = RelationshipFrom('PID', 'UNIQUELY_IDENTIFIED_BY')
-
-class MetaData(StructuredNode):
-    """ Any metaData stored in iRODS """
-    key = StringProperty(index=True)
-    metatype = StringProperty()
-    value = StringProperty(index=True)
-    # Relations
-    data = RelationshipTo(DataObject, 'DESCRIBED_BY')
-    resource = RelationshipTo(Resource, 'DESCRIBED_BY')
-    collection = RelationshipTo(Collection, 'DESCRIBED_BY')
 
 class PID(StructuredNode):
     """
@@ -81,7 +71,19 @@ class PID(StructuredNode):
     code = StringProperty(unique_index=True)
     checksum = StringProperty(index=True)   # For integrity
     # Relations
+    described = RelationshipFrom('MetaData', 'DESCRIBED_BY')
     identify = RelationshipTo(DataObject, 'UNIQUELY_IDENTIFIED_BY')
+
+class MetaData(StructuredNode):
+    """ Any metaData stored in any service level """
+    key = StringProperty(index=True)
+    metatype = StringProperty()         # Describe the level of metadata
+    value = StringProperty(index=True)
+    # Relations
+    pid = RelationshipTo(PID, 'DESCRIBED_BY')
+    data = RelationshipTo(DataObject, 'DESCRIBED_BY')
+    resource = RelationshipTo(Resource, 'DESCRIBED_BY')
+    collection = RelationshipTo(Collection, 'DESCRIBED_BY')
 
 ################################
 # Utilities functions
@@ -98,4 +100,6 @@ def save_node_metadata(graph_node, data, from_node=None):
 
 from libs.graph import GraphDB
 graph = GraphDB()
-graph.load_models([Zone, Resource, DataObject, Collection, MetaData])
+# // TO FIX: may this be listed with a python for?
+models = [Zone, Resource, DataObject, Collection, PID, MetaData, Replication]
+graph.load_models(models)

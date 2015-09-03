@@ -4,14 +4,14 @@
 """
 My irods client class wrapper.
 
-Since python3 is not ready for API or client,
+Since python3 is not ready for irods unofficial client,
 i base this wrapper on plumbum package handling shell commands.
 """
 
-import os, inspect, re, hashlib
+import os, inspect, re, random, hashlib
 from libs.bash import BashCommands
 from libs.templating import Templa
-from libs import IRODS_ENV, TESTING
+from libs import IRODS_ENV, TESTING, string_generator
 
 #######################################
 ## basic irods
@@ -291,11 +291,19 @@ class EudatICommands(IRuled):
     def check_pid(self, dataobj):
 
         if TESTING:
-            # FAKE PID for testing purpose
-            m = hashlib.md5(dataobj.encode('utf-8'))
-            pid = m.hexdigest()
-# // TO FIX: may not exists
+            # PID may not exists
+            if not random.randint(0,1):
+                return None
+
             #pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
+            # 8 - 4 - 4 - 4 - 12
+            base = "842"
+            code = string_generator(8)
+            code += "-" + str(random.randint(1000,9999))
+            code += "-" + string_generator(4) + "-" + string_generator(4)
+            code += "-" + string_generator(12)
+            pid = base + "/" + code
+
         else:
             print("Work in progress")
             exit()
@@ -303,6 +311,8 @@ class EudatICommands(IRuled):
         return pid
 
     def pid_metadata(self, pid):
+        """ Metadata derived only inside an Eudat enviroment """
+
         # Binary included inside the neoicommands docker image
         com = 'epicc'
         credentials = './conf/credentials.json'
@@ -310,15 +320,22 @@ class EudatICommands(IRuled):
 
         json_data = ""
         if TESTING:
+            empty = ""
+            pid_metas = {
+                'URL': empty,
+                'CHECKSUM': empty,
+                'EUDAT/PPID': empty,
+            }
             # Fake, always the same
             pid_metas = self.parse_rest_json(None, './tests/epic.pid.out')
         else:
             json_data = self.execute_command(com, args).strip()
             pid_metas = self.parse_rest_json(json_data)
 
-        # Meaningfull data
+        ## Meaningfull data
+
         location = pid_metas['URL']
-        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+        # # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
         checksum = pid_metas['CHECKSUM']
         # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
         parent_pid = pid_metas['EUDAT/PPID']

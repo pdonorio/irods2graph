@@ -6,21 +6,8 @@ Other methods in my package
 """
 
 DEFAULT_PREFIX = 'abc_'
-import string, random
+from libs import string_generator
 from libs.ogmmodels import save_node_metadata
-
-################################
-## UTILITIES
-def string_generator(size=32, \
-    chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
-    """ Create a random string of fixed size """
-
-    # Some chaos to order
-    return ''.join(random.choice(chars) for _ in range(size))
-
-# def get_classes_from_module(mod):
-#     return dict([(name, cls) \
-#         for name, cls in mod.__dict__.items() if isinstance(cls, type)])
 
 ################################
 ## POPOLAE
@@ -140,44 +127,48 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             current_zone = graph.Zone(name=zone).save()
 
         ##################################
-        # PID
-        pid = icom.check_pid(ifile)
-
-        ##################################
         # Store Data Object
         current_dobj = graph.DataObject(location=location, \
-            filename=filename, path=ifile, PID=pid).save()
+            filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
 
         ##################################
-        ## METADATA
+        # PID
+        pid = icom.check_pid(ifile)
+        if pid != None:
+            print("We have a PID")
+            current_pid = graph.PID(code=pid).save()
+            current_dobj.identity.connect(current_pid)
+            # PID Metadata
+            for key, value in icom.pid_metadata(pid).items():
+                data = {'metatype':'pid', 'key':key, 'value':value}
+                save_node_metadata(graph, data, current_dobj)
+
+#######################
+# WORK IN PROGRESS
+
+## Update PID node{checksum}
+## If PPID then create replica relation{ppid, ror}
+## Check integrity?
+
+        break
+# WORK IN PROGRESS
+#######################
+
+        ##################################
+        ## Other METADATA
 
         # System metadata
         for key, value in icom.meta_sys_list(ifile):
             data = {'metatype':'system', 'key':key, 'value':value}
             save_node_metadata(graph, data, current_dobj)
 
-        # Other metadata, including Eudat/B2safe
-        metas = icom.meta_list(ifile)
-        # Create metadata attributes and connect
-        for key, value in metas.items():
+        # normal metadata, including some Eudat/B2safe
+        for key, value in icom.meta_list(ifile).items():
             data = {'metatype':'classic', 'key':key, 'value':value}
             save_node_metadata(graph, data, current_dobj)
 
-        # PID Metadata
-        if pid != None:
-            for key, value in icom.pid_metadata(pid).items():
-                data = {'metatype':'pid', 'key':key, 'value':value}
-                save_node_metadata(graph, data, current_dobj)
-
-# # WORK IN PROGRESS
-
-# # Create PID node{checksum}
-
-# # If PPID then create replica relation{ppid, ror}
-
-# # Check integrity?
 
         ##################################
         # Save the data object inside graph
