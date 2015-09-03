@@ -29,6 +29,10 @@ echo "$remoteconf" > $IRODS_ENV
 #echo "$localconf" > $IRODS_ENV
 bash -c "iinit" || exit $?
 
+# Create a second resource for replicas
+iadmin mkresc replicaResc unixfilesystem rodserver:/tmp/REPLICA
+#https://docs.irods.org/master/manual/installation/#add-additional-resources
+
 ./app.py popolae --size=2
 
 #./app.py popolae --size=20

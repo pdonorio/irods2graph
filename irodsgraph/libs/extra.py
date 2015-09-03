@@ -6,7 +6,7 @@ Other methods in my package
 """
 
 DEFAULT_PREFIX = 'abc_'
-import random
+import random, pickle
 from libs import TESTING, string_generator
 from libs.ogmmodels import save_node_metadata
 
@@ -82,15 +82,21 @@ def fill_irods_random(com, icom, \
 
         #######################
         ## REPLICA
-        if TESTING:
-            # Use pickle to save the latest list of replicas
-            pass
 
-        # Random choise if replica or not,
-        #   - random number of replicas
+        # Random choise if replica or not
+        if random.randint(0,2):
+            print("Replica!")
+            # Random number of replicas
+            n = random.randint(1,3)
+            icom.replica(irods_file, n)
 
-        print("Debug exit")
-        exit()
+        # if TESTING:
+        #     # Use pickle to save the latest list of replicas
+        #     print("To save pickle replica list")
+        #     pass
+
+        # print("Debug exit")
+        # exit()
 # WORK IN PROGRESS
 ##########################
 

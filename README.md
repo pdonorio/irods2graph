@@ -20,10 +20,10 @@ DataObject - [:UNIQUELY_IDENTIFIED_BY] -> PID{EudatChecksum:'xyz'}
     Note: PID is also a Metadata attribute (PID: x/y-z-w)
     but since Checksum is its property it is better handled as a node
 
-DataObject - [:IS_REPLICA_OF{PPID, ROR}] -> DataObject
+Resource#A <-[:STORED_IN]- DataObject -[:IS_REPLICA_OF{PPID, ROR}]-> DataObject -[:STORED_IN]-> Resource#B
     Note: PPID = PID of replicated object, computable by query
     Note: ROR is the ancestor, the first element. Should be computable.
-    Note: Replica is preferable a node instead of property { Replica: 0/1 }
+    Note: Replica relation is preferable a node instead of property { Replica: 0/1 }
 
 # To be added as model/properties:
 # - checksum timestamp (integrity)

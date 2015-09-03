@@ -13,9 +13,12 @@ Moving data from iRODS server to a Neo4j graphdb.
     * PID rules tests
     * Recover PID from testbed with eudat epic client
     * templating for one irods rule
-// DOING:
     * eudat epic client for PID metadata
+// DOING:
+    * Replica listing (with ils -l)
 // TODO:
+    * Resource node saving and connecting
+    * Replica node saving and connecting
     * add logs class
     * template all rules
 // TOFIX

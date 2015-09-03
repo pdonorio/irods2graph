@@ -22,6 +22,9 @@ class ICommands(BashCommands):
     _init_data = {}
     _base_dir = ''
 
+    first_resource = 'demoResc'
+    second_resource = 'replicaResc'
+
     def __init__(self, irodsenv=IRODS_ENV):
 
         # Recover plumbum shell enviroment
@@ -139,11 +142,39 @@ class ICommands(BashCommands):
         except Exception:
             print("No data found. " + \
                 "You may try 'popolae' command first.")
-# // TO FIX
             exit(1)
         if out:
             return out.strip().split('\n')
         return out
+
+    def replica(self, dataobj, replicas_num=1, resOri=None, resDest=None):
+        """ Replica
+        Replicate a file in iRODS to another storage resource.
+        Note that replication is always within a zone.
+        """
+
+        com = "irepl"
+#irepl irods2graph/abc_qreKLIUJb0dMnWvU24nLhKf3J1vM5LvF.txt -P -S demoResc -R replicaRes
+        if not resOri:
+            resOri = self.first_resource
+        if not resDest:
+            resDest = self.second_resource
+
+        args = [dataobj]
+        args.append("-P") # debug copy
+        args.append("-n")
+        args.append(replicas_num)
+        # Ori
+        args.append("-S")
+        args.append(resOri)
+        # Dest
+        args.append("-R")
+        args.append(resDest)
+
+        return self.execute_command(com, args)
+
+    def replica_list(self, dataobj):
+        pass
 
 #######################################
 ## irods and metadata
@@ -276,8 +307,8 @@ class EudatICommands(IRuled):
 
         return metas
 
-    # PID and replica
-    def register_pid(self, dataobj):
+    # PID
+    def register_pid(self, dataobj, resource=None):
 
         # Path fix
         dataobj = os.path.join(self._base_dir, dataobj)
@@ -340,12 +371,18 @@ class EudatICommands(IRuled):
 
         json_data = ""
         if TESTING:
+# // TO FIX:
             empty = ""
+# Generate random
+        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
+        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
             pid_metas = {
                 'URL': empty,
                 'CHECKSUM': empty,
                 'EUDAT/PPID': empty,
             }
+# // TO REMOVE:
             # Fake, always the same
             pid_metas = self.parse_rest_json(None, './tests/epic.pid.out')
         else:
@@ -355,12 +392,23 @@ class EudatICommands(IRuled):
         ## Meaningfull data
         return {
             'location': pid_metas['URL'],
-        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
             'checksum': pid_metas['CHECKSUM'],
-        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
             'parent_pid': pid_metas['EUDAT/PPID']
-        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
         }
+
+    def replica(self, dataobj, replicas_num=1, pid_register=True, \
+        resOri=None, resDest=None):
+        """ Replica """
+        out = super(EudatICommands, self).replica(dataobj, \
+            replicas_num, resOri, resDest)
+
+        if pid_register:
+            print("***REPLICA PID REGISTRATION NOT IMPLEMENTED YET ***")
+            # Use Eudat irule?
+            #pid = self.register_pid("WHO?")
+            #return pid
+
+        return out
 
 ################################
 ## CONNECT TO IRODS ?
