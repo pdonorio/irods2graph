@@ -2,13 +2,14 @@
 
 EUDAT (http://eudat.eu/) Work Package 9.2: experimenting with graph database on entities across the various services
 
-### Model
+### Models
+*for [B2Safe](http://eudat.eu/b2safe) Eudat service*
 
 ```
 DataObject{Location:'irods://host:port/ZONE/path'} - [:IS_LOCATED_IN] -> Zone
 DataObject - [:STORED_IN] -> Resource - [:IS_AVAILABLE_IN] -> Zone
 
-DataObject - [:BELONGS_TO] -> Collection [:BELONGS_TO] -> Collection [:IS_LOCATED_IN] -> Zone
+DataObject - [:BELONGS_TO] -> Collection [:INSIDE] -> Collection [:IS_PLACED_IN] -> Zone
     Note: Path is computable from Collections walking
 
 DataObject - [:DESCRIBED_BY] -> MetaData
@@ -24,3 +25,6 @@ DataObject - [:IS_REPLICA_OF{PPID, ROR}] -> DataObject
     Note: ROR is the ancestor, the first element. Should be computable.
     Note: Replica is preferable a node instead of property { Replica: 0/1 }
 ```
+
+These models [are mapped as objects](https://github.com/pdonorio/irods2graph/blob/master/irodsgraph/libs/ogmmodels.py#L13) inside the python project using
+the [**neomodel**](http://neomodel.readthedocs.org/en/latest/) OGM library
