@@ -88,11 +88,14 @@ class MetaData(StructuredNode):
 ################################
 # Utilities functions
 
-def save_node_metadata(graph_node, data, from_node=None):
+def save_node_metadata(graph_node, data, from_node=None, pid=False):
     """ Generic pattern of saving metadata and connecting a node """
     obj = graph_node.MetaData(**data).save()
     if from_node != None:
-        obj.data.connect(from_node)
+        if pid:
+            obj.pid.connect(from_node)
+        else:
+            obj.data.connect(from_node)
     print("Saved and connected", data)
 
 ################################

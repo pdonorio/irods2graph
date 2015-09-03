@@ -61,16 +61,15 @@ def fill_irods_random(com, icom, \
             icom.meta_write(irods_file, [name], [value])
             print("Wrote", name, "in", filename)
 
+            #icom.register_pid(irods_file)
 
 ##########################
 # WORK IN PROGRESS
-
-# REMOVED IN DEBUG
-            #icom.register_pid(irods_file)
-# REMOVED IN DEBUG
+            ## Create replica relation + ppid
 
             # Random choise if replica or not,
             #   - random number of replicas
+
             #   - Check replica(s) integrity?
             print("Debug exit")
             break
@@ -143,16 +142,19 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             # PID Metadata
             for key, value in icom.pid_metadata(pid).items():
                 data = {'metatype':'pid', 'key':key, 'value':value}
-                save_node_metadata(graph, data, current_dobj)
+                save_node_metadata(graph, data, current_pid, True)
+
+                # Update PID node{checksum}
+                if key == 'checksum':
+                    current_pid.checksum = value
+                    current_pid.save()
 
 #######################
 # WORK IN PROGRESS
 
-## Update PID node{checksum}
-## If PPID then create replica relation{ppid, ror}
-## Check integrity?
+            ## Check replica relation{ppid, ror}
+            ## Check integrity?
 
-        break
 # WORK IN PROGRESS
 #######################
 

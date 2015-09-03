@@ -287,8 +287,11 @@ class EudatICommands(IRuled):
         os.remove(irule_file)
         return True
 
-    # PID and replica
+    # PID
     def check_pid(self, dataobj):
+        """ Should get this value from irods metadata """
+
+        #self.meta_list(dataobj, ['PID'])
 
         if TESTING:
             # PID may not exists
@@ -333,18 +336,13 @@ class EudatICommands(IRuled):
             pid_metas = self.parse_rest_json(json_data)
 
         ## Meaningfull data
-
-        location = pid_metas['URL']
-        # # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
-        checksum = pid_metas['CHECKSUM']
-        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
-        parent_pid = pid_metas['EUDAT/PPID']
-        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
-
         return {
-            'location': location,
-            'checksum': checksum,
-            'parent_pid': parent_pid
+            'location': pid_metas['URL'],
+        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+            'checksum': pid_metas['CHECKSUM'],
+        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
+            'parent_pid': pid_metas['EUDAT/PPID']
+        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
         }
 
 ################################
