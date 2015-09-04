@@ -57,6 +57,8 @@ class Templa(object):
         if os.path.exists(template_file):
             content = self.render_template(template, context)
             return self.write_to_file(content)
+        else:
+            raise EnvironmentError("Cannot find: " + template_file)
 
         return False
 

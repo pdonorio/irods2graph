@@ -69,9 +69,12 @@ class ICommands(BashCommands):
         com = "ipwd"
         return self.execute_command(com).strip()
 
-    def create_empty(self, path, directory=False):
+    def create_empty(self, path, directory=False, ignore_existing=False):
+        args = [path]
         if directory:
             com = "imkdir"
+            if ignore_existing:
+                args.append("-p")
         else:
             # // TODO:
             # super call of create_tempy with file (touch)
@@ -82,7 +85,7 @@ class ICommands(BashCommands):
             return
 
         # Debug
-        self.execute_command(com, [path])
+        self.execute_command(com, args)
         print("Created", path)
         # com = ""
         # self.execute_command(com, [path])
@@ -113,7 +116,7 @@ class ICommands(BashCommands):
     def save(self, path, destination=None):
         com = 'iput'
         args = [path]
-        if destination:
+        if destination is not None:
             args.append(destination)
         # Execute
         self.execute_command(com, args)
@@ -154,9 +157,9 @@ class ICommands(BashCommands):
         """
 
         com = "irepl"
-        if not resOri:
+        if not resOri is not None:
             resOri = self.first_resource
-        if not resDest:
+        if not resDest is not None:
             resDest = self.second_resource
 
         args = [dataobj]
@@ -270,9 +273,9 @@ class IRuled(IMetaCommands):
     def irule_execution(self, rule=None, rule_file=None):
         com='irule'
         args=[]
-        if rule:
+        if rule is not None:
             args.append(rule)
-        elif rule_file:
+        elif rule_file is not None:
             args.append('-F')
             args.append(rule_file)
 
@@ -293,14 +296,29 @@ class EudatICommands(IRuled):
 
     latest_pid = None
 
+    def execute_rule_from_template(self, rule, context={}):
+        """
+        Using my template class for executing an irods rule
+        from a rendered file with variables in context
+        """
+        jin = Templa(rule)
+        # Use jinja2 templating
+        irule_file = jin.template2file(context)
+        # Call irule from template rendered
+        out = self.irule_from_file(irule_file)
+        # Remove file
+        os.remove(irule_file)
+        # Send response back
+        return out
+
     def parse_rest_json(self, json_string=None, json_file=None):
         """ Parsing REST API output in JSON format """
         import json
         json_data = ""
 
-        if json_string:
+        if json_string is not None:
             json_data = json.loads(json_string)
-        elif json_file:
+        elif json_file is not None:
             with open(json_file) as f:
                 json_data = json.load(f)
 
@@ -313,7 +331,8 @@ class EudatICommands(IRuled):
         return metas
 
     # PID
-    def register_pid(self, dataobj, resource=None):
+    def register_pid(self, dataobj):
+        """ Eudat rule for irods to register a PID to a Handle """
 
         # Path fix
         dataobj = os.path.join(self._base_dir, dataobj)
@@ -330,14 +349,10 @@ class EudatICommands(IRuled):
             pid = base + "/" + code
 
         else:
-            # Use jinja2 templating
-            irule_template = "getpid"
-            jin = Templa(irule_template)
-            irule_file = jin.template2file({'irods_file': '"' + dataobj + '"'})
-            # Call irule from template rendered
-            pid = self.irule_from_file(irule_file)
-            #remove file?
-            os.remove(irule_file)
+            context = {
+                'irods_file': dataobj.center(len(dataobj)+2, '"')
+            }
+            pid = self.execute_rule_from_template('getpid', context)
 
         return pid
 
@@ -403,27 +418,20 @@ class EudatICommands(IRuled):
 
     def eudat_replica(self, dataobj_ori, dataobj_dest=None, pid_register=True):
         """ Replication as Eudat B2safe """
-        # Eudat rule for replication
-        irule_template = "replica"
 
-        if not dataobj_dest:
+        if dataobj_dest is None:
             dataobj_dest = dataobj_ori + ".replica"
         dataobj_ori = os.path.join(self._base_dir, dataobj_ori)
         dataobj_dest = os.path.join(self._base_dir, dataobj_dest)
 
-        # Use jinja2 templating
-        jin = Templa(irule_template)
         context = {
             'dataobj_source': dataobj_ori.center(len(dataobj_ori)+2, '"'),
             'dataobj_dest': dataobj_dest.center(len(dataobj_dest)+2, '"'),
             'pid_register': \
                 str(pid_register).lower().center(len(str(pid_register))+2, '"'),
         }
-        irule_file = jin.template2file(context)
-        # Call irule from template rendered
-        pid = self.irule_from_file(irule_file)
-        #remove file?
-        os.remove(irule_file)
+
+        return self.execute_rule_from_template('replica', context)
 
     def eudat_find_ppid(self, dataobj):
         print("***REPLICA EUDAT LIST NOT IMPLEMENTED YET ***")
