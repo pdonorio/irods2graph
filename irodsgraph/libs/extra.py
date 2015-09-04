@@ -127,7 +127,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         counter += 1
         if counter > elements:
             break
-        print("Working with", ifile)
+
+        print("\nWorking with", ifile)
 
         ##################################
         # Getting the three pieces from Absolute Path of data object:
@@ -204,10 +205,11 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     # Save work in progress?
     # pickle.dump(replicas, open('objs/replicas.obj',"wb"))
     # pickle.dump(graph, open('objs/graph.obj',"wb"))
+    print()
 
     for replica, parent in replicas.items():
+        #print("Replica", replica, "of", parent)
         # Connect replicas
-        print("Replica", replica, "of", parent)
         findconnect_frompid(graph, replica, parent)
     print("Visited", counter-1, "elements")
 
@@ -229,4 +231,7 @@ def findconnect_frompid(graph, pid, ppid):
         exit()
 
     relation = dobj_replica.replica.connect(dobj_parent)
-    print("Saved replica relation for", dobj_replica, dobj_parent)
+    relation.ppid = ppid
+    # // TO FIX:
+    relation.ror = relation.ppid
+    print("Saved replica relation for", pid, relation.ppid)

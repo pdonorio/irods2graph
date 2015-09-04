@@ -8,17 +8,14 @@ Moving data from iRODS server to a Neo4j graphdb.
 // DONE:
     * packaging, libraries and class style
     * docker section
-    * iclient bootstrap script
     * write graphdb class and OGM models, with entities list
-    * PID rules tests
-    * Recover PID from testbed with eudat epic client
-    * templating for one irods rule
+    * PID and rules
     * eudat epic client for PID metadata
-// DOING:
     * Replica relation
+// DOING:
+    * Collections and Resources: from metadata to nodes
     * add logs class
 // TODO:
-    * Collections and Resources: from metadata to nodes
     * template all rules
 // TOFIX
     * show counts of irods element vs selected elements
