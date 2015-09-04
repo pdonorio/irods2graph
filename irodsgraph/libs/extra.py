@@ -119,6 +119,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     data_objs = icom.search(prefix)
 
     counter = 0
+    replicas = {}
+
     for ifile in data_objs:
 
         # Limit elements as requested
@@ -169,9 +171,6 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             data = {'metatype':'classic', 'key':key, 'value':value}
             save_node_metadata(graph, data, current_dobj)
 
-#######################
-# WORK IN PROGRESS
-
         ##################################
         # PID
         pid = icom.check_pid(ifile)
@@ -191,17 +190,42 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
                 if key == 'checksum':
                     current_pid.checksum = value
                     current_pid.save()
+## Check file integrity?
 
-            ## Check replica relation{ppid, ror}
-            ## Check integrity?
-            print("DEBUG exit"); exit();
-# WORK IN PROGRESS
-#######################
+                ## Check replica relation{ppid, ror}
+                if key == 'parent_pid' and value is not '':
+                    replicas[pid] = value
 
         ##################################
         # Save the data object inside graph
         print("Data Object [created]\t", location)
 
-        # DEBUG
-        # print("DEBUG exit")
-        # exit()
+#######################
+# WORK IN PROGRESS
+    print("REPLICAS", replicas)
+    for replica, parent in replicas.items():
+        # Connect replicas
+        print("Replica", replica, "of", parent)
+#        findconnect_frompid(graph, replica, parent)
+# WORK IN PROGRESS
+#######################
+    print("Visited", counter-1, "elements")
+
+def findconnect_frompid(graph, pid, ppid):
+    # Get node from pid
+    try:
+        replica = graph.PID.nodes.get(code=pid)
+    except graph.PID.DoesNotExist:
+        print("Couldn't find PID", pid)
+        exit()
+    try:
+        parent = graph.PID.nodes.get(code=ppid)
+    except graph.PID.DoesNotExist:
+        print("Couldn't find PID", ppid)
+        exit()
+
+    print(replica, parent)
+    relation = replica.replica.connect(parent)
+
+    exit()
+

@@ -96,7 +96,7 @@ def save_node_metadata(graph_node, data, from_node=None, pid=False):
             obj.pid.connect(from_node)
         else:
             obj.data.connect(from_node)
-    print("Saved and connected", data)
+    #print("Saved and connected", data)
 
 ################################
 # Saving models inside the graph class, as properties

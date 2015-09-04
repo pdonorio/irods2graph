@@ -407,7 +407,11 @@ class EudatICommands(IRuled):
             # Fake, always the same
             pid_metas = self.parse_rest_json(None, './tests/epic.pid.out')
         else:
+            print("Epic client for", args)
             json_data = self.execute_command(com, args).strip()
+            print(json_data)
+            if json_data.strip() == 'None':
+                return {}
             pid_metas = self.parse_rest_json(json_data)
 
         ## Meaningfull data

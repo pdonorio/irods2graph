@@ -2,6 +2,8 @@
 
 EUDAT (http://eudat.eu/) Work Package 9.2: experimenting with graph database on entities across the various services
 
+Tracking ideas & progress [here](http://j.mp/cinecagraphdoc).
+
 ### Models
 *for [B2Safe](http://eudat.eu/b2safe) Eudat service*
 
