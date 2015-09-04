@@ -60,7 +60,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
 
         #######################
         ## PID
-        if random.randint(0,2):
+        if random.randint(0,1):
             # PID may not exists
             pid = icom.register_pid(irods_file)
             print("Obtained PID", pid)
@@ -80,7 +80,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         ## REPLICA
 
         # Random choise if replica or not
-        if random.randint(0,3):
+        if random.randint(0,1):
             print("Replica!")
 
             # Random number of replicas
@@ -193,39 +193,40 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 ## Check file integrity?
 
                 ## Check replica relation{ppid, ror}
-                if key == 'parent_pid' and value is not '':
+                if key == 'parent_pid' and value is not None and value is not '':
                     replicas[pid] = value
+                    print("Added replica for", pid)
 
         ##################################
         # Save the data object inside graph
         print("Data Object [created]\t", location)
 
-#######################
-# WORK IN PROGRESS
-    print("REPLICAS", replicas)
+    # Save work in progress?
+    # pickle.dump(replicas, open('objs/replicas.obj',"wb"))
+    # pickle.dump(graph, open('objs/graph.obj',"wb"))
+
     for replica, parent in replicas.items():
         # Connect replicas
         print("Replica", replica, "of", parent)
-#        findconnect_frompid(graph, replica, parent)
-# WORK IN PROGRESS
-#######################
+        findconnect_frompid(graph, replica, parent)
     print("Visited", counter-1, "elements")
 
+############################################
 def findconnect_frompid(graph, pid, ppid):
     # Get node from pid
     try:
-        replica = graph.PID.nodes.get(code=pid)
+        pid_replica = graph.PID.nodes.get(code=pid)
+        dobj_replica = pid_replica.identify.get()
     except graph.PID.DoesNotExist:
         print("Couldn't find PID", pid)
         exit()
+
     try:
-        parent = graph.PID.nodes.get(code=ppid)
+        pid_parent = graph.PID.nodes.get(code=ppid)
+        dobj_parent = pid_parent.identify.get()
     except graph.PID.DoesNotExist:
         print("Couldn't find PID", ppid)
         exit()
 
-    print(replica, parent)
-    relation = replica.replica.connect(parent)
-
-    exit()
-
+    relation = dobj_replica.replica.connect(dobj_parent)
+    print("Saved replica relation for", dobj_replica, dobj_parent)

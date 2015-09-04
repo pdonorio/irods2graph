@@ -35,8 +35,6 @@ bash -c "iinit" || exit $?
 # iadmin mkresc replicaResc unixfilesystem rodserver:/tmp/REPLICA
 # #https://docs.irods.org/master/manual/installation/#add-additional-resources
 
-./app.py popolae --size=2
-
 #./app.py popolae --size=20
 # ./app.py convert
 

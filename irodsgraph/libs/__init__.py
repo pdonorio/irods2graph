@@ -10,9 +10,10 @@ import os, string, random
 USER_HOME = os.environ['HOME']
 CONFIG_FILE = USER_HOME + "/.irodsgraph_connections.ini"
 IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
+
 ## DEVELOPMENT?
-TESTING = True
-#TESTING = False
+#TESTING = True
+TESTING = False
 
 ###########################
 # Parameters

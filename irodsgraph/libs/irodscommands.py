@@ -391,13 +391,20 @@ class EudatICommands(IRuled):
         args = ['os', credentials, 'read', pid]
 
         json_data = ""
+        select = {
+            'location':'URL',
+            'checksum': 'CHECKSUM',
+            'parent_pid':'EUDAT/PPID',
+        }
+        metas = {}
+
         if TESTING:
 # // TO FIX:
             empty = ""
 # Generate random
-        # e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
-        # e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
-        # e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
+# e.g. irods://130.186.13.14:1247/cinecaDMPZone/home/pdonorio/replica/test2
+# e.g. sha2:dCdRWFfS2TGm/4BfKQPu1WdQSdBwxRoxCRMX3zan3SM=
+# e.g. 842/52ae4c2c-4feb-11e5-afd1-fa163e62896a
             pid_metas = {
                 'URL': empty,
                 'CHECKSUM': empty,
@@ -405,21 +412,26 @@ class EudatICommands(IRuled):
             }
 # // TO REMOVE:
             # Fake, always the same
-            pid_metas = self.parse_rest_json(None, './tests/epic.pid.out')
+            metas = self.parse_rest_json(None, './tests/epic.pid.out')
+
         else:
             print("Epic client for", args)
             json_data = self.execute_command(com, args).strip()
-            print(json_data)
             if json_data.strip() == 'None':
                 return {}
-            pid_metas = self.parse_rest_json(json_data)
+
+            # Get all epic metas
+            metas = self.parse_rest_json(json_data)
 
         ## Meaningfull data
-        return {
-            'location': pid_metas['URL'],
-            'checksum': pid_metas['CHECKSUM'],
-            'parent_pid': pid_metas['EUDAT/PPID']
-        }
+        pid_metas = {}
+        for name, selection in select.items():
+            value = None
+            if selection in metas:
+                value = metas[selection]
+            pid_metas[name] = value
+
+        return pid_metas
 
     def eudat_replica(self, dataobj_ori, dataobj_dest=None, pid_register=True):
         """ Replication as Eudat B2safe """
