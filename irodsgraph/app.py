@@ -18,8 +18,8 @@ Moving data from iRODS server to a Neo4j graphdb.
     * Replica
 // TODO:
     * template all rules
-    * Resource
     * Collections
+    * Resource
     * add logs class
 // TOFIX
     * show counts of irods element vs selected elements

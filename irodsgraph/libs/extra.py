@@ -87,6 +87,8 @@ def fill_irods_random(com, icom, \
         if random.randint(0,3):
             print("Replica!")
 
+            icom.eudat_replica(irods_file)
+
             if TESTING:
                 # Random number of replicas
                 n = random.randint(1,3)

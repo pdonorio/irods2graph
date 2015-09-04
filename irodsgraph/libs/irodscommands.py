@@ -401,11 +401,29 @@ class EudatICommands(IRuled):
             'parent_pid': pid_metas['EUDAT/PPID']
         }
 
-    def eudat_replica(self, dataobj_ori, dataobj_dest, pid_register=True):
-        """ Replica """
-        print("***REPLICA PID REGISTRATION NOT IMPLEMENTED YET ***")
-        # Use Eudat irule?
-        exit()
+    def eudat_replica(self, dataobj_ori, dataobj_dest=None, pid_register=True):
+        """ Replication as Eudat B2safe """
+        # Eudat rule for replication
+        irule_template = "replica"
+
+        if not dataobj_dest:
+            dataobj_dest = dataobj_ori + ".replica"
+        dataobj_ori = os.path.join(self._base_dir, dataobj_ori)
+        dataobj_dest = os.path.join(self._base_dir, dataobj_dest)
+
+        # Use jinja2 templating
+        jin = Templa(irule_template)
+        context = {
+            'dataobj_source': dataobj_ori.center(len(dataobj_ori)+2, '"'),
+            'dataobj_dest': dataobj_dest.center(len(dataobj_dest)+2, '"'),
+            'pid_register': \
+                str(pid_register).lower().center(len(str(pid_register))+2, '"'),
+        }
+        irule_file = jin.template2file(context)
+        # Call irule from template rendered
+        pid = self.irule_from_file(irule_file)
+        #remove file?
+        os.remove(irule_file)
 
     def eudat_find_ppid(self, dataobj):
         print("***REPLICA EUDAT LIST NOT IMPLEMENTED YET ***")

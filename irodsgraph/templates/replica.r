@@ -1,8 +1,8 @@
 
 Replication {
-    *source = "/cinecaDMPZone/home/pdonorio/023d6d3cf78907fa4776ca09ed4fa4a7cb301975.txt";
-    *destination = "/cinecaDMPZone/home/pdonorio/replica/test";
-    *registered = bool("true");
+    *source = {{ dataobj_source }};
+    *destination = {{ dataobj_dest }};
+    *registered = bool({{ pid_register }});
     *recursive = bool("true");
     *status = EUDATReplication(*source, *destination, *registered, *recursive, *response);
     if (*status) {
