@@ -92,17 +92,13 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
                 icom.replica_list(irods_file)
             else:
 #// TO FIX: more copies
-                n = 1
-                # Eudat
-                while n > 1:
-                    n -= 1
-                    icom.eudat_replica(irods_file)
+                icom.eudat_replica(irods_file)
+                # # Eudat
+                # while n > 1:
+                #     n -= 1
+                #     icom.eudat_replica(irods_file)
 
-##########################
-            print("Debug exit")
-            exit()
-# WORK IN PROGRESS
-##########################
+        #exit()
 
     # Debug
     print("Created ", metas_elements, "elements")
@@ -173,6 +169,9 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             data = {'metatype':'classic', 'key':key, 'value':value}
             save_node_metadata(graph, data, current_dobj)
 
+#######################
+# WORK IN PROGRESS
+
         ##################################
         # PID
         pid = icom.check_pid(ifile)
@@ -193,12 +192,9 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
                     current_pid.checksum = value
                     current_pid.save()
 
-#######################
-# WORK IN PROGRESS
-
             ## Check replica relation{ppid, ror}
             ## Check integrity?
-
+            print("DEBUG exit"); exit();
 # WORK IN PROGRESS
 #######################
 

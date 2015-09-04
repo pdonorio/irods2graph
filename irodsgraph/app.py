@@ -16,8 +16,8 @@ Moving data from iRODS server to a Neo4j graphdb.
     * eudat epic client for PID metadata
 // DOING:
     * Replica
-// TODO:
     * template all rules
+// TODO:
     * Collections
     * Resource
     * add logs class

@@ -275,12 +275,13 @@ class IRuled(IMetaCommands):
         args=[]
         if rule is not None:
             args.append(rule)
+            print("Executing irule", rule)
         elif rule_file is not None:
             args.append('-F')
             args.append(rule_file)
+            print("Irule execution from file", rule_file)
 
         # Execute
-        print(com, args)
         return self.execute_command(com, args)
 
     def irule_from_file(self, rule_file):
