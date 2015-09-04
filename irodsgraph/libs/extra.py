@@ -13,21 +13,20 @@ from libs.ogmmodels import save_node_metadata
 ################################
 ## POPOLAE
 # Create mock files and save them into irods
-def fill_irods_random(com, icom, \
-    elements=10, prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
+def fill_irods_random(com, icom, elements=10, clean_irods=True, \
+    prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
 
     # Create host data
     com.remove_directory(tmp_dir, ignore=True)
     com.create_directory(tmp_dir)
 
-    # Clean if existing on iRODS
-    status = icom.check(irods_dir)
-    if status == 0:
-        print("Cleaning on server")
-        icom.remove_directory(irods_dir)
-
+    if clean_irods:
+        # Clean if existing on iRODS
+        status = icom.check(irods_dir)
+        if status == 0:
+            print("Cleaning on server")
+            icom.remove_directory(irods_dir)
     icom.create_directory(irods_dir)
-    print("Created directory")
 
     # Create and save
     for i in range(1, elements+1):
@@ -77,9 +76,6 @@ def fill_irods_random(com, icom, \
             icom.meta_write(irods_file, [key], [value])
             print("Wrote", key, "in", filename)
 
-##########################
-# WORK IN PROGRESS
-
         #######################
         ## REPLICA
 
@@ -87,18 +83,22 @@ def fill_irods_random(com, icom, \
         if random.randint(0,3):
             print("Replica!")
 
-            icom.eudat_replica(irods_file)
+            # Random number of replicas
+            n = random.randint(1,3)
 
             if TESTING:
-                # Random number of replicas
-                n = random.randint(1,3)
                 # irods simple replica
                 icom.replica(irods_file, n)
                 icom.replica_list(irods_file)
             else:
+#// TO FIX: more copies
+                n = 1
                 # Eudat
-                icom.eudat_replica(irods_file)
+                while n > 1:
+                    n -= 1
+                    icom.eudat_replica(irods_file)
 
+##########################
             print("Debug exit")
             exit()
 # WORK IN PROGRESS

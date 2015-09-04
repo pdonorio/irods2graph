@@ -33,14 +33,17 @@ class BashCommands(object):
 
     ###################
     # BASE COMMANDS
-    def create_empty(self, path, directory=False):
+    def create_empty(self, path, directory=False, ignore_existing=False):
 
+        args = [path]
         if not directory:
             com = "touch"
         else:
             com = "mkdir"
+            if ignore_existing:
+                args.append("-p")
         # Debug
-        self.execute_command(com, [path])
+        self.execute_command(com, args)
         print("Created", path)
 
     def remove(self, path, recursive=False, force=False):
@@ -60,8 +63,8 @@ class BashCommands(object):
 
     ###################
     # DIRECTORIES
-    def create_directory(self, directory):
-        self.create_empty(directory, directory=True)
+    def create_directory(self, directory, ignore_existing=True):
+        self.create_empty(directory, directory=True, ignore_existing=ignore_existing)
 
     def remove_directory(self, directory, ignore=False):
         self.remove(directory, recursive=True, force=ignore)
