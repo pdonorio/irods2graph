@@ -170,19 +170,32 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # Store Collections
-        print("Collections", collections)
+        counter = 0
+        #print("Collections", collections)
         for collection in collections:
+            counter += 1
 # Missing absolute path
             try:
-                graph.Collection.nodes.get(name=collection)
+                current_collection = graph.Collection.nodes.get(name=collection)
             except graph.Collection.DoesNotExist:
                 print("Saving collection", collection)
                 # Save zone if not exists
                 current_collection = graph.Collection(name=collection).save()
 
-            # TO DO
             # Link the last one to zone
+            if counter == 1:
+                current_dobj.belonging.connect(current_collection)
+
             # Link the first one to dataobject
+            if counter == len(collections):
+                current_collection.hosted.connect(current_zone)
+
+            # TO DO
+            # Otherwise connect to the previous?
+            # else:
+            #     current_collection.matrioska_to.connect(WHO)
+
+        exit()
 
         ##################################
         ## Other METADATA
