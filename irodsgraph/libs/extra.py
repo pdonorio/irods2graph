@@ -171,10 +171,12 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         ##################################
         # Store Collections
         counter = 0
+        last_collection = None
         #print("Collections", collections)
         for collection in collections:
             counter += 1
-# Missing absolute path
+# // TO FIX:
+# Missing absolute path attribute
             try:
                 current_collection = graph.Collection.nodes.get(name=collection)
             except graph.Collection.DoesNotExist:
@@ -192,10 +194,10 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
             # TO DO
             # Otherwise connect to the previous?
-            # else:
-            #     current_collection.matrioska_to.connect(WHO)
+            if last_collection is not None:
+                current_collection.matrioska_from.connect(last_collection)
 
-        exit()
+            last_collection = current_collection
 
         ##################################
         ## Other METADATA
