@@ -132,14 +132,23 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # Getting the three pieces from Absolute Path of data object:
-        # zone, location and filename
+        # zone, absolute path and filename
+        # also keeps track of collections
         zone = ""
         irods_path = ""
+        collections = []
         (head, filename) = os.path.split(ifile)
         while head != "/":
             # Warning: this is not irods_path as eudat thinks of it
             irods_path = os.path.join(zone, irods_path)
+            # Split into basename and dir
             (head, zone) = os.path.split(head)
+            #print("tmp:", zone)
+            collections.append(zone)
+        # Remove the last one which is the zone
+        collections.remove(zone)
+
+        # Eudat URL
         location = icom.current_location(ifile)
 
         ##################################
@@ -158,6 +167,22 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
+
+        ##################################
+        # Store Collections
+        print("Collections", collections)
+        for collection in collections:
+# Missing absolute path
+            try:
+                graph.Collection.nodes.get(name=collection)
+            except graph.Collection.DoesNotExist:
+                print("Saving collection", collection)
+                # Save zone if not exists
+                current_collection = graph.Collection(name=collection).save()
+
+            # TO DO
+            # Link the last one to zone
+            # Link the first one to dataobject
 
         ##################################
         ## Other METADATA
