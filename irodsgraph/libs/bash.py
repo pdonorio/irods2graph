@@ -26,10 +26,12 @@ class BashCommands(object):
 
     def execute_command_advanced(self, command, parameters=[], retcodes=()):
         """ Pattern in plumbum library for executing a shell command """
-        (status, stdin, stdout) = \
-            self._shell[command][parameters].run(retcode=retcodes)
         # e.g. ICOM["list"][irods_dir].run(retcode = (0,4))
-        return status
+# TO FIX: does not work if parameters is bigger than one element
+        comout = \
+            self._shell[command][parameters].run(retcode=retcodes)
+        ## comout is equal to (status, stdin, stdout)
+        return comout
 
     ###################
     # BASE COMMANDS

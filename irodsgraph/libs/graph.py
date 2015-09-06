@@ -69,7 +69,11 @@ class GraphDB(object):
         return results
 
     def clean_whole_database(self):
-        return self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
+        print("Cleaning the whole graph")
+        query = self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
+        # import time
+        # time.sleep(3)
+        return query
 
     # // TO FIX:
     def create_node_if_not_exists(self, model):

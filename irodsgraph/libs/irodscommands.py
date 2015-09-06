@@ -124,15 +124,29 @@ class ICommands(BashCommands):
         #print("Saved irods object from", path)
 
     def check(self, path, retcodes=(0,4)):
-        com = "ils"
-        status = self.execute_command_advanced(com, path, retcodes=retcodes)
-        return status
+        # Retcodes for this particular case, skip also error 4, no file found
+        retcodes = (0,4)
+        (status, stdin, stdout) = self.list(path, False, retcodes)
+        print("Check", path, "with", status)
+        return status == 0
 
-    def list(self, path, retcodes=(0,4)):
+    def list(self, path, detailed=False, retcodes=None):
         com = "ils"
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-        # status = self.execute_command_advanced(com, path, retcodes=retcodes)
-        # return status
+        args = [path]
+        if detailed:
+            args.append("-l")
+        if retcodes is not None:
+            return self.execute_command_advanced(com, args, retcodes=retcodes)
+
+        # Normal command
+        stdout = self.execute_command(com, args)
+        lines = stdout.splitlines()
+        if len(lines) > 1:
+            print("Not implemented yet listing for replica")
+            exit(1)
+        for line in lines:
+            replica = re.split("\s+", stdout.strip())
+        return replica
 
     def search(self, path, like=True):
         com = "ilocate"

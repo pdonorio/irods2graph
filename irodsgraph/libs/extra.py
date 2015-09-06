@@ -22,8 +22,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
 
     if clean_irods:
         # Clean if existing on iRODS
-        status = icom.check(irods_dir)
-        if status == 0:
+        if icom.check(irods_dir):
             print("Cleaning on server")
             icom.remove_directory(irods_dir)
     icom.create_directory(irods_dir)
@@ -160,6 +159,13 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             print("Saving zone", zone)
             # Save zone if not exists
             current_zone = graph.Zone(name=zone).save()
+
+        ##################################
+        # Store Resource node
+        details = icom.list(ifile, True)
+        resource_name = details[2]
+        print(resource_name); exit()
+# DEBUG
 
         ##################################
         # Store Data Object
