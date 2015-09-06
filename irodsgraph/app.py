@@ -15,10 +15,10 @@ Moving data from iRODS server to a Neo4j graphdb.
     * Collections
 // DOING:
     * Resources
-    * Skip .metadata directory!
     * add logs class
 // TODO:
     * template all rules
+    * neo4j new docker image
 // TOFIX
     * show counts of irods element vs selected elements
     * switch script to ipython:

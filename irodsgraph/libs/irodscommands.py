@@ -297,6 +297,16 @@ class EudatICommands(IRuled):
 
     latest_pid = None
 
+    def search(self, path, like=True):
+        """ Remove eudat possible metadata from this method """
+        ifiles = super(EudatICommands, self).search(path, like)
+        for ifile in ifiles:
+            if '.metadata/' in ifile:
+                print("Skipping", ifile)
+                ifiles.remove(ifile)
+        #print(ifiles); exit()
+        return ifiles
+
     def execute_rule_from_template(self, rule, context={}):
         """
         Using my template class for executing an irods rule
