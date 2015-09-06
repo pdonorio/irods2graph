@@ -152,20 +152,12 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # Store Zone node
-        try:
-            # Does this already exists?
-            current_zone = graph.Zone.nodes.get(name=zone)
-        except graph.Zone.DoesNotExist:
-            print("Saving zone", zone)
-            # Save zone if not exists
-            current_zone = graph.Zone(name=zone).save()
+        current_zone = graph.store_or_get(graph.Zone, 'name', zone)
 
         ##################################
-        # Store Resource node
-        details = icom.list(ifile, True)
-        resource_name = details[2]
-        print(resource_name); exit()
-# DEBUG
+        # Get Name and Store Resource node
+        resource_name = icom.get_resource_from_dataobject(ifile)
+        current_resource = graph.store_or_get(graph.Resource, 'name', resource_name)
 
         ##################################
         # Store Data Object
@@ -173,14 +165,18 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
             filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
+        current_dobj.stored.connect(current_resource)
+        print("Created and connected data object", filename)
 
         ##################################
         # Store Collections
-        counter = 0
+
+        collection_counter = 0
         last_collection = None
         #print("Collections", collections)
+
         for collection in collections:
-            counter += 1
+            collection_counter += 1
 # // TO FIX:
 # Missing absolute path attribute
             try:
@@ -191,14 +187,13 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
                 current_collection = graph.Collection(name=collection).save()
 
             # Link the last one to zone
-            if counter == 1:
+            if collection_counter == 1:
                 current_dobj.belonging.connect(current_collection)
 
             # Link the first one to dataobject
-            if counter == len(collections):
+            if collection_counter == len(collections):
                 current_collection.hosted.connect(current_zone)
 
-            # TO DO
             # Otherwise connect to the previous?
             if last_collection is not None:
                 current_collection.matrioska_from.connect(last_collection)
@@ -261,23 +256,15 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
 ############################################
 def findconnect_frompid(graph, pid, ppid):
-    # Get node from pid
-    try:
-        pid_replica = graph.PID.nodes.get(code=pid)
-        dobj_replica = pid_replica.identify.get()
-    except graph.PID.DoesNotExist:
-        print("Couldn't find PID", pid)
-        exit()
-
-    try:
-        pid_parent = graph.PID.nodes.get(code=ppid)
-        dobj_parent = pid_parent.identify.get()
-    except graph.PID.DoesNotExist:
-        print("Couldn't find PID", ppid)
-        exit()
-
+    # Replica
+    pid_replica = graph.store_only(graph.PID, 'code', pid)
+    dobj_replica = pid_replica.identify.get()
+    # Original copy (parent)
+    pid_parent = graph.store_only(graph.PID, 'code', ppid)
+    dobj_parent = pid_parent.identify.get()
+    # Relationship as neomodel
     relation = dobj_replica.replica.connect(dobj_parent)
     relation.ppid = ppid
-    # // TO FIX:
+# // TO FIX: how to find ROR?
     relation.ror = relation.ppid
     print("Saved replica relation for", pid, relation.ppid)

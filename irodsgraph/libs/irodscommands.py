@@ -69,6 +69,11 @@ class ICommands(BashCommands):
         com = "ipwd"
         return self.execute_command(com).strip()
 
+    def get_resource_from_dataobject(self, ifile):
+        """ The attribute of resource from a data object """
+        details = self.list(ifile, True)
+        return details[2]
+
     def create_empty(self, path, directory=False, ignore_existing=False):
         args = [path]
         if directory:

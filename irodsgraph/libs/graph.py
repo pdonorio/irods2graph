@@ -52,6 +52,30 @@ class GraphDB(object):
         # if model in dir(self):
         #     print(getattr(self, model))
 
+    def store_only(self, model, key, value):
+        return self.store_or_get(model, key, value, False)
+
+    @staticmethod
+    def store_or_get(model, key, value, get=True):
+        """ A way to easily use the store-or-get-node pattern """
+        props = {key:value}
+        current_node = None
+
+        # Does this already exists?
+        try:
+            # Get it
+            current_node = model.nodes.get(**props)
+        except model.DoesNotExist:
+            if get:
+                print("Saving", key, "->", value)
+                # Save if not
+                current_node = model(**props).save()
+            else:
+                print("Could not find", key, value, "on", model)
+                exit(1)
+
+        return current_node
+
     def save_data(self, data):
         """ Save data inside graph db with batch process """
 
