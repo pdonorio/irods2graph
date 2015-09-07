@@ -246,8 +246,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
     # Save work in progress?
     # pickle.dump(replicas, open('objs/replicas.obj',"wb"))
     # pickle.dump(graph, open('objs/graph.obj',"wb"))
-    print()
 
+    print()
     for replica, parent in replicas.items():
         #print("Replica", replica, "of", parent)
         # Connect replicas

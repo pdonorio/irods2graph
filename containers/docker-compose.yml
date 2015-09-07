@@ -15,8 +15,9 @@ irods:
 ############################
 ## IRODS clients (+ python?)
 icom:
-  image: pdonorio/neoicommands
   #image: irods/icommands:4.0.3
+  #image: pdonorio/neoicommands
+  build: docker_images/iclient
   # labels:
   #   io.rancher.scheduler.global: 'true'
   hostname: iclient
@@ -34,11 +35,11 @@ icom:
 ############################
 ## neo4j
 graphdb:
-  image: tpires/neo4j
-  # // TO FIX:
-  # Must change this. Update to https://hub.docker.com/r/neo4j/neo4j/
+  build: docker_images/graphvbox
+  # Based on official beta https://hub.docker.com/r/neo4j/neo4j/
   volumes:
-  - ./neo4j_server.conf:/etc/neo4j/neo4j-server.properties:rw
+  - ../data/graphserver:/data
+  - ./docker_images/graphvbox/neo4j_server.conf:/conf/neo4j-server.properties
   # labels:
   #   io.rancher.scheduler.affinity:host_label_ne: anet=pub
   #   io.rancher.scheduler.affinity:host_label: anet=pub
