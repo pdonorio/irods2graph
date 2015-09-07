@@ -6,15 +6,20 @@
 Moving data from iRODS server to a Neo4j graphdb.
 
 // DONE:
-    * packaging, libraries and class style
-    * docker section
-    * write graphdb class and OGM models, with entities list
-    * PID and rules
-    * eudat epic client for PID metadata
-    * Replica relation, Collections, Resources
-    * neo4j new docker image
+* packaging, libraries and class style
+* docker section
+* write graphdb class and OGM models, with entities list
+* PID and rules
+* Replica relation, Collections, Resources
+* eudat epic client for PID metadata
+* neo4j new docker image
+
 // DOING:
-    * neo4j backup http://stackoverflow.com/a/25569005/2114395
+    * add notebook docker image for executing queries
+    NOTE:
+    - should use a separate git repo for docker images
+        and should also use the matrioska compose of image to separate concepts
+    - should track this repo here with git submodules
 // TODO:
     * add logs class
     * adjust template for all rules
@@ -24,7 +29,7 @@ Moving data from iRODS server to a Neo4j graphdb.
     * switch script to ipython:
         http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
     * python3 irods client? or stick with plumbus?
-// NOT SO FAST:
+// LATER:
     * Recover PID in production? http://hdl.handle.net/
     * rancher yaml for multi host configuration
 
