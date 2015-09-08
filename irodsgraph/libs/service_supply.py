@@ -136,16 +136,17 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         zone = ""
         irods_path = ""
         collections = []
-        (head, filename) = os.path.split(ifile)
-        while head != "/":
+        (prefix, filename) = os.path.split(ifile)
+        while prefix != "/":
+            oripath = prefix
             # Warning: this is not irods_path as eudat thinks of it
             irods_path = os.path.join(zone, irods_path)
             # Split into basename and dir
-            (head, zone) = os.path.split(head)
-            #print("tmp:", zone)
-            collections.append(zone)
-        # Remove the last one which is the zone
-        collections.remove(zone)
+            (prefix, zone) = os.path.split(prefix)
+            # Skip the last one, as it is a zone and not a collection
+            if zone != oripath.strip('/'):
+                # Save collection name (zone) and its path (prefix+zone)
+                collections.append((zone, oripath))
 
         # Eudat URL
         location = icom.current_location(ifile)
@@ -157,7 +158,10 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         ##################################
         # Get Name and Store Resource node
         resource_name = icom.get_resource_from_dataobject(ifile)
-        current_resource = graph.store_or_get(graph.Resource, 'name', resource_name)
+        current_resource = \
+            graph.store_or_get(graph.Resource, 'name', resource_name)
+        # Connect resource to Zone
+        current_resource.hosted.connect(current_zone)
 
         ##################################
         # Store Data Object
@@ -175,24 +179,23 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         last_collection = None
         #print("Collections", collections)
 
-        for collection in collections:
+        for collection, cpath in collections:
             collection_counter += 1
-# // TO FIX:
-# Missing absolute path attribute
-            try:
-                current_collection = graph.Collection.nodes.get(name=collection)
-            except graph.Collection.DoesNotExist:
-                print("Saving collection", collection)
-                # Save zone if not exists
-                current_collection = graph.Collection(name=collection).save()
+            #print("COLLECTON", collection, cpath)
+            current_collection = \
+                graph.store_or_get(graph.Collection, 'name', collection)
+            # Absolute path attribute
+            if current_collection.path is not '':
+                current_collection.path = cpath
+                current_collection.save()
 
-            # Link the last one to zone
+            # Link the first one to dataobject
             if collection_counter == 1:
                 current_dobj.belonging.connect(current_collection)
 
-            # Link the first one to dataobject
-            if collection_counter == len(collections):
-                current_collection.hosted.connect(current_zone)
+            # Link to zone
+            #if collection_counter == len(collections):
+            current_collection.hosted.connect(current_zone)
 
             # Otherwise connect to the previous?
             if last_collection is not None:
