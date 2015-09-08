@@ -9,6 +9,9 @@ __pycache__/
 data/
 conf/
 
+# Jupyter notebook checkpoints
+.ipynb_*
+
 # Distribution / packaging
 .Python
 env/

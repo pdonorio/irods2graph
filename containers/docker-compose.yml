@@ -4,8 +4,7 @@
 irods:
   image: irods/icat:4.0.3
   hostname: rodserver
-  command:
-  - mytest
+  command: mytest
   ports:
   - 1247/tcp
   links:
@@ -55,3 +54,15 @@ graphdb:
   stdin_open: true
   cap_add:
   - SYS_RESOURCE
+
+############################
+## Jupyter project - ipython notebook
+notebook:
+  image: pdonorio/jupy3dataslide
+  hostname: nb
+  ports:
+  - 80:8888/tcp
+  volumes:
+  - ../notebooks:/data:rw
+  links:
+  - graphdb:neo

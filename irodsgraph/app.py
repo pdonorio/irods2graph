@@ -15,8 +15,9 @@ Moving data from iRODS server to a Neo4j graphdb.
 * neo4j new docker image
 
 // DOING:
-    * add notebook docker image for executing queries
-        NOTE: should use a separate git repo for docker images
+    * create notebook docker image for executing queries
+    * create docker images for graph and iclient
+    * use my separate git repo 'dockerizing' + git submodules
 // TO DO:
     * add logs class
     * adjust template for all rules
