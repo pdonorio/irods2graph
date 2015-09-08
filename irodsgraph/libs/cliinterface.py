@@ -10,7 +10,7 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import EudatICommands
 from libs.config import MyConfig
-from libs.extra import fill_irods_random, fill_graph_from_irods
+from libs.service_supply import fill_irods_random, fill_graph_from_irods
 
 ############################
 # Click commands grouping
