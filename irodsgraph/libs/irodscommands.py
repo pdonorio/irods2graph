@@ -152,8 +152,7 @@ class ICommands(BashCommands):
         lines = stdout.splitlines()
         replicas = []
         for line in lines:
-            replicas.append(re.split("\s+", stdout.strip()))
-
+            replicas.append(re.split("\s+", line.strip()))
         return replicas
 
     def search(self, path, like=True):

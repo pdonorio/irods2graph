@@ -90,7 +90,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
                 # irods simple replica
                 icom.replica(irods_file, n)
                 #icom.replica_list(irods_file)
-                exit()
+                #exit()
             else:
 #// TO FIX: more copies
                 icom.eudat_replica(irods_file)
@@ -171,6 +171,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         resources = icom.get_resource_from_dataobject(ifile)
 
         for resource_name in resources:
+            print("Resource", resource_name)
             current_resource = \
                 graph.store_or_get(graph.Resource, 'name', resource_name)
             # Connect resource to Zone
