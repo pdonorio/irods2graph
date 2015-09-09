@@ -11,6 +11,7 @@ from libs.bash import BashCommands as basher
 from libs.irodscommands import EudatICommands
 from libs.config import MyConfig
 from libs.service_supply import fill_irods_random, fill_graph_from_irods
+from libs import appconfig
 
 ############################
 # Click commands grouping
@@ -22,7 +23,10 @@ from libs.service_supply import fill_irods_random, fill_graph_from_irods
 def cli(ctx, verbose, debug, mock):
     click.echo('Script init. Verbosity: %s' % verbose)
     click.echo('Debug: %s' % debug)
-    click.echo('Mock: %s' % mock)
+    if mock:
+        appconfig.set('devel')
+    else:
+        appconfig.set('production')
 
     # Do we have iRODS?
     icom = EudatICommands()
@@ -33,6 +37,7 @@ def cli(ctx, verbose, debug, mock):
     # Save context
     ctx.obj['VERBOSE'] = verbose
     ctx.obj['DEBUG'] = debug
+    ctx.obj['MOCK'] = mock
     ctx.obj['icom'] = icom
     ctx.obj['conf'] = configurer
     #print(dir(ctx))

@@ -7,7 +7,7 @@ Other methods in my package
 
 DEFAULT_PREFIX = 'abc_'
 import random, pickle
-from libs import TESTING, string_generator
+from libs import string_generator, appconfig
 from libs.ogmmodels import save_node_metadata
 
 ################################
@@ -64,7 +64,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
             pid = icom.register_pid(irods_file)
             print("Obtained PID", pid)
 
-            if TESTING:
+            if appconfig.mocking():
                 # Save pid inside metadata
                 # Automatic if using real Eudat service
                 metas["PID"] = pid
@@ -85,7 +85,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
             # Random number of replicas
             n = random.randint(1,3)
 
-            if TESTING:
+            if appconfig.mocking():
                 # irods simple replica
                 icom.replica(irods_file, n)
                 icom.replica_list(irods_file)

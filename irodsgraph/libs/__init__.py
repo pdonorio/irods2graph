@@ -11,10 +11,6 @@ USER_HOME = os.environ['HOME']
 CONFIG_FILE = USER_HOME + "/.irodsgraph_connections.ini"
 IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
 
-## DEVELOPMENT?
-#TESTING = True
-TESTING = False
-
 ###########################
 # Parameters
 protocol = 'http'
@@ -37,3 +33,29 @@ def string_generator(size=32, \
     """ Create a random string of fixed size """
     # Some chaos to order
     return ''.join(random.choice(chars) for _ in range(size))
+
+################################
+## A la flask
+
+class AppConfigs(object):
+    """"Main holder for configurations"""
+
+    mock = True
+
+    def __init__(self, mode=None):
+        super(AppConfigs, self).__init__()
+        self.set(mode)
+
+    def set(self, mode=None):
+        if mode == 'production':
+            self.mock = False
+        elif mode is None:
+            pass
+        else:
+            self.mock = True
+
+    def mocking(self):
+        return self.mock
+
+# Define instance holder
+appconfig = AppConfigs()

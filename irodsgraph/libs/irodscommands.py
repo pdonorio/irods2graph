@@ -11,7 +11,7 @@ i base this wrapper on plumbum package handling shell commands.
 import os, inspect, re, random, hashlib
 from libs.bash import BashCommands
 from libs.templating import Templa
-from libs import IRODS_ENV, TESTING, string_generator
+from libs import IRODS_ENV, string_generator, appconfig
 
 #######################################
 ## basic irods
@@ -367,7 +367,7 @@ class EudatICommands(IRuled):
         # Path fix
         dataobj = os.path.join(self._base_dir, dataobj)
 
-        if TESTING:
+        if appconfig.mocking():
 
             #pid = "842/a72976e0-5177-11e5-b479-fa163e62896a"
             # 8 - 4 - 4 - 4 - 12
@@ -427,7 +427,7 @@ class EudatICommands(IRuled):
         }
         metas = {}
 
-        if TESTING:
+        if appconfig.mocking():
 # // TO FIX:
             empty = ""
 # Generate random
