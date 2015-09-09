@@ -52,7 +52,7 @@ def popolae(ctx, size):
     click.echo('COMMAND:\tFilling irods.')
 
     com = basher()  # system commands, only needed for this command
-    remove_irods_existing = False
+    remove_irods_existing = appconfig.mocking()
     fill_irods_random(com, ctx.obj['icom'], size, remove_irods_existing)
 
 cli.add_command(popolae)

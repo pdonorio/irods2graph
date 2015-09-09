@@ -27,6 +27,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
             icom.remove_directory(irods_dir)
     icom.create_directory(irods_dir)
 
+    print("Creating", elements, "elements")
     # Create and save
     for i in range(1, elements+1):
 
@@ -88,7 +89,8 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
             if appconfig.mocking():
                 # irods simple replica
                 icom.replica(irods_file, n)
-                icom.replica_list(irods_file)
+                #icom.replica_list(irods_file)
+                exit()
             else:
 #// TO FIX: more copies
                 icom.eudat_replica(irods_file)
@@ -125,6 +127,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         # Limit elements as requested
         counter += 1
         if counter > elements:
+            print("Stopping at element", counter)
             break
 
         print("\nWorking with", ifile)
@@ -156,21 +159,25 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         current_zone = graph.store_or_get(graph.Zone, 'name', zone)
 
         ##################################
-        # Get Name and Store Resource node
-        resource_name = icom.get_resource_from_dataobject(ifile)
-        current_resource = \
-            graph.store_or_get(graph.Resource, 'name', resource_name)
-        # Connect resource to Zone
-        current_resource.hosted.connect(current_zone)
-
-        ##################################
         # Store Data Object
         current_dobj = graph.DataObject(location=location, \
             filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
-        current_dobj.stored.connect(current_resource)
         print("Created and connected data object", filename)
+
+        ##################################
+        # Get Name and Store Resource node
+        resources = icom.get_resource_from_dataobject(ifile)
+
+        for resource_name in resources:
+            current_resource = \
+                graph.store_or_get(graph.Resource, 'name', resource_name)
+            # Connect resource to Zone
+# // TO FIX: only if not connected already
+            current_resource.hosted.connect(current_zone)
+            # Connect data object to this replica resource
+            current_dobj.stored.connect(current_resource)
 
         ##################################
         # Store Collections

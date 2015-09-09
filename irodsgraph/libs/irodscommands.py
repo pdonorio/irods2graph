@@ -72,7 +72,11 @@ class ICommands(BashCommands):
     def get_resource_from_dataobject(self, ifile):
         """ The attribute of resource from a data object """
         details = self.list(ifile, True)
-        return details[2]
+        resources = []
+        for element in details:
+            # 2 position is the resource in irods ils -l
+            resources.append(element[2])
+        return resources
 
     def create_empty(self, path, directory=False, ignore_existing=False):
         args = [path]
@@ -146,12 +150,11 @@ class ICommands(BashCommands):
         # Normal command
         stdout = self.execute_command(com, args)
         lines = stdout.splitlines()
-        if len(lines) > 1:
-            print("Not implemented yet listing for replica")
-            exit(1)
+        replicas = []
         for line in lines:
-            replica = re.split("\s+", stdout.strip())
-        return replica
+            replicas.append(re.split("\s+", stdout.strip()))
+
+        return replicas
 
     def search(self, path, like=True):
         com = "ilocate"
@@ -195,13 +198,7 @@ class ICommands(BashCommands):
         return self.execute_command(com, args)
 
     def replica_list(self, dataobj):
-        com = 'ils'
-        args = ['-l']
-        args.append(dataobj)
-        out = self.execute_command(com, args)
-        print(out)
-        exit()
-        return out
+        return self.get_resource_from_dataobject(dataobj)
 
 #######################################
 ## irods and metadata
@@ -323,7 +320,6 @@ class EudatICommands(IRuled):
             if '.metadata/' in ifile:
                 print("Skipping", ifile)
                 ifiles.remove(ifile)
-        #print(ifiles); exit()
         return ifiles
 
     def execute_rule_from_template(self, rule, context={}):
