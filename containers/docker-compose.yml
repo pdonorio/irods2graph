@@ -64,5 +64,6 @@ notebook:
   - 80:8888/tcp
   volumes:
   - ../notebooks:/data:rw
+  - ../irodsgraph/libs/:/data/libs:ro
   links:
   - graphdb:neo

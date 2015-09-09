@@ -9,7 +9,7 @@ import os
 
 ###########################
 ## A graph database with class as models
-from libs import GRAPHDB_LINK
+from libs import GRAPHDB_LINK, host, port, user
 import py2neo
 from neomodel import db
 
@@ -18,10 +18,11 @@ class GraphDB(object):
 
     #_link = GRAPHDB_LINK
 
-    def __init__(self):
+    def __init__(self, clean=False):
         super(GraphDB, self).__init__()
         self.check_connection()
-        self.clean_whole_database()
+        if clean:
+            self.clean_whole_database()
         self.load_models()
 
     def check_connection(self, debug=True):
@@ -30,12 +31,14 @@ class GraphDB(object):
         This is the only way because we have a global connection for other
         python classes inside other files
         """
+
+        print("Graph:\t", user + '@' + host + ':' + port)
         # Enable OGM connection
         try:
             os.environ["NEO4J_REST_URL"]
+            print("Connected")
         except:
             raise EnvironmentError("Missing REST url configuration for graph")
-        print("Graph database is connected")
 
         if debug:
             # Set debug for cipher queries
@@ -46,11 +49,6 @@ class GraphDB(object):
         for model in models:
             # Save attribute inside class with the same name
             setattr(self, model.__name__, model)
-
-        # # Check if load models worked
-        # model = 'Zone'
-        # if model in dir(self):
-        #     print(getattr(self, model))
 
     def store_only(self, model, key, value):
         return self.store_or_get(model, key, value, False)
@@ -95,8 +93,6 @@ class GraphDB(object):
     def clean_whole_database(self):
         print("Cleaning the whole graph")
         query = self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
-        # import time
-        # time.sleep(3)
         return query
 
     # // TO FIX:

@@ -157,6 +157,8 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         ##################################
         # Store Zone node
         current_zone = graph.store_or_get(graph.Zone, 'name', zone)
+# // TO FIX:
+#Zone.get_or_create({'name':'tempZoneZZZ'})
 
         ##################################
         # Store Data Object
