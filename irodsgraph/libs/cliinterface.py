@@ -15,11 +15,14 @@ from libs.service_supply import fill_irods_random, fill_graph_from_irods
 ############################
 # Click commands grouping
 @click.group()
-@click.option('--debug/--no-debug', default=False)
 @click.option('-v', '--verbose', count=True)
+@click.option('--debug/--no-debug', default=False)
+@click.option('--mock/--no-mock', default=False)
 @click.pass_context
-def cli(ctx, debug, verbose):
+def cli(ctx, verbose, debug, mock):
     click.echo('Script init. Verbosity: %s' % verbose)
+    click.echo('Debug: %s' % debug)
+    click.echo('Mock: %s' % mock)
 
     # Do we have iRODS?
     icom = EudatICommands()
