@@ -9,14 +9,9 @@ import os
 
 ###########################
 ## A graph database with class as models
-from libs import GRAPHDB_LINK, host, port, user
-import py2neo
-from neomodel import db
 
 class GraphDB(object):
     """ Wrapper for our neo4j-db client connection"""
-
-    #_link = GRAPHDB_LINK
 
     def __init__(self, clean=False):
         super(GraphDB, self).__init__()
@@ -32,7 +27,6 @@ class GraphDB(object):
         python classes inside other files
         """
 
-        print("Graph:\t", user + '@' + host + ':' + port)
         # Enable OGM connection
         try:
             os.environ["NEO4J_REST_URL"]
@@ -45,6 +39,9 @@ class GraphDB(object):
             os.environ["NEOMODEL_CYPHER_DEBUG"] = "1"
 
     def load_models(self, models=[]):
+
+        # from libs.graph import ogmmodels as mymodels
+        # models = get_models(mymodels)
 
         for model in models:
             # Save attribute inside class with the same name
@@ -84,6 +81,7 @@ class GraphDB(object):
 
     def cipher_query(self, query):
         """ Execute normal neo4j queries """
+        from neomodel import db
         try:
             results, meta = db.cypher_query(query)
         except Exception as e:

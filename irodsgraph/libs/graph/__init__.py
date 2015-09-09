@@ -4,7 +4,18 @@
 """ Instance of Graph with my current models """
 
 from libs.graph.graph import GraphDB
-import libs.graph.ogmmodels
+
+###########################
+# Parameters
+protocol = 'http'
+host = 'neo'
+port = '7474'
+# username and pw default
+user = 'neo4j'
+pw = user
+# Connection http descriptor
+GRAPHDB_LINK = \
+    protocol + "://" + user + ":" + pw + "@" + host + ":" + port + "/db/data"
 
 ################################
 ## Listing classes inside a module
@@ -24,9 +35,16 @@ def get_models(lib):
 
 ################################
 # Saving models inside the graph class, as properties
+
+# Enable OGM models db connection via environment
+import os
+os.environ["NEO4J_REST_URL"] = GRAPHDB_LINK
+
+import libs.graph.ogmmodels
 graph = GraphDB()
+# # This step is automatic
 graph_models = get_models(ogmmodels)
-# This step is automatic
 graph.load_models(graph_models)
+#graph.load_models()
 
 # We are ready now

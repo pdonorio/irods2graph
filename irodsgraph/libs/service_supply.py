@@ -114,7 +114,12 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
 ################################
 ## From iRODS to neo4j graph
 
-def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
+def fill_graph_from_irods(icom, graph, elements=20, \
+    clean_graph=False, prefix=DEFAULT_PREFIX):
+
+
+    if clean_graph:
+        graph.clean_whole_database()
 
     import os
     data_objs = icom.search(prefix)
@@ -156,9 +161,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
         ##################################
         # Store Zone node
-        current_zone = graph.store_or_get(graph.Zone, 'name', zone)
-# // TO FIX:
-#Zone.get_or_create({'name':'tempZoneZZZ'})
+        current_zone = graph.Zone.get_or_create({'name': zone}).pop()
 
         ##################################
         # Store Data Object
@@ -175,7 +178,7 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         for resource_name in resources:
             print("Resource", resource_name)
             current_resource = \
-                graph.store_or_get(graph.Resource, 'name', resource_name)
+                graph.Resource.get_or_create({'name':resource_name}).pop()
             # Connect resource to Zone
 # // TO FIX: only if not connected already
             current_resource.hosted.connect(current_zone)
@@ -192,12 +195,12 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
         for collection, cpath in collections:
             collection_counter += 1
             #print("COLLECTON", collection, cpath)
+            properties = {
+                'path': cpath,
+                'name': collection,
+            }
             current_collection = \
-                graph.store_or_get(graph.Collection, 'name', collection)
-            # Absolute path attribute
-            if current_collection.path is not '':
-                current_collection.path = cpath
-                current_collection.save()
+                graph.Collection.get_or_create(properties).pop()
 
             # Link the first one to dataobject
             if collection_counter == 1:
@@ -269,12 +272,17 @@ def fill_graph_from_irods(icom, graph, elements=20, prefix=DEFAULT_PREFIX):
 
 ############################################
 def findconnect_frompid(graph, pid, ppid):
+
     # Replica
-    pid_replica = graph.store_only(graph.PID, 'code', pid)
+    pid_replica = graph.PID.nodes.get(code=pid)
     dobj_replica = pid_replica.identify.get()
-    # Original copy (parent)
-    pid_parent = graph.store_only(graph.PID, 'code', ppid)
-    dobj_parent = pid_parent.identify.get()
+    if appconfig.mocking():
+        fake = {'name':'well', 'location':'fixed'}
+        dobj_parent = graph.DataObject.get_or_create(fake).pop()
+    else:
+        # Original copy (parent)
+        pid_parent = graph.PID.nodes.get(code=ppid)
+        dobj_parent = pid_parent.identify.get()
     # Relationship as neomodel
     relation = dobj_replica.replica.connect(dobj_parent)
     relation.ppid = ppid
