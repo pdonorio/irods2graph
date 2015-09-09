@@ -67,7 +67,7 @@ def convert(ctx, elements):
     click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
 
     # Loading the library opens the graph connection
-    from libs.ogmmodels import graph    # only needed for this command
+    from libs.graph import graph    # only needed for this command
     fill_graph_from_irods(ctx.obj['icom'], graph, elements)
 
 cli.add_command(convert)

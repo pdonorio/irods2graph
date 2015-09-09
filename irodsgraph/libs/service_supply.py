@@ -8,7 +8,7 @@ Other methods in my package
 DEFAULT_PREFIX = 'abc_'
 import random, pickle
 from libs import string_generator, appconfig
-from libs.ogmmodels import save_node_metadata
+from libs.graph.ogmmodels import save_node_metadata
 
 ################################
 ## POPOLAE
