@@ -99,15 +99,3 @@ class GraphDB(object):
     def create_node_if_not_exists(self, model):
         """ UHM? """
         pass
-
-
-#############################################
-## STANDARD python library
-# from py2neo import Graph, Node, Relationship
-# remote_graph = Graph(graph_link)
-# def graph_test():
-#     # Test connection
-#     alice = Node("Person", name="Alice")
-#     bob = Node("Person", name="Bob")
-#     alice_knows_bob = Relationship(alice, "KNOWS", bob)
-#     remote_graph.create(alice_knows_bob)

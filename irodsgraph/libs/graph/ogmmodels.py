@@ -97,12 +97,3 @@ def save_node_metadata(graph_node, data, from_node=None, pid=False):
         else:
             obj.data.connect(from_node)
     #print("Saved and connected", data)
-
-################################
-# Saving models inside the graph class, as properties
-
-from libs.graph import GraphDB
-graph = GraphDB()
-# // TO FIX: may this be listed with a python for?
-models = [Zone, Resource, DataObject, Collection, PID, MetaData, Replication]
-graph.load_models(models)
