@@ -19,6 +19,7 @@ Moving data from iRODS server to a Neo4j graphdb.
     * create docker images for graph and iclient
     * use my separate git repo 'dockerizing' + git submodules
 // TO DO:
+    * deal with iRODS replica in the graph as a new node model
     * add logs class
     * adjust template for all rules
 // TO FIX
