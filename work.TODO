@@ -1,0 +1,32 @@
+
+COMPLETED:
+ ✔ packaging, libraries and class style @done (15-09-11 12:41)
+ ✔ docker section @done (15-09-11 12:41)
+ ✔ write graphdb class and OGM models, with entities list @done (15-09-11 12:41)
+ ✔ PID and rules @done (15-09-11 12:41)
+ ✔ Replica relation, Collections, Resources @done (15-09-11 12:41)
+ ✔ eudat epic client for PID metadata @done (15-09-11 12:41)
+ ✔ neo4j new docker image @done (15-09-11 12:41)
+
+--- ✄ -----------------------
+
+TO DO:
+ ☐ create notebook docker image for executing queries
+ ☐ create docker images for graph and iclient
+ ☐ use my separate git repo 'dockerizing' + git submodules
+ ☐ deal with iRODS replica in the graph as a new node model
+ ☐ add logs class
+ ☐ adjust template for all rules
+
+--- ✄ -----------------------
+
+TO FIX:
+    * show counts of irods element vs selected elements
+    * irods replica concept
+    * switch script to ipython:
+        http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
+    * python3 irods client? or stick with plumbus?
+LATER ON:
+    * Recover PID in production? http://hdl.handle.net/
+    * rancher yaml for multi host configuration
+

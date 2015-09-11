@@ -276,16 +276,20 @@ def findconnect_frompid(graph, pid, ppid):
     # Replica
     pid_replica = graph.PID.nodes.get(code=pid)
     dobj_replica = pid_replica.identify.get()
+
+    # Original copy (parent)
     if appconfig.mocking():
         fake = {'name':'well', 'location':'fixed'}
         dobj_parent = graph.DataObject.get_or_create(fake).pop()
     else:
-        # Original copy (parent)
         pid_parent = graph.PID.nodes.get(code=ppid)
         dobj_parent = pid_parent.identify.get()
+
     # Relationship as neomodel
     relation = dobj_replica.replica.connect(dobj_parent)
     relation.ppid = ppid
+
 # // TO FIX: how to find ROR?
     relation.ror = relation.ppid
+
     print("Saved replica relation for", pid, relation.ppid)
