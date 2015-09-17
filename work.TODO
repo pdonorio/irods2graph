@@ -1,4 +1,6 @@
 
+== EUDAT ==
+
 COMPLETED:
  ✔ packaging, libraries and class style @done (15-09-11 12:41)
  ✔ docker section @done (15-09-11 12:41)
@@ -11,21 +13,21 @@ COMPLETED:
 --- ✄ -----------------------
 
 TO DO:
- ☐ create notebook docker image for executing queries
- ☐ create docker images for graph and iclient
- ☐ use my separate git repo 'dockerizing' + git submodules
  ☐ deal with iRODS replica in the graph as a new node model
  ☐ add logs class
  ☐ adjust template for all rules
+ ☐ create notebook docker image for executing queries
+ ☐ create docker images for graph and iclient
+ ☐ use my separate git repo 'dockerizing' + git submodules
 
 --- ✄ -----------------------
 
 TO FIX:
-    * show counts of irods element vs selected elements
     * irods replica concept
+    * show counts of irods element vs selected elements
     * switch script to ipython:
         http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
-    * python3 irods client? or stick with plumbus?
+
 LATER ON:
     * Recover PID in production? http://hdl.handle.net/
     * rancher yaml for multi host configuration

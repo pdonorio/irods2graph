@@ -25,8 +25,8 @@ RUN apt-get install -y \
 
 RUN pip3 install ipython \
     click plumbum \
-    py2neo neomodel \
-    jupyter
+    py2neo neomodel
+    #jupyter
     # python-irodsclient #does not work with python 3
 
 ####################################
@@ -38,8 +38,8 @@ RUN apt-get install -y \
 RUN wget http://j.mp/eudat_epic_client -q -O /opt/epicclient.py && \
     chmod +x /opt/epicclient.py && \
     ln -s /opt/epicclient.py /usr/bin/epicc
-# test
-RUN epicc -h
+# # test ?
+# RUN epicc -h
 
 ####################################
 RUN useradd -ms /bin/bash dev
