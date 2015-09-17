@@ -64,6 +64,7 @@ notebook:
   - 80:8888/tcp
   volumes:
   - ../notebooks:/data:rw
-  - ../irodsgraph/libs/:/data/libs:ro
+  #- ../irodsgraph/libs/:/data/libs:ro
+  - ../irodsgraph/libs/:/root/.ipython/libs:ro
   links:
   - graphdb:neo

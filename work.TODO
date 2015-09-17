@@ -13,6 +13,7 @@ COMPLETED:
 --- ✄ -----------------------
 
 TO DO:
+ ✔ move libs inside PYTHON_PATH as volume @done (15-09-17 22:55)
  ☐ deal with iRODS replica in the graph as a new node model
  ☐ add logs class
  ☐ adjust template for all rules
