@@ -38,6 +38,8 @@ def get_models(lib):
 ################################
 # Saving models inside the graph class, as properties
 
+############################################
+## Ipython trick
 def run_from_ipython():
     try:
         __IPYTHON__
@@ -45,20 +47,20 @@ def run_from_ipython():
     except NameError:
         return False
 
-if run_from_ipython():
+connect_icypher = run_from_ipython()
+if connect_icypher:
     os.environ["NEO4J_URI"] = GRAPHDB_LINK
-else:
-    # Enable OGM models db connection via environment
-    os.environ["NEO4J_REST_URL"] = GRAPHDB_LINK
+############################################
 
-    import libs.graph.ogmmodels
-    graph = GraphDB()
-    # # This step is automatic
-    graph_models = get_models(ogmmodels)
-    graph.load_models(graph_models)
-    #graph.load_models()
+# Enable OGM models db connection via environment
+os.environ["NEO4J_REST_URL"] = GRAPHDB_LINK
 
-connected = True
-print("Graph connected")
+import libs.graph.ogmmodels
+graph = GraphDB()
+# # This step is automatic
+graph_models = get_models(ogmmodels)
+graph.load_models(graph_models)
+#graph.load_models()
+
 ######################
 # We are ready (graph connected) now
