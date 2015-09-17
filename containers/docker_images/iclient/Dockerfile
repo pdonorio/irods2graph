@@ -24,7 +24,7 @@ RUN apt-get install -y \
     python-setuptools python3-dev python3-pip
 
 RUN pip3 install ipython \
-    click plumbum \
+    click plumbum jinja2 \
     py2neo neomodel
     #jupyter
     # python-irodsclient #does not work with python 3
