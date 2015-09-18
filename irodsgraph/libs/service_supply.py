@@ -158,6 +158,7 @@ def fill_graph_from_irods(icom, graph, elements=20, \
 
         # Eudat URL
         location = icom.current_location(ifile)
+        print("Location:", location)
 
         ##################################
         # Store Zone node
@@ -165,8 +166,8 @@ def fill_graph_from_irods(icom, graph, elements=20, \
 
         ##################################
         # Store Data Object
-        current_dobj = graph.DataObject(location=location, \
-            filename=filename, path=ifile).save()
+        current_dobj = graph.DataObject( \
+            location=location, filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
         print("Created and connected data object", filename)

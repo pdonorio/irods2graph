@@ -69,6 +69,7 @@ def convert(ctx, elements):
     # Loading the library opens the graph connection
     from libs.graph import graph    # only needed for this command
     remove_graph_existing = appconfig.mocking()
+    #remove_graph_existing = True #DEBUG
     fill_graph_from_irods(ctx.obj['icom'], graph, elements, remove_graph_existing)
 
 cli.add_command(convert)

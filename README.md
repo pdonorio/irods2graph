@@ -10,6 +10,7 @@ Tracking ideas & progress [here](http://j.mp/cinecagraphdoc).
 ```
 DataObject{Location:'irods://host:port/ZONE/path'} - [:IS_LOCATED_IN] -> Zone
 DataObject - [:STORED_IN] -> Resource - [:IS_AVAILABLE_IN] -> Zone
+DataObject - [:IS_OWNED_BY] -> Person
 
 DataObject - [:BELONGS_TO] -> Collection [:INSIDE] -> Collection [:IS_PLACED_IN] -> Zone
     Note: Path is computable from Collections walking
