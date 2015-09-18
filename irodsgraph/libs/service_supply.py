@@ -224,6 +224,11 @@ def fill_graph_from_irods(icom, graph, elements=20, \
             data = {'metatype':'system', 'key':key, 'value':value}
             save_node_metadata(graph, data, current_dobj)
 
+            # People/User
+            if key == 'data_owner_name':
+                current_user = graph.Person.get_or_create({'name':value}).pop()
+                current_dobj.owned.connect(current_user)
+
         # normal metadata, including some Eudat/B2safe
         for key, value in icom.meta_list(ifile).items():
             data = {'metatype':'classic', 'key':key, 'value':value}

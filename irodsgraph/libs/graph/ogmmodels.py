@@ -13,6 +13,11 @@ from neomodel import StringProperty, \
 ################################
 ## MODELS
 
+class Person(StructuredNode):
+    name = StringProperty(unique_index=True)
+    # Relations
+    ownership = RelationshipFrom('DataObject', 'IS_OWNED_BY')
+
 class Zone(StructuredNode):
     name = StringProperty(unique_index=True)
     # Relations
@@ -56,6 +61,7 @@ class DataObject(StructuredNode):
     filename = StringProperty(index=True)
     path = StringProperty()
     # Relations
+    owned = RelationshipTo(Person, 'IS_OWNED_BY')
     located = RelationshipTo(Zone, 'IS_LOCATED_IN')
     stored = RelationshipTo(Resource, 'STORED_IN')
     belonging = RelationshipTo(Collection, 'BELONGS_TO')
