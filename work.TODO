@@ -1,5 +1,7 @@
 
 == EUDAT ==
+ Tracking some ideas & progress:
+  http://j.mp/cinecagraphdoc
 
 COMPLETED:
  ✔ packaging, libraries and class style @done (15-09-11 12:41)
@@ -15,6 +17,14 @@ COMPLETED:
 TO DO:
  ✔ move libs inside PYTHON_PATH as volume @done (15-09-17 22:55)
  ✔ add User/People node and connection @done (15-09-18 10:16)
+
+For October 2th
+ ☐ Server with fake data (both neo4j + ipython - with passwords)
+   ✔ update Readme inside github (with local/remote instructions) @done (15-09-21 12:37)
+   ☐ at least 50 elements?
+ ☐ Update model with User
+  ☐ How to recover email address
+
  ☐ deal with iRODS replica in the graph
    ☐ as a new node model
  ☐ add logs class
@@ -23,15 +33,26 @@ TO DO:
  ☐ create docker images for graph and iclient
  ☐ use my separate git repo 'dockerizing' + git submodules
 
+ ☐ Talk to stephan
+ ☐ Write inside the google doc about use case
+ ☐ Explore direction to use icypher for moving data
+ ☐ Overlap
+   ☐ PID / User to connect?
+    ☐ Real metadata - find information that overlaps with other
+ ☐ How to  Express entities as a level of collection depth, e.g.
+  /experiment/dataset/analysis/input-oputput
+
+To be added as model/properties:
+ ☐ checksum timestamp (integrity)
+ ☐ ACL ?
+
 --- ✄ -----------------------
 
 TO FIX:
-    * irods replica concept
-    * show counts of irods element vs selected elements
-    * switch script to ipython:
-        http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
+ ☐ show counts of irods element vs selected elements
+ ☐ switch script to ipython?
+  http://click.pocoo.org/5/exceptions/#what-if-i-don-t-want-that
 
 LATER ON:
-    * Recover PID in production? http://hdl.handle.net/
-    * rancher yaml for multi host configuration
-
+    ☐ Recover PID in production? http://hdl.handle.net/
+    ☐ rancher yaml for multi host configuration
