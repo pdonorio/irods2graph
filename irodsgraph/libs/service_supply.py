@@ -10,33 +10,43 @@ import os, random
 from libs import string_generator, appconfig
 from libs.graph.ogmmodels import save_node_metadata
 
+fake_directories = [
+    "mydata",
+    "experiments",
+    "data",
+    "data/test",
+    "data/prototype",
+    "tmp",
+    "tmp/test",
+]
+
 ################################
 ## POPOLAE
 # Create mock files and save them into irods
 def fill_irods_random(com, icom, elements=10, clean_irods=True, \
-    prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
+    prefix=DEFAULT_PREFIX, tmp_dir='itmp'):
 
     # Remove host data temporary dir if existing
     com.remove_directory(tmp_dir, ignore=True)
     # Create host data dir
     com.create_directory(tmp_dir)
 
+    # Clean all fake dirs if requested
     if clean_irods:
-# // TO FIX:
-# Clean by usating locate for my random prefix
-# data_objs = icom.search(prefix)
-        # Clean if existing on iRODS
-        if icom.check(irods_dir):
-            print("Cleaning on server")
-            icom.remove_directory(irods_dir)
-
-# // TO FIX:
-# A different irods_dir at each round.
-    icom.create_directory(irods_dir)
+        for mydir in fake_directories:
+            # Clean if existing on iRODS
+            if icom.check(mydir):
+                print("Cleaning on server")
+                icom.remove_directory(mydir)
 
     print("Creating", elements, "elements")
     # Create and save
     for i in range(1, elements+1):
+
+        # Random directory, not so random
+        pos = random.randint(0,len(fake_directories)-1)
+        irods_dir = fake_directories[pos]
+        icom.create_directory(irods_dir)
 
         print("\nElement n." + str(i))
         # Create two strings

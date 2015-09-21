@@ -19,16 +19,16 @@ TO DO:
  ✔ add User/People node and connection @done (15-09-18 10:16)
 
 For October 2th
+ ✔ Random paths? @done (15-09-21 12:58)
+ ☐ add logs
  ☐ Server with fake data (both neo4j + ipython - with passwords)
    ✔ update Readme inside github (with local/remote instructions) @done (15-09-21 12:37)
    ☐ at least 50 elements?
- ☐ Random paths?
  ☐ Update model with User
    ☐ How to recover email address?
 
  ☐ deal with iRODS replica in the graph
-   ☐ as a new node model
- ☐ add logs class
+   ☐ as a new node model: @internal_repl
  ☐ adjust template for all rules
  ☐ create notebook docker image for executing queries
  ☐ create docker images for graph and iclient
