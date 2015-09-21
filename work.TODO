@@ -22,8 +22,9 @@ For October 2th
  ☐ Server with fake data (both neo4j + ipython - with passwords)
    ✔ update Readme inside github (with local/remote instructions) @done (15-09-21 12:37)
    ☐ at least 50 elements?
+ ☐ Random paths?
  ☐ Update model with User
-  ☐ How to recover email address
+   ☐ How to recover email address?
 
  ☐ deal with iRODS replica in the graph
    ☐ as a new node model

@@ -6,7 +6,7 @@ Other methods in my package
 """
 
 DEFAULT_PREFIX = 'abc_'
-import random, pickle
+import os, random
 from libs import string_generator, appconfig
 from libs.graph.ogmmodels import save_node_metadata
 
@@ -16,15 +16,22 @@ from libs.graph.ogmmodels import save_node_metadata
 def fill_irods_random(com, icom, elements=10, clean_irods=True, \
     prefix=DEFAULT_PREFIX, tmp_dir='itmp', irods_dir='irods2graph'):
 
-    # Create host data
+    # Remove host data temporary dir if existing
     com.remove_directory(tmp_dir, ignore=True)
+    # Create host data dir
     com.create_directory(tmp_dir)
 
     if clean_irods:
+# // TO FIX:
+# Clean by usating locate for my random prefix
+# data_objs = icom.search(prefix)
         # Clean if existing on iRODS
         if icom.check(irods_dir):
             print("Cleaning on server")
             icom.remove_directory(irods_dir)
+
+# // TO FIX:
+# A different irods_dir at each round.
     icom.create_directory(irods_dir)
 
     print("Creating", elements, "elements")
@@ -117,11 +124,9 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
 def fill_graph_from_irods(icom, graph, elements=20, \
     clean_graph=False, prefix=DEFAULT_PREFIX):
 
-
     if clean_graph:
         graph.clean_whole_database()
 
-    import os
     data_objs = icom.search(prefix)
 
     counter = 0
@@ -266,6 +271,7 @@ def fill_graph_from_irods(icom, graph, elements=20, \
         print("Data Object [created]\t", location)
 
     # Save work in progress?
+    #import pickle
     # pickle.dump(replicas, open('objs/replicas.obj',"wb"))
     # pickle.dump(graph, open('objs/graph.obj',"wb"))
 
