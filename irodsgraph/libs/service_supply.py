@@ -29,10 +29,10 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         for mydir in fake_directories:
             # Clean if existing on iRODS
             if icom.check(mydir):
-                print("Cleaning on server")
+                logger.warning("Cleaning on server")
                 icom.remove_directory(mydir)
 
-    print("Creating", elements, "elements")
+    logger.info("Creating %s elements" % elements)
     # Create and save
     for i in range(1, elements+1):
 
@@ -41,7 +41,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         irods_dir = fake_directories[pos]
         icom.create_directory(irods_dir)
 
-        print("\nElement n." + str(i))
+        logger.debug("Element n. %s " % i)
         # Create two strings
         r1 = string_generator()
         r2 = string_generator()
@@ -73,7 +73,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         if random.randint(0,1):
             # PID may not exists
             pid = icom.register_pid(irods_file)
-            print("Obtained PID", pid)
+            logger.info("Obtained PID %s" % pid)
 
             if appconfig.mocking():
                 # Save pid inside metadata
@@ -84,14 +84,14 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         for key, value in metas.items():
             # Could use batch insert instead
             icom.meta_write(irods_file, [key], [value])
-            print("Wrote", key, "in", filename)
+            logger.debug("Wrote key %s in " % (key, filename))
 
         #######################
         ## REPLICA
 
         # Random choise if replica or not
         if random.randint(0,1):
-            print("Replica!")
+            logger.debug("Generating a REPLICA!")
 
             # Random number of replicas
             n = random.randint(1,3)
@@ -112,11 +112,11 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         #exit()
 
     # Debug
-    print("Created ", metas_elements, "elements")
+    # print("Created ", metas_elements, "elements")
 
     # Clean host data
     com.remove_directory(tmp_dir, ignore=True)
-    print("COMPLETED! Generated", elements, "elements")
+    logger.info("COMPLETED\nGenerated n.%s elements" % elements)
 
     # DEBUG: Check data
     #print(icom.search(prefix))

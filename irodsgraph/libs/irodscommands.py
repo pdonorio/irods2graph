@@ -97,7 +97,7 @@ class ICommands(BashCommands):
 
         # Debug
         self.execute_command(com, args)
-        logger.debug("Created", path)
+        logger.debug("Created %s" % path)
         # com = ""
         # self.execute_command(com, [path])
 
