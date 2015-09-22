@@ -5,6 +5,9 @@
 Use 'click' library to create an interface for shell execution
 """
 
+from libs import get_logger
+logger = get_logger(__name__)
+
 # Make this script a powerful command line program
 import click
 from libs.bash import BashCommands as basher
@@ -21,8 +24,8 @@ from libs import appconfig
 @click.option('--mock/--no-mock', default=False)
 @click.pass_context
 def cli(ctx, verbose, debug, mock):
-    click.echo('Script init. Verbosity: %s' % verbose)
-    click.echo('Debug: %s' % debug)
+    logger.debug('Script init. Verbosity: %s' % verbose)
+    logger.debug('Debug: %s' % debug)
     if mock:
         appconfig.set('devel')
     else:
@@ -49,7 +52,7 @@ def cli(ctx, verbose, debug, mock):
     help='number of elements to find and convert')
 @click.pass_context
 def popolae(ctx, size):
-    click.echo('COMMAND:\tFilling irods.')
+    logger.info('COMMAND: Filling irods')
 
     com = basher()  # system commands, only needed for this command
     remove_irods_existing = appconfig.mocking()
@@ -64,7 +67,7 @@ cli.add_command(popolae)
     help='number of elements to find and convert')
 @click.pass_context
 def convert(ctx, elements):
-    click.echo('COMMAND:\tConverting iRODS objects inside a modeled graphdb')
+    logger.info('COMMAND: Converting iRODS objects inside a modeled graphdb')
 
     # Loading the library opens the graph connection
     from libs.graph import graph    # only needed for this command

@@ -8,7 +8,10 @@ Since python3 is not ready for irods unofficial client,
 i base this wrapper on plumbum package handling shell commands.
 """
 
-import os, inspect, re, random, hashlib
+from libs import get_logger
+logger = get_logger(__name__)
+
+import os, inspect, re, random, sys
 from libs.bash import BashCommands
 from libs.templating import Templa
 from libs import IRODS_ENV, string_generator, appconfig
@@ -32,7 +35,7 @@ class ICommands(BashCommands):
 
         self.irodsenv = irodsenv
         self.iinit()
-        print("iRODS environment found: ", self._init_data)
+        logger.info("iRODS environment found: %s" % self._init_data)
 
         self._base_dir = self.get_base_dir()
 
@@ -44,7 +47,6 @@ class ICommands(BashCommands):
         # Check if irods client exists and is configured
         if not os.path.exists(self.irodsenv):
             raise EnvironmentError("No irods environment found")
-        #print("Found data in " + self.irodsenv)
 
         # Recover irods data
         data = {}
@@ -89,13 +91,13 @@ class ICommands(BashCommands):
             # super call of create_tempy with file (touch)
             # icp / iput of that file
             # super call of remove for the original temporary file
-            print("NOT IMPLEMENTED for a file:", \
+            logger.debug("NOT IMPLEMENTED for a file:" + \
                 inspect.currentframe().f_code.co_name)
             return
 
         # Debug
         self.execute_command(com, args)
-        print("Created", path)
+        logger.debug("Created", path)
         # com = ""
         # self.execute_command(com, [path])
 
@@ -120,7 +122,7 @@ class ICommands(BashCommands):
         # Execute
         self.execute_command(com, args)
         # Debug
-        print("Removed irods object:\t", path)
+        logger.debug("Removed irods object: %s" % path)
 
     def save(self, path, destination=None):
         com = 'iput'
@@ -129,14 +131,12 @@ class ICommands(BashCommands):
             args.append(destination)
         # Execute
         self.execute_command(com, args)
-        # Debug
-        #print("Saved irods object from", path)
 
     def check(self, path, retcodes=(0,4)):
         # Retcodes for this particular case, skip also error 4, no file found
         retcodes = (0,4)
         (status, stdin, stdout) = self.list(path, False, retcodes)
-        print("Check", path, "with", status)
+        logger.debug("Check %s with %s " % (path, status) )
         return status == 0
 
     def list(self, path, detailed=False, retcodes=None):
@@ -159,14 +159,14 @@ class ICommands(BashCommands):
         com = "ilocate"
         if like:
             path += '%'
-        print("iRODS search for", path)
+        logger.debug("iRODS search for %s" % path)
         # Execute
         try:
             out = self.execute_command(com, path)
         except Exception:
-            print("No data found. " + \
+            logger.debug("No data found. " + \
                 "You may try 'popolae' command first.")
-            exit(1)
+            sys.exit(1)
         if out:
             return out.strip().split('\n')
         return out
@@ -237,8 +237,8 @@ class IMetaCommands(ICommands):
                     except:
                         pass
             else:
-                print("No valid attributes specified for action", action)
-                print(attributes, values)
+                logger.debug("No valid attributes specified for action %s" % action)
+                logger.debug("Attrib %s Val %s" % (attributes, values) )
 
         # Execute
         return self.execute_command(com, args)
@@ -268,7 +268,6 @@ class IMetaCommands(ICommands):
         com = "isysmeta"
         args = ['ls']
         args.append(path)
-        #print("iRODS sys meta for", path)
         out = self.execute_command(com, args)
         metas = {}
         if out:
@@ -290,11 +289,11 @@ class IRuled(IMetaCommands):
         args=[]
         if rule is not None:
             args.append(rule)
-            print("Executing irule", rule)
+            logger.info("Executing irule %s" % rule)
         elif rule_file is not None:
             args.append('-F')
             args.append(rule_file)
-            print("Irule execution from file", rule_file)
+            logger.debug("Irule execution from file %s" % rule_file)
 
         # Execute
         return self.execute_command(com, args)
@@ -317,7 +316,7 @@ class EudatICommands(IRuled):
         ifiles = super(EudatICommands, self).search(path, like)
         for ifile in ifiles:
             if '.metadata/' in ifile:
-                print("Skipping", ifile)
+                logger.debug("Skipping metadata file %s" % ifile)
                 ifiles.remove(ifile)
         return ifiles
 
@@ -439,7 +438,7 @@ class EudatICommands(IRuled):
             metas = self.parse_rest_json(None, './tests/epic.pid.out')
 
         else:
-            print("Epic client for", args)
+            logger.debug("Epic client for %s " % args)
             json_data = self.execute_command(com, args).strip()
             if json_data.strip() == 'None':
                 return {}
@@ -475,8 +474,8 @@ class EudatICommands(IRuled):
         return self.execute_rule_from_template('replica', context)
 
     def eudat_find_ppid(self, dataobj):
-        print("***REPLICA EUDAT LIST NOT IMPLEMENTED YET ***")
-        exit()
+        logger.debug("***REPLICA EUDAT LIST NOT IMPLEMENTED YET ***")
+        sys.exit()
 
 ################################
 ## CONNECT TO IRODS ?
@@ -490,4 +489,5 @@ class EudatICommands(IRuled):
 
 def do_nothing(self):
     """ Remember how to say 'not implemented yet' """
-    print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
+    logger.critical("NOT IMPLEMENTED YET: %s" \
+        % inspect.currentframe().f_code.co_name)

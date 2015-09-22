@@ -7,6 +7,9 @@ Class for neo4j database operations
 
 import os
 
+from libs import get_logger
+logger = get_logger(__name__)
+
 ###########################
 ## A graph database with class as models
 
@@ -30,7 +33,7 @@ class GraphDB(object):
         # Enable OGM connection
         try:
             os.environ["NEO4J_REST_URL"]
-            print("Connected")
+            logger.info("Graph is connected")
         except:
             raise EnvironmentError("Missing REST url configuration for graph")
 
@@ -47,37 +50,14 @@ class GraphDB(object):
             # Save attribute inside class with the same name
             setattr(self, model.__name__, model)
 
-    # def store_only(self, model, key, value):
-    #     return self.store_or_get(model, key, value, False)
-
-    # @staticmethod
-    # def store_or_get(model, key, value, get=True):
-    #     """ A way to easily use the store-or-get-node pattern """
-    #     props = {key:value}
-    #     current_node = None
-
-    #     # Does this already exists?
-    #     try:
-    #         # Get it
-    #         current_node = model.nodes.get(**props)
-    #     except model.DoesNotExist:
-    #         if get:
-    #             print("Saving", key, "->", value)
-    #             # Save if not
-    #             current_node = model(**props).save()
-    #         else:
-    #             print("Could not find", key, value, "on", model)
-    #             exit(1)
-
-    #     return current_node
-
     def save_data(self, data):
         """ Save data inside graph db with batch process """
 
         #http://neomodel.readthedocs.org/en/latest/batch.html
-        import inspect
-        print("NOT IMPLEMENTED YET:", inspect.currentframe().f_code.co_name)
-        pass
+        import inspect, sys
+        logger.critical("NOT IMPLEMENTED YET: %s" \
+            % inspect.currentframe().f_code.co_name)
+        sys.exit(1)
 
     def cipher_query(self, query):
         """ Execute normal neo4j queries """
@@ -89,7 +69,7 @@ class GraphDB(object):
         return results
 
     def clean_whole_database(self):
-        print("Cleaning the whole graph")
+        logger.critical("Cleaning the whole graph!")
         query = self.cipher_query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
         return query
 
