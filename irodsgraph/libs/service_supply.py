@@ -5,9 +5,8 @@
 Other methods in my package
 """
 
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+from libs import get_logger
+logger = get_logger(__name__)
 
 import os, random
 from libs import DEFAULT_PREFIX, string_generator, \

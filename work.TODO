@@ -21,6 +21,8 @@ TO DO:
 For October 2th
  ✔ Random paths? @done (15-09-21 12:58)
  ☐ add logs
+   ✔ bootstrap log @done (15-09-22 11:25)
+   ☐ change each class...
  ☐ Server with fake data (both neo4j + ipython - with passwords)
    ✔ update Readme inside github (with local/remote instructions) @done (15-09-21 12:37)
    ☐ at least 50 elements?

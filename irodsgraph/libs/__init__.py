@@ -27,6 +27,7 @@ fake_directories = [
 #http://docs.python-guide.org/en/latest/writing/logging/
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
+LOG_LEVEL = logging.DEBUG
 
 try:  # Python 2.7+
     from logging import NullHandler
@@ -39,10 +40,10 @@ logging.getLogger(__name__).addHandler(NullHandler())
 FORMAT = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
 logging.basicConfig(format=FORMAT) #, level=logging.INFO)
 
-# logger = logging.getLogger(__name__)
-# logger.warning("TEST")
-# exit()
-
+def get_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(LOG_LEVEL)
+    return logger
 
 ################################
 ## UTILITIES
