@@ -71,9 +71,9 @@ Edit 'irodsgraph/bootstrap.sh' to verify if irods data are correct.
 Then:
 
 ```
-bash bootstrap.sh
+bash bootstrap.sh remote
 # You will be prompted for your real irods password.
-./app convert --size=10
+./app.py convert --elements=10
 # Port 10 elements from your irods server to the local graph db.
 ```
 
