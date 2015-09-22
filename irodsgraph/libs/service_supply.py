@@ -84,7 +84,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
         for key, value in metas.items():
             # Could use batch insert instead
             icom.meta_write(irods_file, [key], [value])
-            logger.debug("Wrote key %s in " % (key, filename))
+            logger.debug("Wrote key %s inside file %s " % (key, filename))
 
         #######################
         ## REPLICA
@@ -273,12 +273,14 @@ def fill_graph_from_irods(icom, graph, elements=20, \
         # Save the data object inside graph
         logger.warning("Data Object [created]\t%s" % location)
 
+##################################
+# May come handy?
     # Save work in progress?
     #import pickle
     # pickle.dump(replicas, open('objs/replicas.obj',"wb"))
     # pickle.dump(graph, open('objs/graph.obj',"wb"))
+##################################
 
-    print()
     for replica, parent in replicas.items():
         #print("Replica", replica, "of", parent)
         # Connect replicas

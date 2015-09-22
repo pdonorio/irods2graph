@@ -7,6 +7,9 @@ http://plumbum.readthedocs.org/en/latest/index.html#
 - use shell commands in a more pythonic way -
 """
 
+from libs import get_logger
+logger = get_logger(__name__)
+
 class BashCommands(object):
     """ Wrapper for execution of commands in a bash shell """
 
@@ -18,7 +21,7 @@ class BashCommands(object):
         self._shell = myshell
 
         super(BashCommands, self).__init__()
-        print("Internal shell initialized")
+        logger.debug("Internal shell initialized")
 
     def execute_command(self, command, parameters=[]):
         """ Pattern in plumbum library for executing a shell command """
@@ -46,7 +49,7 @@ class BashCommands(object):
                 args.append("-p")
         # Debug
         self.execute_command(com, args)
-        print("Created", path)
+        logger.debug("Created %s" % path)
 
     def remove(self, path, recursive=False, force=False):
 
@@ -61,7 +64,7 @@ class BashCommands(object):
         # Execute
         self.execute_command(com, args)
         # Debug
-        print("Removed", path)
+        logger.debug("Removed %s" % path)
 
     ###################
     # DIRECTORIES

@@ -5,6 +5,9 @@
 Internal app config using ".ini" configparser
 """
 
+from libs import get_logger
+logger = get_logger(__name__)
+
 import os
 #import ConfigParser #python2
 import configparser
@@ -39,7 +42,7 @@ class MyConfig(object):
 
         # Get irods data and save them only if not available yet
         if nosection:
-            print("No self.section "+self.section+" found")
+            logger.warning("No section %s found" % self.section)
             data = self.icom.get_init()
             self.save(data)
 
@@ -54,4 +57,4 @@ class MyConfig(object):
             for key, value in data.items():
                 self.configurer.set(self.section, key, value)
             self.configurer.write(cfgfile)
-        print("Wrote ini file and its irods section")
+        logger.debug("Wrote ini file and its irods section")
