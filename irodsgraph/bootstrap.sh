@@ -4,6 +4,8 @@ export HOME="/home/$USER"
 
 IRODS_DIR="$HOME/.irods"
 IRODS_ENV="$IRODS_DIR/.irodsEnv"
+
+rm -f $IRODS_ENV
 mkdir -p $IRODS_DIR
 
 if [ "$1" == "remote" ]; then

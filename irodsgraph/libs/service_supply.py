@@ -5,20 +5,14 @@
 Other methods in my package
 """
 
-DEFAULT_PREFIX = 'abc_'
-import os, random
-from libs import string_generator, appconfig
-from libs.graph.ogmmodels import save_node_metadata
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-fake_directories = [
-    "mydata",
-    "experiments",
-    "data",
-    "data/test",
-    "data/prototype",
-    "tmp",
-    "tmp/test",
-]
+import os, random
+from libs import DEFAULT_PREFIX, string_generator, \
+    appconfig, fake_directories
+from libs.graph.ogmmodels import save_node_metadata
 
 ################################
 ## POPOLAE
@@ -147,10 +141,10 @@ def fill_graph_from_irods(icom, graph, elements=20, \
         # Limit elements as requested
         counter += 1
         if counter > elements:
-            print("Stopping at element", counter)
+            logger.warning("Stopping at element %s" % counter)
             break
 
-        print("\nWorking with", ifile)
+        logger.info("Working with %s" % ifile)
 
         ##################################
         # Getting the three pieces from Absolute Path of data object:
@@ -173,7 +167,7 @@ def fill_graph_from_irods(icom, graph, elements=20, \
 
         # Eudat URL
         location = icom.current_location(ifile)
-        print("Location:", location)
+        logger.debug("Location: %s" % location)
 
         ##################################
         # Store Zone node
@@ -185,14 +179,14 @@ def fill_graph_from_irods(icom, graph, elements=20, \
             location=location, filename=filename, path=ifile).save()
         # Connect the object
         current_dobj.located.connect(current_zone)
-        print("Created and connected data object", filename)
+        logger.info("Created and connected data object %s" % filename)
 
         ##################################
         # Get Name and Store Resource node
         resources = icom.get_resource_from_dataobject(ifile)
 
         for resource_name in resources:
-            print("Resource", resource_name)
+            logger.debug("Resource %s" % resource_name)
             current_resource = \
                 graph.Resource.get_or_create({'name':resource_name}).pop()
             # Connect resource to Zone
@@ -274,11 +268,11 @@ def fill_graph_from_irods(icom, graph, elements=20, \
                 ## Check replica relation{ppid, ror}
                 if key == 'parent_pid' and value is not None and value is not '':
                     replicas[pid] = value
-                    print("Added replica for", pid)
+                    logger.info("Adding replica for %s" % pid)
 
         ##################################
         # Save the data object inside graph
-        print("Data Object [created]\t", location)
+        logger.warning("Data Object [created]\t%s" % location)
 
     # Save work in progress?
     #import pickle
@@ -290,7 +284,7 @@ def fill_graph_from_irods(icom, graph, elements=20, \
         #print("Replica", replica, "of", parent)
         # Connect replicas
         findconnect_frompid(graph, replica, parent)
-    print("Visited", counter-1, "elements")
+    logger.info("Visited %s elements" % str(counter-1))
 
 ############################################
 def findconnect_frompid(graph, pid, ppid):
@@ -314,4 +308,4 @@ def findconnect_frompid(graph, pid, ppid):
 # // TO FIX: how to find ROR?
     relation.ror = relation.ppid
 
-    print("Saved replica relation for", pid, relation.ppid)
+    logger.info("Saved replica relation for %s %s" % (pid, relation.ppid))

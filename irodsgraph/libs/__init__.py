@@ -10,6 +10,39 @@ import os, string, random
 USER_HOME = os.environ['HOME']
 CONFIG_FILE = USER_HOME + "/.irodsgraph_connections.ini"
 IRODS_ENV = USER_HOME + "/.irods/.irodsEnv"
+DEFAULT_PREFIX = 'abc_'
+
+fake_directories = [
+    "mydata",
+    "experiments",
+    "data",
+    "data/test",
+    "data/prototype",
+    "tmp",
+    "tmp/test",
+]
+
+################################
+## LOGGING
+#http://docs.python-guide.org/en/latest/writing/logging/
+# Set default logging handler to avoid "No handler found" warnings.
+import logging
+
+try:  # Python 2.7+
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
+logging.getLogger(__name__).addHandler(NullHandler())
+
+FORMAT = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+logging.basicConfig(format=FORMAT) #, level=logging.INFO)
+
+# logger = logging.getLogger(__name__)
+# logger.warning("TEST")
+# exit()
+
 
 ################################
 ## UTILITIES
