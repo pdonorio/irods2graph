@@ -12,6 +12,12 @@ COMPLETED:
  ✔ eudat epic client for PID metadata @done (15-09-11 12:41)
  ✔ neo4j new docker image @done (15-09-11 12:41)
 
+ HOW TO
+ - copy db:
+$NEO4J_HOME/bin/neo4j stop
+cd $NEO4J_HOME/data
+tar -zcvf backup.tar.gz graph.db
+
 --- ✄ -----------------------
 
 TO DO:
@@ -20,12 +26,14 @@ TO DO:
 
 For October 2th
  ✔ Random paths? @done (15-09-21 12:58)
- ☐ add logs
+ ✔ add logs @done (15-09-22 19:14)
    ✔ bootstrap log @done (15-09-22 11:25)
-   ☐ change each class...
+   ✔ change each class... @done (15-09-22 19:14)
+
  ☐ Server with fake data (both neo4j + ipython - with passwords)
    ✔ update Readme inside github (with local/remote instructions) @done (15-09-21 12:37)
-   ☐ at least 50 elements?
+   ✔ 47 elements @done (15-09-22 19:22)
+   ☐ copy db and run (and change password?)
  ☐ Update model with User
    ☐ How to recover email address?
 

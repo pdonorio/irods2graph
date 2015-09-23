@@ -63,16 +63,16 @@ cli.add_command(popolae)
 ############################
 # Option 2. Converting data from irods to a graph
 @click.command()
-@click.option('--elements', default=10, type=int, \
-    help='number of elements to find and convert')
+@click.option('--elements', default=0, type=int, \
+    help='number of elements to find and convert') #note: 0 is all
 @click.pass_context
 def convert(ctx, elements):
     logger.info('COMMAND: Converting iRODS objects inside a modeled graphdb')
 
     # Loading the library opens the graph connection
     from libs.graph import graph    # only needed for this command
-    remove_graph_existing = appconfig.mocking()
-    #remove_graph_existing = True #DEBUG
+    #remove_graph_existing = appconfig.mocking()
+    remove_graph_existing = True #DEBUG
     fill_graph_from_irods(ctx.obj['icom'], graph, elements, remove_graph_existing)
 
 cli.add_command(convert)

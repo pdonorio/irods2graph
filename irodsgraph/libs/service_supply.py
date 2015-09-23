@@ -124,7 +124,7 @@ def fill_irods_random(com, icom, elements=10, clean_irods=True, \
 ################################
 ## From iRODS to neo4j graph
 
-def fill_graph_from_irods(icom, graph, elements=20, \
+def fill_graph_from_irods(icom, graph, elements=0, \
     clean_graph=False, prefix=DEFAULT_PREFIX):
 
     if clean_graph:
@@ -139,7 +139,7 @@ def fill_graph_from_irods(icom, graph, elements=20, \
 
         # Limit elements as requested
         counter += 1
-        if counter > elements:
+        if elements > 0 and counter > elements:
             logger.warning("Stopping at element %s" % counter)
             break
 
