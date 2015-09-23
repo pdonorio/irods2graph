@@ -3,6 +3,16 @@
  Tracking some ideas & progress:
   http://j.mp/cinecagraphdoc
 
+  - Password protect:
+  http://jupyter-notebook.readthedocs.org/en/latest/public_server.html#securing-a-notebook-server
+
+> from notebook.auth import passwd
+> passwd()
+'sha1:080dd84ae076:ba2748b6cd52ff336520806cf52647dd9de421b6'
+= pyeudat
+
+$ jupyter notebook --generate-config
+
 COMPLETED:
  ✔ packaging, libraries and class style @done (15-09-11 12:41)
  ✔ docker section @done (15-09-11 12:41)
@@ -12,11 +22,12 @@ COMPLETED:
  ✔ eudat epic client for PID metadata @done (15-09-11 12:41)
  ✔ neo4j new docker image @done (15-09-11 12:41)
 
- HOW TO
- - copy db:
+ - how to copy db:
 $NEO4J_HOME/bin/neo4j stop
 cd $NEO4J_HOME/data
 tar -zcvf backup.tar.gz graph.db
+
+Note: if db won't launch because of iterative try of recover, go and remove graph.db/schema
 
 --- ✄ -----------------------
 
