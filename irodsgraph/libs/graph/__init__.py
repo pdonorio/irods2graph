@@ -3,6 +3,12 @@
 
 """ Instance of Graph with my current models """
 
+################################
+# Define a timeout
+from py2neo.packages.httpstream import http
+http.socket_timeout = 3
+
+################################
 import os
 from libs.graph.graph import GraphDB
 
@@ -15,6 +21,8 @@ port = '7474'
 user = 'neo4j'
 #pw = user
 pw = 'test'
+pw = 'neoeudat'
+
 # Connection http descriptor
 GRAPHDB_LINK = \
     protocol + "://" + user + ":" + pw + "@" + host + ":" + port + "/db/data"
