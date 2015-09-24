@@ -13,7 +13,6 @@ import click
 from libs.bash import BashCommands as basher
 from libs.irodscommands import EudatICommands
 from libs.config import MyConfig
-from libs.service_supply import fill_irods_random, fill_graph_from_irods
 from libs import appconfig
 
 ############################
@@ -56,6 +55,7 @@ def popolae(ctx, size):
 
     com = basher()  # system commands, only needed for this command
     remove_irods_existing = appconfig.mocking()
+    from libs.service_supply import fill_irods_random
     fill_irods_random(com, ctx.obj['icom'], size, remove_irods_existing)
 
 cli.add_command(popolae)
@@ -73,6 +73,7 @@ def convert(ctx, elements):
     from libs.graph import graph    # only needed for this command
     #remove_graph_existing = appconfig.mocking()
     remove_graph_existing = True #DEBUG
+    from libs.service_supply import fill_graph_from_irods
     fill_graph_from_irods(ctx.obj['icom'], graph, elements, remove_graph_existing)
 
 cli.add_command(convert)
