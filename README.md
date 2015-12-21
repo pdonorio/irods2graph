@@ -81,4 +81,4 @@ At this point you may:
 * check your local graph on web url http://localhost:7777
 * open http://localhost/ to use *ipython notebooks*.
 
-*N.B. **localhost** may be your server IP (e.g. if you use docker with virtualbox)*
+N.B. **localhost** *may be your server IP (e.g. if you use docker with virtualbox)*
