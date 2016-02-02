@@ -8,6 +8,7 @@ __pycache__/
 # Conf and Data Dirs
 data/
 conf/
+irodsgraph/itmp
 
 # Jupyter notebook checkpoints
 .ipynb_*
