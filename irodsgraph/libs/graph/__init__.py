@@ -20,8 +20,9 @@ port = '7474'
 # username and pw default
 user = 'neo4j'
 #pw = user
-pw = 'test'
-pw = 'neoeudat'
+# pw = 'test'
+# pw = 'neoeudat'
+pw = 'eudat'
 
 # Connection http descriptor
 GRAPHDB_LINK = \

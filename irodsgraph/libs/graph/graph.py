@@ -65,7 +65,8 @@ class GraphDB(object):
         try:
             results, meta = db.cypher_query(query)
         except Exception as e:
-            raise ("Failed to execute Cipher Query: " + query + "\n" + str(e))
+            raise BaseException("Failed to execute Cipher Query: "
+                 + query + "\n" + str(e))
         return results
 
     def clean_whole_database(self):

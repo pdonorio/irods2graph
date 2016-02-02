@@ -34,26 +34,35 @@ icom:
 ############################
 ## neo4j
 graphdb:
-  build: docker_images/graphvbox
-  # Based on official beta https://hub.docker.com/r/neo4j/neo4j/
-  volumes:
-  - ../data/graphserver:/data
-  - ./docker_images/graphvbox/neo4j_server.conf:/conf/neo4j-server.properties
-  # labels:
-  #   io.rancher.scheduler.affinity:host_label_ne: anet=pub
-  #   io.rancher.scheduler.affinity:host_label: anet=pub
-  hostname: neo
-  expose:
-  - 7474
-  ports:
-  - 7777:7474/tcp
-  restart: 'no'
-  environment:
-    NEO4J_AUTH: none # No passw otherwise the web server is not accessible
-  tty: true
-  stdin_open: true
-  cap_add:
-  - SYS_RESOURCE
+    image: neo4j/neo4j
+    # volumes:
+    #   - eudat_graphdata:/data
+    hostname: neo
+    environment:
+        NEO4J_AUTH: neo4j/eudat
+    ports:
+        - 8000:7474
+  # build: docker_images/graphvbox
+  # # Based on official beta https://hub.docker.com/r/neo4j/neo4j/
+  # volumes:
+  # - eudat_graphdata:/data
+  # #- ../data/graphserver:/data
+  # - ./docker_images/graphvbox/neo4j_server.conf:/conf/neo4j-server.properties
+  # # labels:
+  # #   io.rancher.scheduler.affinity:host_label_ne: anet=pub
+  # #   io.rancher.scheduler.affinity:host_label: anet=pub
+  # hostname: neo
+  # expose:
+  #     - 7474
+  # ports:
+  #     - 7777:7474/tcp
+  # restart: 'no'
+  # environment:
+  #   NEO4J_AUTH: none # No passw otherwise the web server is not accessible
+  # tty: true
+  # stdin_open: true
+  # cap_add:
+  # - SYS_RESOURCE
 
 ############################
 ## Jupyter project - ipython notebook

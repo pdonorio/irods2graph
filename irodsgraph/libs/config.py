@@ -6,12 +6,17 @@ Internal app config using ".ini" configparser
 """
 
 from libs import get_logger
-logger = get_logger(__name__)
 
 import os
-#import ConfigParser #python2
-import configparser
 from libs import CONFIG_FILE
+try:
+    import configparser
+except:
+    # python2
+    import ConfigParser as configparser
+
+logger = get_logger(__name__)
+
 
 class MyConfig(object):
     """My personal ini configuration for speeding app usage"""
