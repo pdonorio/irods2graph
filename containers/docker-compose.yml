@@ -35,8 +35,8 @@ icom:
 ## neo4j
 graphdb:
     image: neo4j/neo4j
-    # volumes:
-    #   - eudat_graphdata:/data
+    volumes:
+      - eudat_graphdata:/data
     hostname: neo
     environment:
         NEO4J_AUTH: neo4j/eudat
